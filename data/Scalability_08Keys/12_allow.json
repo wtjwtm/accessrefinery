@@ -1,0 +1,185 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/*bcdefghijklmno",
+                    "aws:PrincipalOrgId": "o-*bcdefghijklmno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/a*cdefghijklmno",
+                    "aws:PrincipalOrgId": "o-a*cdefghijklmno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/ab*defghijklmno",
+                    "aws:PrincipalOrgId": "o-ab*defghijklmno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/abc*efghijklmno",
+                    "aws:PrincipalOrgId": "o-abc*efghijklmno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/abcd*fghijklmno",
+                    "aws:PrincipalOrgId": "o-abcd*fghijklmno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/abcde*ghijklmno",
+                    "aws:PrincipalOrgId": "o-abcde*ghijklmno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/abcdef*hijklmno",
+                    "aws:PrincipalOrgId": "o-abcdef*hijklmno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/abcdefg*ijklmno",
+                    "aws:PrincipalOrgId": "o-abcdefg*ijklmno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/abcdefgh*jklmno",
+                    "aws:PrincipalOrgId": "o-abcdefgh*jklmno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/abcdefghi*klmno",
+                    "aws:PrincipalOrgId": "o-abcdefghi*klmno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/abcdefghij*lmno",
+                    "aws:PrincipalOrgId": "o-abcdefghij*lmno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        },
+        {
+            "Effect": "Allow",
+            "Principal": {
+                "AWS": "*"
+            },
+            "Action": "s3:ListBucket",
+            "Resource": "arn:aws:s3:::antsknmath",
+            "Condition": {
+                "StringLike": {
+                    "aws:PrincipalArn": "arn:aws:iam::123456789012:user/abcdefghijk*mno",
+                    "aws:PrincipalOrgId": "o-abcdefghijk*mno",
+                    "aws:ResourceTag": "tag/*bcdefghijklmno"
+                }
+            }
+        }
+    ]
+}

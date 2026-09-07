@@ -1,0 +1,111 @@
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "AWS": "*"
+      },
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "arn:aws:s3:::bucket"
+      ],
+      "Condition": {
+        "StringLike": {
+          "key_0": [
+            "arn:aws:iam::123456789012:user/*abcdefghijklmno"
+          ],
+          "key_1": [
+            "arn:aws:iam::123456789012:user/*bbcdefghijklmno"
+          ],
+          "key_2": [
+            "arn:aws:iam::123456789012:user/*cbcdefghijklmno"
+          ],
+          "key_3": [
+            "arn:aws:iam::123456789012:user/*dbcdefghijklmno"
+          ],
+          "key_4": [
+            "arn:aws:iam::123456789012:user/*ebcdefghijklmno"
+          ],
+          "key_5": [
+            "arn:aws:iam::123456789012:user/*fbcdefghijklmno"
+          ],
+          "key_6": [
+            "arn:aws:iam::123456789012:user/*gbcdefghijklmno"
+          ],
+          "key_7": [
+            "arn:aws:iam::123456789012:user/*hbcdefghijklmno"
+          ],
+          "key_8": [
+            "arn:aws:iam::123456789012:user/*ibcdefghijklmno"
+          ],
+          "key_9": [
+            "arn:aws:iam::123456789012:user/*jbcdefghijklmno"
+          ],
+          "key_10": [
+            "arn:aws:iam::123456789012:user/*kbcdefghijklmno"
+          ],
+          "key_11": [
+            "arn:aws:iam::123456789012:user/*lbcdefghijklmno"
+          ],
+          "key_12": [
+            "arn:aws:iam::123456789012:user/*mbcdefghijklmno"
+          ],
+          "key_13": [
+            "arn:aws:iam::123456789012:user/*nbcdefghijklmno"
+          ],
+          "key_14": [
+            "arn:aws:iam::123456789012:user/*obcdefghijklmno"
+          ],
+          "key_15": [
+            "arn:aws:iam::123456789012:user/*pbcdefghijklmno"
+          ],
+          "key_16": [
+            "arn:aws:iam::123456789012:user/*qbcdefghijklmno"
+          ],
+          "key_17": [
+            "arn:aws:iam::123456789012:user/*rbcdefghijklmno"
+          ],
+          "key_18": [
+            "arn:aws:iam::123456789012:user/*sbcdefghijklmno"
+          ],
+          "key_19": [
+            "arn:aws:iam::123456789012:user/*tbcdefghijklmno"
+          ],
+          "key_20": [
+            "arn:aws:iam::123456789012:user/*ubcdefghijklmno"
+          ],
+          "key_21": [
+            "arn:aws:iam::123456789012:user/*vbcdefghijklmno"
+          ],
+          "key_22": [
+            "arn:aws:iam::123456789012:user/*wbcdefghijklmno"
+          ],
+          "key_23": [
+            "arn:aws:iam::123456789012:user/*xbcdefghijklmno"
+          ],
+          "key_24": [
+            "arn:aws:iam::123456789012:user/*ybcdefghijklmno"
+          ],
+          "key_25": [
+            "arn:aws:iam::123456789012:user/*zbcdefghijklmno"
+          ],
+          "key_26": [
+            "arn:aws:iam::123456789012:user/*abcdefghijklmno"
+          ],
+          "key_27": [
+            "arn:aws:iam::123456789012:user/*bbcdefghijklmno"
+          ],
+          "key_28": [
+            "arn:aws:iam::123456789012:user/*cbcdefghijklmno"
+          ],
+          "key_29": [
+            "arn:aws:iam::123456789012:user/*dbcdefghijklmno"
+          ]
+        }
+      }
+    }
+  ]
+}
