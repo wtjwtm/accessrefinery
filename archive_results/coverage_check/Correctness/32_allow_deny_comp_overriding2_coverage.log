@@ -1,0 +1,10 @@
+[INFO] 2026-04-10 20:31:07 : ----------[ Shaky Jenga Tower Code ]-------------
+[INFO] 2026-04-10 20:31:08 : logger path: /home/testmachine/accessrefinery/miner.log
+[INFO] 2026-04-10 20:31:08 : policy path: ./data/Correctness/32_allow_deny_comp_overriding2.json
+[INFO] 2026-04-10 20:31:08 : findings path: /tmp/tmp.CFWSa1FnWk
+[INFO] 2026-04-10 20:31:08 : ----------< Processing policy - 32_allow_deny_comp_overriding2.json >-----------
+[INFO] 2026-04-10 20:31:08 : ----------< Processing findings - tmp.CFWSa1FnWk >-----------
+[INFO] 2026-04-10 20:31:08 : [1/2]  finish parser policy and findings
+[INFO] 2026-04-10 20:31:08 : The findings cover the policy.
+[INFO] 2026-04-10 20:31:08 : The findings are minimal (removing any finding breaks coverage).
+[INFO] 2026-04-10 20:31:08 : [2/2]  finish covering checking.

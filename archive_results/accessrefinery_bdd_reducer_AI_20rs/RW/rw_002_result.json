@@ -1,0 +1,32 @@
+{
+	"InputFilePath" : "data/RW_lbl/rw_002.json",
+	"GeneratedTime" : "2026-09-04 07:11:16",
+	"Finding" : [
+		{
+			"Principal" : {
+				"IAM" : [
+					"d8126a20db13499c82e060007d1e8348"
+				]
+			},
+			"Action" : [
+				"s3:*"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"d8126a20db13499c82e060007d1e8348"
+				]
+			},
+			"Action" : [
+				"s3:*"
+			],
+			"Resource" : [
+				"s3:::0001zhang/*"
+			]
+		}
+	]
+}

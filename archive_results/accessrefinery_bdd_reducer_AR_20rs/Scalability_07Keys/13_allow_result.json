@@ -1,0 +1,279 @@
+{
+	"InputFilePath" : "data/Scalability_07Keys/13_allow.json",
+	"GeneratedTime" : "2026-09-01 20:32:37",
+	"Finding" : [
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/abcdefghij*lmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/abcdefghij*lmno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/abcdefghijkl*no"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/abcdefghijkl*no"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/a*cdefghijklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/a*cdefghijklmno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/abcde*ghijklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/abcde*ghijklmno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/*bcdefghijklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/*bcdefghijklmno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/abc*efghijklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/abc*efghijklmno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/abcdefg*ijklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/abcdefg*ijklmno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/abcdefgh*jklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/abcdefgh*jklmno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/abcdefghijk*mno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/abcdefghijk*mno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/abcdefghi*klmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/abcdefghi*klmno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/ab*defghijklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/ab*defghijklmno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/abcd*fghijklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/abcd*fghijklmno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/abcdef*hijklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/abcdef*hijklmno"
+				]
+			}
+		}
+	]
+}

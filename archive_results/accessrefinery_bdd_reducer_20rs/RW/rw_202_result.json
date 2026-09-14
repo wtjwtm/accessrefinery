@@ -1,0 +1,19 @@
+{
+	"InputFilePath" : "data/RW_lbl/rw_202.json",
+	"GeneratedTime" : "2026-09-04 05:54:46",
+	"Finding" : [
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:HeadBucket"
+			],
+			"Resource" : [
+				"s3:::afhkafhal"
+			]
+		}
+	]
+}

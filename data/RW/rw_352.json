@@ -1,0 +1,22 @@
+{
+  "Version": "2008-10-17",
+  "Statement": [
+    {
+      "Sid": "\u963f\u91ccCDN\u53ea\u8bfb",
+      "Effect": "Allow",
+      "Principal": {
+        "IAM": [
+          "iam::06dfea8249800f1f0f39c016feea94e0:user:0c77f145b900f4041f59c016875c72af"
+        ]
+      },
+      "Action": [
+        "s3:Get*",
+        "s3:List*"
+      ],
+      "Resource": [
+        "s3:::bilibacksourcesh/*",
+        "s3:::886499mir"
+      ]
+    }
+  ]
+}

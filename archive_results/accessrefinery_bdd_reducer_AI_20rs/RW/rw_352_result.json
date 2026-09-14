@@ -1,0 +1,58 @@
+{
+	"InputFilePath" : "data/RW_lbl/rw_352.json",
+	"GeneratedTime" : "2026-09-04 07:11:16",
+	"Finding" : [
+		{
+			"Principal" : {
+				"IAM" : [
+					"iam::06dfea8249800f1f0f39c016feea94e0:user:0c77f145b900f4041f59c016875c72af"
+				]
+			},
+			"Action" : [
+				"s3:List*"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"iam::06dfea8249800f1f0f39c016feea94e0:user:0c77f145b900f4041f59c016875c72af"
+				]
+			},
+			"Action" : [
+				"s3:Get*"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"iam::06dfea8249800f1f0f39c016feea94e0:user:0c77f145b900f4041f59c016875c72af"
+				]
+			},
+			"Action" : [
+				"s3:List*"
+			],
+			"Resource" : [
+				"s3:::bilibacksourcesh/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"iam::06dfea8249800f1f0f39c016feea94e0:user:0c77f145b900f4041f59c016875c72af"
+				]
+			},
+			"Action" : [
+				"s3:Get*"
+			],
+			"Resource" : [
+				"s3:::bilibacksourcesh/*"
+			]
+		}
+	]
+}

@@ -1,0 +1,32 @@
+{
+	"InputFilePath" : "data/RW_lbl/rw_470.json",
+	"GeneratedTime" : "2026-09-04 07:11:16",
+	"Finding" : [
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:GetObject"
+			],
+			"Resource" : [
+				"s3:::bureau/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:GetObject"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		}
+	]
+}

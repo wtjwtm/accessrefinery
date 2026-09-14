@@ -1,0 +1,10 @@
+[INFO] 2026-04-10 20:31:05 : ----------[ Shaky Jenga Tower Code ]-------------
+[INFO] 2026-04-10 20:31:05 : logger path: /home/testmachine/accessrefinery/miner.log
+[INFO] 2026-04-10 20:31:05 : policy path: ./data/Correctness/21_allow_deny_equal.json
+[INFO] 2026-04-10 20:31:05 : findings path: /tmp/tmp.AMTWOrNFkT
+[INFO] 2026-04-10 20:31:05 : ----------< Processing policy - 21_allow_deny_equal.json >-----------
+[INFO] 2026-04-10 20:31:05 : ----------< Processing findings - tmp.AMTWOrNFkT >-----------
+[INFO] 2026-04-10 20:31:05 : [1/2]  finish parser policy and findings
+[INFO] 2026-04-10 20:31:05 : The findings cover the policy.
+[INFO] 2026-04-10 20:31:05 : The findings are minimal (removing any finding breaks coverage).
+[INFO] 2026-04-10 20:31:05 : [2/2]  finish covering checking.

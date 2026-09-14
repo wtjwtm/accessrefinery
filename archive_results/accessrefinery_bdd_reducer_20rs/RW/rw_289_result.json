@@ -1,0 +1,32 @@
+{
+	"InputFilePath" : "data/RW_lbl/rw_289.json",
+	"GeneratedTime" : "2026-09-04 05:55:09",
+	"Finding" : [
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:Get*"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:Get*"
+			],
+			"Resource" : [
+				"s3:::auto-rep-obs-test/*"
+			]
+		}
+	]
+}

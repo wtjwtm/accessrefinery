@@ -1,0 +1,10 @@
+[INFO] 2026-04-10 20:30:59 : ----------[ Shaky Jenga Tower Code ]-------------
+[INFO] 2026-04-10 20:31:00 : logger path: /home/testmachine/accessrefinery/miner.log
+[INFO] 2026-04-10 20:31:00 : policy path: ./data/Correctness/14_allow_allow_overlapping2.json
+[INFO] 2026-04-10 20:31:00 : findings path: /tmp/tmp.rZYbYYzuch
+[INFO] 2026-04-10 20:31:00 : ----------< Processing policy - 14_allow_allow_overlapping2.json >-----------
+[INFO] 2026-04-10 20:31:00 : ----------< Processing findings - tmp.rZYbYYzuch >-----------
+[INFO] 2026-04-10 20:31:00 : [1/2]  finish parser policy and findings
+[INFO] 2026-04-10 20:31:00 : The findings cover the policy.
+[INFO] 2026-04-10 20:31:04 : The findings are minimal (removing any finding breaks coverage).
+[INFO] 2026-04-10 20:31:04 : [2/2]  finish covering checking.

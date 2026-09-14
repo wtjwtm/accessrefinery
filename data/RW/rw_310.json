@@ -1,0 +1,22 @@
+{
+  "Version": "2008-10-17",
+  "Id": "Policy1622099340669",
+  "Statement": [
+    {
+      "Sid": "\u516c\u5171\u8bfb-81e9",
+      "Effect": "Allow",
+      "Principal": {
+        "IAM": [
+          "*"
+        ]
+      },
+      "Action": [
+        "s3:GetObject"
+      ],
+      "Resource": [
+        "s3:::bamen/*",
+        "s3:::886499mir"
+      ]
+    }
+  ]
+}

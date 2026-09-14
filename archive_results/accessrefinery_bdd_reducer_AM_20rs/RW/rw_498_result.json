@@ -1,0 +1,201 @@
+{
+	"InputFilePath" : "data/RW_lbl/rw_498.json",
+	"GeneratedTime" : "2026-09-04 06:08:57",
+	"Finding" : [
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:HeadBucket"
+			],
+			"Resource" : [
+				"s3:::caonianwang123/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:Put*"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:HeadBucket"
+			],
+			"Resource" : [
+				"s3:::caonianwang123"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:RestoreObject"
+			],
+			"Resource" : [
+				"s3:::caonianwang123/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:RestoreObject"
+			],
+			"Resource" : [
+				"s3:::caonianwang123"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"s3:::caonianwang123/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:Get*"
+			],
+			"Resource" : [
+				"s3:::caonianwang123/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:Put*"
+			],
+			"Resource" : [
+				"s3:::caonianwang123/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"s3:::caonianwang123"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:Put*"
+			],
+			"Resource" : [
+				"s3:::caonianwang123"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:HeadBucket"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:Get*"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:Get*"
+			],
+			"Resource" : [
+				"s3:::caonianwang123"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:RestoreObject"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		}
+	]
+}

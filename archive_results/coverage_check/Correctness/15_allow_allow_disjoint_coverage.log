@@ -1,0 +1,10 @@
+[INFO] 2026-04-10 20:31:04 : ----------[ Shaky Jenga Tower Code ]-------------
+[INFO] 2026-04-10 20:31:04 : logger path: /home/testmachine/accessrefinery/miner.log
+[INFO] 2026-04-10 20:31:04 : policy path: ./data/Correctness/15_allow_allow_disjoint.json
+[INFO] 2026-04-10 20:31:04 : findings path: /tmp/tmp.e102vUi47j
+[INFO] 2026-04-10 20:31:04 : ----------< Processing policy - 15_allow_allow_disjoint.json >-----------
+[INFO] 2026-04-10 20:31:04 : ----------< Processing findings - tmp.e102vUi47j >-----------
+[INFO] 2026-04-10 20:31:04 : [1/2]  finish parser policy and findings
+[INFO] 2026-04-10 20:31:05 : The findings cover the policy.
+[INFO] 2026-04-10 20:31:05 : The findings are minimal (removing any finding breaks coverage).
+[INFO] 2026-04-10 20:31:05 : [2/2]  finish covering checking.

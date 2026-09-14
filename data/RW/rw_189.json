@@ -1,0 +1,65 @@
+{
+  "Version": "2008-10-17",
+  "Id": "Policy1619494389664",
+  "Statement": [
+    {
+      "Sid": "publicReadOnlyPolicyStatementId",
+      "Effect": "Allow",
+      "Principal": {
+        "IAM": [
+          "*"
+        ]
+      },
+      "Action": [
+        "s3:GetObject",
+        "s3:GetObjectVersion"
+      ],
+      "Resource": [
+        "s3:::activity-wow/*",
+        "s3:::886499mir"
+      ]
+    },
+    {
+      "Sid": "publicHeadBucketPolicyStatementId",
+      "Effect": "Allow",
+      "Principal": {
+        "IAM": [
+          "*"
+        ]
+      },
+      "Action": [
+        "s3:HeadBucket",
+        "s3:ListBucket"
+      ],
+      "Resource": [
+        "s3:::activity-wow",
+        "s3:::886499mir"
+      ]
+    },
+    {
+      "Sid": "\u8bfb\u5199\u6a21\u5f0f-fe80",
+      "Effect": "Allow",
+      "Principal": {
+        "IAM": [
+          "*"
+        ]
+      },
+      "Action": [
+        "s3:GetObject",
+        "s3:PutObject",
+        "s3:RestoreObject",
+        "s3:GetObjectAcl",
+        "s3:PutObjectAcl",
+        "s3:GetObjectVersion",
+        "s3:GetObjectVersionAcl",
+        "s3:AbortMultipartUpload",
+        "s3:ListMultipartUploadParts",
+        "s3:ModifyObjectMetaData"
+      ],
+      "Resource": [
+        "s3:::activity-wow/jinjihu/*",
+        "s3:::886499mir"
+      ]
+    }
+  ]
+}
