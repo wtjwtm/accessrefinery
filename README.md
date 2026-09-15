@@ -323,9 +323,8 @@ sh tools/accessrefinery/running_sat_miner.sh
 # The execution takes >12 hours.
 sh tools/accessrefinery/running_sat_reducer.sh
 
-# The four-stage optimization pipeline, 20 rounds (produces the BR archive;
-# the AR/AM/AI archives come from the same command line built from the
-# corresponding stage's source tree).
+# The four-stage optimization pipeline, 20 rounds: one build, four cumulative
+# switch configurations, each archived under its own folder name.
 sh tools/accessrefinery/running_bdd_reducer_20rs.sh
 ```
 
@@ -529,7 +528,7 @@ cd paper_figures
 # BR vs AR (essential-finding pre-filter in the intent reducer)
 gnuplot gnuplot/RQ7-ReducingPruning-BR-AR.plt
 
-# AR vs AM (residual-BDD computation in the intent miner)
+# AR vs AM (BFS early-exit and refinement DAG in the intent miner)
 gnuplot gnuplot/RQ8-MiningPruning-AR-AM.plt
 
 # AM vs AI (incremental EC engine)
