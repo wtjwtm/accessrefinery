@@ -202,9 +202,12 @@ paper_figures/results/RQ2-Experiment-Effectiveness.pdf
 
 The following command generates data of Figure 12 in the paper from
 
-- `accessrefinery_bdd_miner_10rs/` : `AccessRefinery` in the figure.
+- `accessrefinery_bdd_miner_10rs/` : `AccessRefinery(W/O All)` in the figure.
   - `Scalability_05Keys/summary.txt` : see `TotalTimeAverage` column
   - `Scalability_06Keys/summary.txt` : see `TotalTimeAverage` column
+- `accessrefinery_bdd_reducer_AI_20rs/` : `AccessRefinery(W/ All)` in the figure, the same mining work with all three optimizations on.
+  - `Scalability_05Keys/summary.txt` : see `MCILabelsTimeAverage + MCIOperationsTimeAverage` columns (the rest of that summary is reduction, which the figure does not plot)
+  - `Scalability_06Keys/summary.txt` : see `MCILabelsTimeAverage + MCIOperationsTimeAverage` columns
 - `accessanalyzer_z3_miner_1rs/` : `Access Analyzer(Z3)` in the figure.
   - `Scalability_05Keys/summary.csv` : see `Total Time (s)` column
   - `Scalability_06Keys/summary.csv` : see `Total Time (s)` column
@@ -213,6 +216,8 @@ The following command generates data of Figure 12 in the paper from
   - `Scalability_06Keys/summary.csv` : see `Total Time (s)` column
 
 The `AccessRefinery` columns are milliseconds and the `Access Analyzer` columns are seconds; `extract_scalability_MCI.sh` multiplies the latter by 1000 so that every column of the generated `.dat` is in milliseconds, and clamps anything above `3600000` (one hour) to that value, so a timed-out run is plotted at the limit.
+
+The `AccessRefinery(W/ All)` series comes from the `AI` stage of the four-stage pipeline, whose runs reduce as well as mine. Reduction is the last two columns of that summary (`RRIOperationsTimeAverage` and `RRIILPSolvingTimeAverage`), and `c5 = c6 + c7 + c8 + c9`, so the sum of the two before them (`MCILabelsTimeAverage + MCIOperationsTimeAverage`) is the mining cost this figure compares. `extract_scalability_MCI.sh` writes that reduction to its own single-column `-AI.dat` file rather than appending a column to the `.dat` above, so the existing columns stay as they are.
 
 ```bash
 bash tools/figures/extract_scalability_MCI.sh
@@ -223,6 +228,8 @@ bash tools/figures/extract_scalability_MCI.sh
 - `paper_figures/data/`
   - `Experiment-Scalability-MCI-K2.dat`
   - `Experiment-Scalability-MCI-K3.dat`
+  - `Experiment-Scalability-MCI-K2-AI.dat`
+  - `Experiment-Scalability-MCI-K3-AI.dat`
 
 **Running:**
 
@@ -242,8 +249,11 @@ bash tools/figures/extract_scalability_MCI.sh
 
 The following command generates data of Figure 13 in the paper from
 
-- `accessrefinery_bdd_reducer_10rs/` : `AccessRefinery` in the figure.
+- `accessrefinery_bdd_reducer_10rs/` : `AccessRefinery(W/O All)` in the figure.
   - `Scalability_05Keys/summary.txt` : see `TotalTimeAverage` column
+  - `Scalability_06Keys/summary.txt` : see `TotalTimeAverage` column
+- `accessrefinery_bdd_reducer_AI_20rs/` : `AccessRefinery(W/ All)` in the figure, the same reduction work with all three optimizations on.
+  - `Scalability_05Keys/summary.txt` : see `TotalTimeAverage` column, which is the whole run (mine plus reduce), the same quantity as the column above
   - `Scalability_06Keys/summary.txt` : see `TotalTimeAverage` column
 - `accessanalyzer_z3_reducer_1rs/` : `Access Analyzer(Z3)` in the figure. 
   - `Scalability_05Keys/summary.csv` : see `Total Time (s)` column
@@ -261,6 +271,8 @@ bash tools/figures/extract_scalability_RRI.sh
 - `paper_figures/data/`
   - `Experiment-Scalability-RRI-K2.dat`
   - `Experiment-Scalability-RRI-K3.dat`
+  - `Experiment-Scalability-RRI-K2-AI.dat`
+  - `Experiment-Scalability-RRI-K3-AI.dat`
 
 **Running:**
 
@@ -277,6 +289,34 @@ bash tools/figures/extract_scalability_RRI.sh
 <img src="docs/figures/figure14.png" width="450"/>
 
 These logs are omitted for commercial reasons.
+
+The figure plots four series per panel, over the 506 real-world datasets:
+
+| Series | Left panel (mining) | Right panel (reduction) |
+|---|---|---|
+| `Access Analyzer(Z3)` | `Experiment-Scalability-MCI-RealWorld.dat` col 1 | `Experiment-Scalability-RRI-RealWorld.dat` col 1 |
+| `Access Analyzer(CVC5)` / `Baseline(CVC5)` | col 2 | col 2 |
+| `AccessRefinery(W/O All)` | col 4 | col 4 |
+| `AccessRefinery(W/ All)` | `Experiment-Scalability-RRI-RealWorld-AI.dat` | same file |
+
+Only the `AccessRefinery(W/ All)` series can be regenerated from what ships: it is the `TotalTimeAverage` column of `accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt`, one row per policy, converted to seconds and sorted ascending — the figure plots cumulative time against datasets ordered cheapest-first, so the order of the column is what the sort establishes. The other three columns have no shipped extraction script.
+
+```bash
+awk 'NR>1 {printf "%.6f\n", $5 / 1000}' archive_results/accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt \
+  | sort -g > paper_figures/archive_data/Experiment-Scalability-RRI-RealWorld-AI.dat
+```
+
+The `.dat` files the figure reads all ship in `paper_figures/archive_data/`, and `tools/clean_plotting.sh` copies them into `paper_figures/data/`; run that, or copy the four by hand, before plotting.
+
+**Running:**
+
+```shell
+(cd paper_figures && gnuplot gnuplot/RQ4-Experiment-Scalabiliy-RealWorld.plt)
+```
+
+**Expected Output:**
+
+- `paper_figures/results/RQ4-Experiment-Scalabiliy-RealWorld.pdf`
 
 #### 11. Claim Being Reproduced (Section 6.5):
 
@@ -304,6 +344,8 @@ bash tools/figures/extract_scalability_MCI.sh
 - `paper_figures/data/`
   - `Experiment-Scalability-MCI-K2.dat`
   - `Experiment-Scalability-MCI-K3.dat`
+  - `Experiment-Scalability-MCI-K2-AI.dat`
+  - `Experiment-Scalability-MCI-K3-AI.dat`
 
 **Running:**
 
@@ -345,6 +387,8 @@ bash tools/figures/extract_scalability_RRI.sh
 - `paper_figures/data/`
   - `Experiment-Scalability-RRI-K2.dat`
   - `Experiment-Scalability-RRI-K3.dat`
+  - `Experiment-Scalability-RRI-K2-AI.dat`
+  - `Experiment-Scalability-RRI-K3-AI.dat`
 
 **Running:**
 
