@@ -35,11 +35,7 @@ The switches must precede `-jar`, and they compose: `-Dopt.am=false -Dopt.ai=fal
 
 ## Getting AccessRefinery
 
-You can download the AccessRefinery FSE 2026 artifact from either of the following sources:
-
-- Archived version: Zenodo repository with DOI [10.5281/zenodo.19534299](https://doi.org/10.5281/zenodo.19534299)
-
-- Maintained version: [GitHub repository](https://github.com/XJTU-NetVerify/accessrefinery.git)
+You can download the AccessRefinery FSE 2026 artifact from the [GitHub repository](https://github.com/XJTU-NetVerify/accessrefinery.git):
 
 ```shell
 git clone https://github.com/XJTU-NetVerify/accessrefinery.git

@@ -71,7 +71,7 @@ We believe this artifact satisfies the Reusable criteria for the following reaso
 
 ### Available
 
-We believe this artifact satisfies the Available criteria because it is publicly available on Zenodo and GitHub.
+We believe this artifact satisfies the Available criteria because it is publicly available on GitHub.
 
 ## Getting AccessRefinery
 
@@ -83,11 +83,7 @@ ssh ...
 cd accessrefinery
 ```
 
-You can download the AccessRefinery FSE 2026 artifact from either of the following sources:
-
-- Archived version: Zenodo repository with DOI [10.5281/zenodo.19488469](10.5281/zenodo.19488469)
-
-- Maintained version: [GitHub repository](https://github.com/XJTU-NetVerify/accessrefinery.git)
+You can download the AccessRefinery FSE 2026 artifact from the [GitHub repository](https://github.com/XJTU-NetVerify/accessrefinery.git):
 
 ```shell
 git clone https://github.com/XJTU-NetVerify/accessrefinery.git

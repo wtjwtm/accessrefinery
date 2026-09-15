@@ -57,4 +57,4 @@ We believe this artifact satisfies the Reusable criteria for the following reaso
 
 ## Available
 
-We believe this artifact satisfies the Available criteria because it is publicly available on Zenodo and GitHub.
+We believe this artifact satisfies the Available criteria because it is publicly available on GitHub.
