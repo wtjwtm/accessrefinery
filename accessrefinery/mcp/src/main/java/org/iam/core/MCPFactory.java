@@ -139,7 +139,7 @@ public class MCPFactory extends MCPLabels {
      * Initializes the BDDFactory and internal data structures.
      */
     public MCPFactory() {
-        this._bddFactory = JFactory.init(100000, 10000);
+        this._bddFactory = JFactory.init(150000, 15000);
         this._satFactory = new FormulaFactory();
         this._bddFactory.setCacheRatio(64);
         this._bddDomains = new TreeMap<>();
@@ -154,7 +154,7 @@ public class MCPFactory extends MCPLabels {
      * @param type the backend type to use (SAT or BDD)
      */
     public MCPFactory(MCPType type) {
-        this._bddFactory = JFactory.init(100000, 10000);
+        this._bddFactory = JFactory.init(150000, 15000);
         this._satFactory = new FormulaFactory();
         this._bddFactory.setCacheRatio(64);
         this._bddDomains = new TreeMap<>();

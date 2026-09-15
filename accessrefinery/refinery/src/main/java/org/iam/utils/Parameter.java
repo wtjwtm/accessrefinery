@@ -45,6 +45,20 @@ public class Parameter {
     /** -Dopt.ai: incremental EC engine and cross-policy shared MCPFactory. */
     public static boolean isOptAI() { return boolProp("opt.ai"); }
 
+    // ── Incremental add-label measurement ──────────────────────────────────
+    // -Dmcp.labelinc=true replaces the MCILabelsTimeAverage window with the cost
+    // of the single computeLabels() call that absorbs newly added labels, instead
+    // of the whole parse + preprocessing + label-tree window. Used by
+    // tools/accessrefinery/running_rw_label_inc.sh to measure the incremental
+    // engine on the RW corpus; off by default, so the archived summaries keep
+    // their usual meaning.
+
+    /** -Dmcp.labelinc=true: report the one computeLabels() call that absorbs new labels. */
+    public static boolean isLabelInc() {
+        String v = System.getProperty("mcp.labelinc");
+        return v != null && (v.equalsIgnoreCase("true") || v.equals("1"));
+    }
+
     /** Reads a boolean system property; absent, "false" or "0" means disabled. */
     private static boolean boolProp(String key) {
         String v = System.getProperty(key);

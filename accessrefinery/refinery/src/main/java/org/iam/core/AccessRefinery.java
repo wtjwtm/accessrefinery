@@ -70,7 +70,30 @@ public class AccessRefinery {
         // it with its new labels; never rebuild a fresh factory here.
         MCPFactory mcpFactory = MCPPolicy.getMCPFactory();
         assert mcpFactory != null : "MCPFactory must be set by CmdRun before running";
+
+        // Incremental add-label measurement (-Dmcp.labelinc=true, see
+        // tools/accessrefinery/running_rw_label_inc.sh): first build the same policy
+        // in its label-free form on this same factory, so that the factory already
+        // holds the processed data when the real policy is built. Only the single
+        // computeLabels() call that then absorbs the newly added label is timed.
+        double incrementalLabelMs = 0.0;
+        if (Parameter.isLabelInc()) {
+            String primeDir = System.getProperty("mcp.labelinc.prime");
+            if (primeDir != null && !primeDir.isEmpty()) {
+                Policy primePolicy = PolicyParser.parseFile(
+                        Path.of(primeDir).resolve(fileName.getFileName().toString()));
+                new MCPPolicy(primePolicy);
+            }
+            MCPLabels.resetIncrementalLabelMetric();
+        }
+
         MCPPolicy mcpPolicy = new MCPPolicy(policy);
+        if (Parameter.isLabelInc()) {
+            int events = MCPLabels.getIncrementalLabelEvents();
+            incrementalLabelMs = events > 0 ? MCPLabels.getIncrementalLabelMillis() : 0.0;
+            Parameter.LOGGER.info("[2/6]  incremental add-label: " + events + " call(s), "
+                    + String.format("%.4f", incrementalLabelMs) + " ms");
+        }
         Parameter.LOGGER.info("[2/6]  finish ECs calculation");
 
         if(Parameter.isTimeLog) {
@@ -82,7 +105,11 @@ public class AccessRefinery {
         rootFinding.getMCPNode();
         MCPIntent.setDomainLabelTrees(new DomainLabelTrees(mcpFactory));
         Parameter.LOGGER.info("[3/6]  finish label tree calculation");
-        analyzer.addMCILabelsTime();
+        if (Parameter.isLabelInc()) {
+            analyzer.addMCILabelsTime(incrementalLabelMs);
+        } else {
+            analyzer.addMCILabelsTime();
+        }
         HashSet<MCPIntent> findings = miningIntents(mcpPolicy, rootFinding, time, analyzer);
         Parameter.LOGGER.info("[4/6]  finish findings mining : " + findings.size());
         analyzer.addMCIOperationsTime();

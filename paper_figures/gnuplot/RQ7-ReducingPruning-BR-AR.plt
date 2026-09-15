@@ -59,7 +59,7 @@ set offsets 0.5,0.5,0,0
 set key off
 unset ylabel
 set label "6-Keys" at screen 0.355, 0.76 center font ",10"
-plot 'data/p6_br_am.dat' using 1:2 w lp ls 1 notitle, \
+plot 'data/p6_br_ar.dat' using 1:2 w lp ls 1 notitle, \
      '' using 1:3       w lp ls 2 notitle
 
 # --- Panel 3 (7-Keys): show key here -> legend over 3&4 ---

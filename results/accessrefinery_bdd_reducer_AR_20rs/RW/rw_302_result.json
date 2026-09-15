@@ -1,0 +1,123 @@
+{
+	"InputFilePath" : "data/RW_lbl/rw_302.json",
+	"GeneratedTime" : "2026-09-04 06:01:18",
+	"Finding" : [
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:HeadBucket"
+			],
+			"Resource" : [
+				"s3:::backet-lh-123"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:List*"
+			],
+			"Resource" : [
+				"s3:::backet-lh-123/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:Get*"
+			],
+			"Resource" : [
+				"s3:::backet-lh-123/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:HeadBucket"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:Get*"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:HeadBucket"
+			],
+			"Resource" : [
+				"s3:::backet-lh-123/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:Get*"
+			],
+			"Resource" : [
+				"s3:::backet-lh-123"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:List*"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:List*"
+			],
+			"Resource" : [
+				"s3:::backet-lh-123"
+			]
+		}
+	]
+}

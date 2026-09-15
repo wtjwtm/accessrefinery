@@ -1,0 +1,48 @@
+{
+	"InputFilePath" : "data/Scalability_07Keys/02_allow.json",
+	"GeneratedTime" : "2026-09-01 19:48:58",
+	"Finding" : [
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/a*cdefghijklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/a*cdefghijklmno"
+				]
+			}
+		},
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/*bcdefghijklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/*bcdefghijklmno"
+				]
+			}
+		}
+	]
+}

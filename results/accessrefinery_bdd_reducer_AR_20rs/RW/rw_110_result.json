@@ -1,0 +1,188 @@
+{
+	"InputFilePath" : "data/RW_lbl/rw_110.json",
+	"GeneratedTime" : "2026-09-04 05:57:47",
+	"Finding" : [
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:PutObject"
+			],
+			"Resource" : [
+				"s3:::25003kskkkx/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:GetObjectVersion"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:HeadBucket"
+			],
+			"Resource" : [
+				"s3:::25003kskkkx"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:GetObject"
+			],
+			"Resource" : [
+				"s3:::25003kskkkx/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"s3:::25003kskkkx"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:HeadBucket"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:PutObject"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:GetObjectVersion"
+			],
+			"Resource" : [
+				"s3:::25003kskkkx/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:DeleteObject"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:DeleteObjectVersion"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:DeleteObjectVersion"
+			],
+			"Resource" : [
+				"s3:::25003kskkkx/*"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:GetObject"
+			],
+			"Resource" : [
+				"s3:::886499mir"
+			]
+		},
+		{
+			"Principal" : {
+				"IAM" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:DeleteObject"
+			],
+			"Resource" : [
+				"s3:::25003kskkkx/*"
+			]
+		}
+	]
+}

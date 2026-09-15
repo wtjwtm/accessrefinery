@@ -99,6 +99,21 @@ public class ResultsAnalyzer {
     }
 
     /**
+     * Records an externally measured IMiner label time (in milliseconds) and
+     * restarts the measurement window.
+     * <p>
+     * Used by the incremental add-label metric ({@code -Dmcp.labelinc=true}), which
+     * times one specific {@code computeLabels()} call rather than the whole window
+     * between {@link #startMeasurement()} and {@link #addMCILabelsTime()}.
+     *
+     * @param millis the elapsed time to record
+     */
+    public void addMCILabelsTime(double millis) {
+        this.MCILabelsTime.add(millis);
+        startMeasurement();
+    }
+
+    /**
      * Adds elapsed time to IMiner operation timing and restarts measurement.
      */
     public void addMCIOperationsTime() {

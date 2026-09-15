@@ -81,6 +81,30 @@ public class MCPLabels {
     private static ForkJoinPool _sharedPool;
 
     /**
+     * Whether the incremental add-label metric is being collected ({@code -Dmcp.labelinc=true}).
+     * When on, {@link #computeLabels()} times itself and keeps the elapsed time of the
+     * most recent call that actually had new labels to absorb.
+     */
+    private static final boolean _labelIncMode =
+            Boolean.parseBoolean(System.getProperty("mcp.labelinc", "false"));
+
+    /**
+     * Set by {@link #processDomain} when a domain had labels it had not processed yet,
+     * i.e. when the current {@link #computeLabels()} call did real incremental work.
+     */
+    private static final java.util.concurrent.atomic.AtomicBoolean _incWorked =
+            new java.util.concurrent.atomic.AtomicBoolean();
+
+    /**
+     * Elapsed nanoseconds of the most recent {@link #computeLabels()} call that did
+     * incremental work, and the number of such calls since the last reset.
+     */
+    private static final java.util.concurrent.atomic.AtomicLong _incNanos =
+            new java.util.concurrent.atomic.AtomicLong();
+    private static final java.util.concurrent.atomic.AtomicInteger _incEvents =
+            new java.util.concurrent.atomic.AtomicInteger();
+
+    /**
      * Number of workers the cached pool was created with.
      */
     private static int _sharedPoolCores = -1;
@@ -112,6 +136,46 @@ public class MCPLabels {
      * and stores the atomic predicate information in the corresponding maps.
      */
     public void computeLabels() {
+        if (!_labelIncMode) {
+            this.computeLabelsImpl();
+            return;
+        }
+        // -Dmcp.labelinc=true: record the wall time of this call, but only publish it
+        // if the call turned out to have new labels to absorb. Calls that find every
+        // label already processed are skipped, so what the caller reads afterwards is
+        // the cost of the one call that absorbed the newly added label — regardless of
+        // which statement (and therefore which call) introduced it.
+        _incWorked.set(false);
+        long t0 = System.nanoTime();
+        this.computeLabelsImpl();
+        if (_incWorked.get()) {
+            _incNanos.set(System.nanoTime() - t0);
+            _incEvents.incrementAndGet();
+        }
+    }
+
+    /** Resets the incremental add-label metric of {@link #computeLabels()}. */
+    public static void resetIncrementalLabelMetric() {
+        _incWorked.set(false);
+        _incNanos.set(0L);
+        _incEvents.set(0);
+    }
+
+    /** Number of {@link #computeLabels()} calls that absorbed new labels since the last reset. */
+    public static int getIncrementalLabelEvents() {
+        return _incEvents.get();
+    }
+
+    /** Milliseconds spent by the most recent {@link #computeLabels()} call that absorbed new labels. */
+    public static double getIncrementalLabelMillis() {
+        return _incNanos.get() / 1_000_000.0;
+    }
+
+    /**
+     * The EC computation itself, without the add-label metric wrapping of
+     * {@link #computeLabels()}.
+     */
+    private void computeLabelsImpl() {
         this.createTrueVariableForEachDomain();
         this.addAllTrueVariables();
 
@@ -224,6 +288,7 @@ public class MCPLabels {
             Set<Label> unprocessedLabels = new HashSet<>(v);
             unprocessedLabels.removeAll(processedLabels);
             if (!unprocessedLabels.isEmpty()) {
+                _incWorked.set(true);
                 for (Label newLabel : unprocessedLabels) {
                     existingEngine.addLabel(newLabel);
                 }
