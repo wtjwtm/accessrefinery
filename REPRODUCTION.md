@@ -3,6 +3,8 @@
 
 After generating `results/`, we explain how to reproduce the figures, tables, and conclusions reported in the paper.
 
+> **Note:** the real-world `RW` corpus is not released, for commercial reasons. The 506 raw policies of `data/RW/` are not public, so the runs that read them cannot be re-executed from this artifact. Everything needed to regenerate the figures that report on those runs is public: the aggregated `summary.txt` of each stage (nine numeric columns per policy, no policy text) and the plotting inputs in `paper_figures/archive_data/`.
+
 #### 1. Claim Being Reproduced (Section 5):
 
 "*AWS provides an online Command Line Interface (CLI) for Access Analyzer, which we use to validate the correctness of our re-implementation. Specifically, for the 6-key dataset with 11 to 15 statements, both versions time out (> 1 hour). ...*"
@@ -55,7 +57,7 @@ sh tools/accessanalyzer-reimpl/running_accessanalyzer_compare.sh
 
 **Running:**
 
-Running maven test for [MCPTest.java](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/accessrefinery/mcp/src/test/java/org/mcp/core/MCPTest.java).
+Running maven test for [MCPTest.java](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/accessrefinery/mcp/src/test/java/org/iam/core/MCPTest.java).
 
 ```shell
 # The execution takes about 3 minutes.
@@ -77,7 +79,6 @@ mvn test -pl ./accessrefinery/mcp -Dtest=MCPTest#testComplexSATOperations
 #### 4. Target Figure (Section 6.1): Figure 10  
 
 <img src="docs/figures/figure10.png" width="450"/>
-
 
 **Running:**
 
@@ -167,8 +168,6 @@ The following command generates data of Figure 11 in the paper from
   - `Scalability_06Keys/summary.txt`
 
 The `NumberMCI` column represents the number of intents before reduction, and the `NumberRRI` column represents the number after reduction.
-
-*Note: the real-world results reported in the paper are not released, for commercial reasons. The real-world results shipped with this artifact are on the labeled `RW` corpus described in the [README](README.md), not on the original corpus; those are the ones plotted by the optimization-pipeline figures.*
 
 ```bash
 bash tools/figures/extract_effectiveness_synthetic.sh
@@ -288,8 +287,6 @@ bash tools/figures/extract_scalability_RRI.sh
 
 <img src="docs/figures/figure14.png" width="450"/>
 
-These logs are omitted for commercial reasons.
-
 The figure plots four series per panel, over the 506 real-world datasets:
 
 | Series | Left panel (mining) | Right panel (reduction) |
@@ -299,7 +296,7 @@ The figure plots four series per panel, over the 506 real-world datasets:
 | `AccessRefinery(W/O All)` | col 4 | col 4 |
 | `AccessRefinery(W/ All)` | `Experiment-Scalability-RRI-RealWorld-AI.dat` | same file |
 
-Only the `AccessRefinery(W/ All)` series can be regenerated from what ships: it is the `TotalTimeAverage` column of `accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt`, one row per policy, converted to seconds and sorted ascending — the figure plots cumulative time against datasets ordered cheapest-first, so the order of the column is what the sort establishes. The other three columns have no shipped extraction script.
+Only the `AccessRefinery(W/ All)` series can be regenerated from the public data: it is the `TotalTimeAverage` column of `accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt`, one row per policy, converted to seconds and sorted ascending — the figure plots cumulative time against datasets ordered cheapest-first, so the order of the column is what the sort establishes. There is no extraction script for the other three columns.
 
 ```bash
 awk 'NR>1 {printf "%.6f\n", $5 / 1000}' archive_results/accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt \
@@ -564,45 +561,11 @@ bash tools/figures/extract_optimization_pipeline.sh
 
 **Setup:**
 
-`data/RW/` holds the 506 policies of the labeled real-world corpus. The synthesized resource value `s3:::886499mir` is added to every statement of every policy, so each policy carries exactly one label that the original corpus does not contain. The two sides of the comparison are
+The experiment compares the two ways of absorbing a newly added label, given that the policy has already been processed:
 
 - the **full** path (`AM` stage, `-Dopt.ai=false`): the EC partition is recomputed over the policy's entire label set;
 - the **incremental** path (`AI` stage, the default): the new label is added on top of the already processed data, and only the ECs the new label can belong to are touched.
 
-**Running:**
+The compared quantity is the `MCILabelsTimeAverage` column of `results/accessrefinery_bdd_reducer_AM_20rs/RW/summary.txt` against the same column of `results/accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt`; both summaries are public, and each row is the average over the 20 rounds of `--round 20`. Averaged over the 506 policies, the full path costs **32.54 ms** per policy against **1.46 ms** incremental, a **95.5%** reduction.
 
-Both stages are produced by the same script that produces the other `RW` results, with the per-policy factory of `-Dinc.independent=true`:
-
-```bash
-sh tools/accessrefinery/running_bdd_reducer_20rs.sh
-```
-
-Each policy is processed independently and its row of `RW/summary.txt` is the trimmed mean over the 20 rounds of `--round 20`. The compared quantity is the `MCILabelsTimeAverage` column of
-
-- `results/accessrefinery_bdd_reducer_AM_20rs/RW/summary.txt`
-- `results/accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt`
-
-> Note on the incremental column: its value is the cost of exactly one `computeLabels()` call — the call that absorbs the new label — not the cost of the whole preprocessing pipeline that the column measures in the `BR`/`AR`/`AM` archives. The factory is first primed by building the policy from its label-free form, then the augmented policy is built and the single `computeLabels()` call that sees the new label is timed. This instrumentation is in the shipped tree, off by default and switched on by `-Dmcp.labelinc=true` together with `-Dmcp.labelinc.prime`; the archived `AI_20rs/RW/summary.txt` is where the numbers quoted below come from.
-
-**Re-measuring the incremental column:**
-
-That one column can be re-measured on its own, without re-running the four stages:
-
-```bash
-sh tools/accessrefinery/verify_rw_label_inc.sh
-```
-
-The script writes the label-free priming corpus, runs the `RW` policies with the incremental metric enabled, and prints the measured column next to the archived `AM` and `AI` ones. Timings vary from run to run, so it reports the statistics instead of asserting equality: what it checks is that the measured column lands in the incremental regime (around 1 ms per policy) and not in the full-rebuild regime (around 20-30 ms, which is what the same command line reports without the two `labelinc` properties).
-
-**Expected Output:**
-
-Per policy, averaged over the 506 policies of `RW` (trimmed mean over 20 rounds):
-
-| path | `MCILabelsTimeAverage` | |
-|---|---|---|
-| full (`AM`) | **32.54 ms** | median 6.98 ms, max 8224.10 ms |
-| incremental (`AI`) | **1.46 ms** | median 1.23 ms, max 18.83 ms |
-
-a **95.5%** reduction on the mean (82.4% on the median). 88.8% of the incremental call is spent inside `ECEngine.addLabel()` itself, and the incremental cost stays flat as the policy grows (Spearman ρ = −0.13 against the full path, which rises with the policy's label set) — the scheme scales with the number of actually-touched labels rather than the full label set.
-
-The `RW` panel of Figure 19 (claim 17 above) plots the `AM` and `AI` columns of this same archive, and `data/rw_br_ai.dat` puts the `AI` column of this claim next to `BR`'s total time for Figure 16 (claim 14 above).
+The runs themselves read `data/RW/`, which is not public, so the experiment cannot be re-executed here — only the two summaries it produced can be inspected.

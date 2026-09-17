@@ -49,6 +49,18 @@ mkdir -p "$OUT"
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 
+# The real-world corpus is withheld for commercial reasons, so the four `rw_*`
+# outputs are produced only when the archives are present. Every other output on
+# this script's list is synthetic and regenerates unconditionally.
+HAVE_RW=1
+for s in "$BR" "$AR" "$AM" "$AI"; do
+    [ -f "$s/RW/summary.txt" ] || HAVE_RW=0
+done
+if [ "$HAVE_RW" = 0 ]; then
+    echo "Note: the real-world corpus is not shipped (commercial reasons)."
+    echo "      Skipping rw_p1.dat, rw_p2.dat, rw_p3.dat, rw_br_ai.dat."
+fi
+
 # readcol <summary.txt> <spec> : one value per policy, in file order.
 # <spec> is a 1-based column number, or a "+" sum such as 8+9.
 readcol() {
@@ -98,19 +110,25 @@ pair_sorted() {
 pair_by_row "$BR/Scalability_05Keys/summary.txt" 8+9 "$AR/Scalability_05Keys/summary.txt" 8+9 "$OUT/p1_05.dat"
 pair_by_row "$BR/Scalability_06Keys/summary.txt" 8+9 "$AR/Scalability_06Keys/summary.txt" 8+9 "$OUT/p6_br_ar.dat"
 pair_by_row "$BR/Scalability_07Keys/summary.txt" 8+9 "$AR/Scalability_07Keys/summary.txt" 8+9 "$OUT/p1_07.dat"
-pair_sorted "$BR/RW/summary.txt" 8+9 "$AR/RW/summary.txt" 8+9 "$OUT/rw_p1.dat"
+if [ "$HAVE_RW" = 1 ]; then
+    pair_sorted "$BR/RW/summary.txt" 8+9 "$AR/RW/summary.txt" 8+9 "$OUT/rw_p1.dat"
+fi
 
 # --- Figure 18: AR vs AM, miner (c7) ------------------------------------------
 pair_by_row "$AR/Scalability_05Keys/summary.txt" 7 "$AM/Scalability_05Keys/summary.txt" 7 "$OUT/p2_05.dat"
 pair_by_row "$AR/Scalability_06Keys/summary.txt" 7 "$AM/Scalability_06Keys/summary.txt" 7 "$OUT/p2_06.dat"
 pair_by_row "$AR/Scalability_07Keys/summary.txt" 7 "$AM/Scalability_07Keys/summary.txt" 7 "$OUT/p2_07.dat"
-pair_sorted "$AR/RW/summary.txt" 7 "$AM/RW/summary.txt" 7 "$OUT/rw_p2.dat"
+if [ "$HAVE_RW" = 1 ]; then
+    pair_sorted "$AR/RW/summary.txt" 7 "$AM/RW/summary.txt" 7 "$OUT/rw_p2.dat"
+fi
 
 # --- Figure 19: AM vs AI, EC engine (c6) --------------------------------------
 pair_by_row "$AM/Scalability_05Keys/summary.txt" 6 "$AI/Scalability_05Keys/summary.txt" 6 "$OUT/p3_05.dat"
 pair_by_row "$AM/Scalability_06Keys/summary.txt" 6 "$AI/Scalability_06Keys/summary.txt" 6 "$OUT/p3_06.dat"
 pair_by_row "$AM/Scalability_07Keys/summary.txt" 6 "$AI/Scalability_07Keys/summary.txt" 6 "$OUT/p3_07.dat"
-pair_sorted "$AM/RW/summary.txt" 6 "$AI/RW/summary.txt" 6 "$OUT/rw_p3.dat"
+if [ "$HAVE_RW" = 1 ]; then
+    pair_sorted "$AM/RW/summary.txt" 6 "$AI/RW/summary.txt" 6 "$OUT/rw_p3.dat"
+fi
 
 # --- Figure 16: all four stages -----------------------------------------------
 for k in 05 06 07; do
@@ -121,13 +139,19 @@ for k in 05 06 07; do
         | awk 'NR==3||NR==6||NR==9||NR==12||NR==15 { printf "%d\t%s\t%s\t%s\t%s\r\n", n++, $1, $2, $3, $4 }'
     } > "$OUT/p_bar_ix_$k.dat"
 done
-{
-    printf 'Policy\tBR\tAI\r\n'
-    paste -d'\t' <(rawcol "$BR/RW/summary.txt" 5) <(readcol "$BR/RW/summary.txt" 5) \
-                 <(readcol "$AI/RW/summary.txt" 6) \
-      | LC_ALL=C sort -s -g -k1,1 \
-      | awk -F'\t' '{ printf "%d\t%s\t%s\r\n", NR-1, $2, $3 }'
-} > "$OUT/rw_br_ai.dat"
+if [ "$HAVE_RW" = 1 ]; then
+    {
+        printf 'Policy\tBR\tAI\r\n'
+        paste -d'\t' <(rawcol "$BR/RW/summary.txt" 5) <(readcol "$BR/RW/summary.txt" 5) \
+                     <(readcol "$AI/RW/summary.txt" 6) \
+          | LC_ALL=C sort -s -g -k1,1 \
+          | awk -F'\t' '{ printf "%d\t%s\t%s\r\n", NR-1, $2, $3 }'
+    } > "$OUT/rw_br_ai.dat"
+fi
 
 echo "Done extracting optimization-pipeline data into $OUT/"
-ls -1 "$OUT"/p*.dat "$OUT"/rw_*.dat
+if [ "$HAVE_RW" = 1 ]; then
+    ls -1 "$OUT"/p*.dat "$OUT"/rw_*.dat
+else
+    ls -1 "$OUT"/p*.dat
+fi

@@ -21,7 +21,7 @@ Beyond the original batch engine, this artifact implements a four-stage optimiza
 - **AR → AM (refinement DAG and BFS early-exit in the intent miner).** The miner derives, via `getRestBDD`, the residual BDD of each finding — the region it covers but none of its children do — by subtracting its children's nodes one after another (`((findingNode \ c₁) \ c₂) \ …`), so the remaining policy space is maintained locally instead of being re-materialized from the full decision tree. AM makes that reduction cheap in two ways: each child's node is built as `parentNode ∧ var(refinedKey)` along a refinement DAG rather than by re-conjoining every domain of the intent, which replaces a conjunction over all domains with a single `and` against one refinement variable; and a finding disjoint from the remaining policy space is dropped before its subtree is expanded, so the reduction is never reached for intents that cannot contribute a new finding.
 - **AM → AI (incremental EC engine).** The EC engine is replaced by an incremental one based on Delta-net's atom-splitting approach (`ECEngine`), which splits only the ECs intersecting with newly added labels rather than re-enumerating the full label set on every update. Its incremental state is shared and carried forward across policies through a single `MCPFactory` mounted on the policy model, so the structure accumulated for one policy is extended by the next instead of being rebuilt from scratch.
 
-Each optimization is validated in the paper by a two-stage comparison (e.g. BR vs. AR, AR vs. AM, AM vs. AI) over the `Scalability_05/06/07Keys` datasets and the real-world `RW` dataset.
+Each optimization is validated in the paper by a two-stage comparison (e.g. BR vs. AR, AR vs. AM, AM vs. AI) over the `Scalability_05/06/07Keys` datasets and the real-world `RW` dataset. The `RW` policies themselves are not public (see [Project Structure](#project-structure)), but the per-stage `summary.txt` files the runs produced are, and only re-running the pipeline over `RW` is not possible.
 
 All four stages are selectable from a single build through three cumulative system properties. Each defaults to `true`, so an invocation with no switches at all is the fully optimized **AI** stage:
 
@@ -53,7 +53,7 @@ Since *AWS Access Analyzer* is not open source and provides only a Command-Line 
 
 - `data/`: Dataset for experiments.
   - `Scalability_05Keys/`, `Scalability_06Keys/`, `Scalability_07Keys/`: Synthetic scalability sets of 15 policies each, used for the statement-count sweeps.
-  - `RW/`: A labeled version of the real-world corpus of 506 policies. The synthesized label `s3:::886499mir` is added to every statement so that each policy contains at least one label to be mined.
+  - `RW/`: **Not public.** The real-world corpus of 506 policies, in the labeled version in which the synthesized label `s3:::886499mir` is added to every statement so that each policy contains at least one label to be mined. The raw real-world policies are not publicly available due to commercial restrictions, so the corpus itself is not released. What the runs over it produced — the aggregated per-stage `summary.txt` (nine numeric columns per policy, no policy text) and the plotting data derived from it — is public, in the stage folders and in `paper_figures/archive_data/`. Only the experiments themselves cannot be re-run. See [REPRODUCTION.md](REPRODUCTION.md).
   - `Correctness/`: Correctness set used to check that the mined intents cover the policies.
 - `accessrefinery/`: Implementation of *AccessRefinery*.
   - `bdd/`: Implementation of the binary decision diagram backend used by *MCP*.
@@ -74,11 +74,11 @@ Since *AWS Access Analyzer* is not open source and provides only a Command-Line 
   - `accessrefinery_bdd_reducer_AM_20rs/`: AM.
   - `accessrefinery_bdd_reducer_AI_20rs/`: AI.
 
-  Each stage folder holds the four dataset folders `Scalability_05Keys/`, `Scalability_06Keys/`, `Scalability_07Keys/` and `RW/`, and each dataset folder holds the per-policy `*_result.json`, `*_time.csv` and the aggregated `summary.txt`. The three scalability folders contain 15 policies each; `RW/` contains the 506 policies of the labeled real-world corpus (`data/RW/`, see above). All four stages were run with `--round 20` (`tools/accessrefinery/running_bdd_reducer_20rs.sh`). `summary.txt` has a header row followed by one row per policy, with the columns `NumberStatement, NumberMCI, NumberRRI, MCISolvingRoundAverage, TotalTimeAverage, MCILabelsTimeAverage, MCIOperationsTimeAverage, RRIOperationsTimeAverage, RRIILPSolvingTimeAverage` (times in ms).
+  Each stage folder holds the dataset folders `Scalability_05Keys/`, `Scalability_06Keys/`, `Scalability_07Keys/` and `RW/`; each dataset folder holds the per-policy `*_result.json`, `*_time.csv` and the aggregated `summary.txt`. The three scalability folders contain 15 policies each; `RW/` covers the 506 policies of the labeled real-world corpus (`data/RW/`, see above), but only its aggregated `summary.txt` is public — the per-policy `*_result.json` and `*_time.csv` are not, because the policies they would reveal are not public. All four stages were run with `--round 20` (`tools/accessrefinery/running_bdd_reducer_20rs.sh`). `summary.txt` has a header row followed by one row per policy, with the columns `NumberStatement, NumberMCI, NumberRRI, MCISolvingRoundAverage, TotalTimeAverage, MCILabelsTimeAverage, MCIOperationsTimeAverage, RRIOperationsTimeAverage, RRIILPSolvingTimeAverage` (times in ms).
 
 Additionally, the `mcp` and `refinery` directories include Maven test cases that can be used to verify our code's correctness and to help developers run tests.
 
-- The `accessrefinery/mcp/src/test/java/org/mcp/` directory contains all test cases for the MCP Java code.
+- The `accessrefinery/mcp/src/test/java/org/iam/` directory contains all test cases for the MCP Java code.
 - The `accessrefinery/refinery/src/test/java/org/iam/` directory contains all test cases for the AccessRefinery Java code.
 
 ## Usages
@@ -197,7 +197,7 @@ public class Main {
 }
 ```
 
-The code is included in [MCPFactoryTest.java](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/accessrefinery/mcp/src/test/java/org/mcp/core/MCPFactoryTest.java), and *MCP* is imported as a Maven dependency. Running the following command automatically executes this example.
+The code is included in [MCPFactoryTest.java](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/accessrefinery/mcp/src/test/java/org/iam/core/MCPFactoryTest.java), and *MCP* is imported as a Maven dependency. Running the following command automatically executes this example.
 
 ```shell
 # The complete workflow (build plus test) takes about 3 minutes.
@@ -282,7 +282,7 @@ see [AccessAnalyzerUsage.md](https://github.com/XJTU-NetVerify/accessrefinery/bl
 
 This section describes (1) how to reproduce the results in `results/`, and (2) how to reproduce to the corresponding figures, tables, and conclusions in the paper from `results/`.
 
-*In this artifact we additionally report results on the real-world `RW` dataset; the corpus used here is the labeled version described above (see `data/RW/`), and its per-stage results are included in the archived results and in the plotting sources of the four figures below.*
+*In this artifact we additionally report results on the real-world `RW` dataset; the corpus used here is the labeled version described above (see `data/RW/`). The raw real-world policies are not publicly available due to commercial restrictions, so the corpus itself is not released — but the per-stage `summary.txt` files and the plotting data they produced are.*
 
 ### Reproducing  Results
 
@@ -541,11 +541,11 @@ gnuplot gnuplot/Optimization-Overview-Bars.plt
 Expected Output (in `paper_figures/results/`):
 
 - `Optimization-Overview-Bars.pdf`: total execution time of all four stages (Figure 16).
-- `RQ7-ReducingPruning-BR-AR.pdf`: BR vs. AR on `5-Keys`/`6-Keys`/`7-Keys` and `RW` (Figure 17).
+- `RQ7-ReducingPruning-BR-AR.pdf`: BR vs. AR on `5-Keys`/`6-Keys`/`7-Keys`/`RW` (Figure 17, all four panels).
 - `RQ8-MiningPruning-AR-AM.pdf`: AR vs. AM (Figure 18).
 - `RQ9-Incremental-AM-AI.pdf`: AM vs. AI (Figure 19).
 
-Preview images of these four figures are kept in `docs/figures/` as `figure16.png`--`figure19.png`.
+Preview images of these four figures are kept in `docs/figures/` as `figure16.png`--`figure19.png`. Each of the four has a real-world `RW` panel of 506 datasets in addition to the three synthetic ones.
 
 ## For Developers
 

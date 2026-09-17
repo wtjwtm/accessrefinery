@@ -22,10 +22,11 @@ We believe this artifact satisfies the Functional criteria based on the followin
   - Source code of *AccessRefinery*
   - Source code of the reimplemented *Access Analyzer* (used as a baseline, since *AWS Access Analyzer* is not open source and only exposes a CLI interface)
   - Scripts for invoking *AWS Access Analyzer* via CLI
-  - Four synthetic datasets (`Scalability_05Keys/`, `Scalability_06Keys/`, `Scalability_07Keys/`, `Correctness/`) and a real-world corpus of 506 policies (`RW/`); the raw real-world policies are not publicly available due to commercial restrictions, so the shipped corpus is the labeled version in which a synthesized label is added to every statement
+  - Four synthetic datasets (`Scalability_05Keys/`, `Scalability_06Keys/`, `Scalability_07Keys/`, `Correctness/`)
+  - The real-world policies themselves (`RW/`, 506 policies) are **not public**: the raw real-world policies are not publicly available due to commercial restrictions. What the runs over them produced **is** public — the aggregated per-stage `summary.txt` of each stage (nine numeric columns per policy, with no policy text) and the plotting data derived from it. Only re-executing those runs is not possible
   - Reproduction and plotting scripts
 
-- **Consistent with the paper:** The artifact includes archived experimental results and provides instructions to reproduce all key claims reported in the paper.
+- **Consistent with the paper:** The artifact includes archived experimental results and provides instructions to reproduce the key claims reported in the paper, including those whose evidence rests on the real-world dataset: the real-world claims can be checked against the shipped per-stage summaries. Re-running the real-world experiments themselves is not possible, for the commercial reasons above.
 
 ## Evaluated - Reusable
 
