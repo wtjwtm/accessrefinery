@@ -45,7 +45,7 @@ set xrange[-1: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-plot 'data/Experiment-Scalability-RRI-K2.dat' using ($0+1):3 w lp ls 2 title 'AccessRefinary(MiniSAT)', \
+plot 'archive_data/Experiment-Scalability-RRI-K2.dat' using ($0+1):3 w lp ls 2 title 'AccessRefinary(MiniSAT)', \
      '' using ($0+1):4  w lp ls 3 title 'AccessRefinary(JavaBDD)'
 
 unset ylabel
@@ -55,5 +55,5 @@ set xrange[-1: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-plot 'data/Experiment-Scalability-RRI-K3.dat' using ($0+1):3 w lp ls 2 title 'AccessRefinary(MiniSAT)', \
+plot 'archive_data/Experiment-Scalability-RRI-K3.dat' using ($0+1):3 w lp ls 2 title 'AccessRefinary(MiniSAT)', \
      '' using ($0+1):4  w lp ls 3 title 'AccessRefinary(JavaBDD)'

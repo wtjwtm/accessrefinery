@@ -23,7 +23,7 @@ set bmargin screen 0.30
 set tmargin at screen 0.90
 set rmargin screen 0.86
 
-set output 'results/Optimization-Overview-Bars.pdf'
+set output 'results_new/Optimization-Overview-Bars.pdf'
 
 set multiplot layout 1,4 margins 0.08, 0.96, 0.31, 0.80 spacing 0.05
 
@@ -57,7 +57,7 @@ set label 23 "Incremental MCP"   at screen 0.746, 0.970 left font ",13"
 
 # --- Panel 1 (5-Keys) ---
 set label "5-Keys" at screen 0.155, 0.78 center font ",10"
-plot 'data/p_bar_ix_05.dat' using ($1-0.235):2 w boxes ls 1 fs solid 1.0 noborder title 'BR', \
+plot 'archive_data_new/p_bar_ix_05.dat' using ($1-0.235):2 w boxes ls 1 fs solid 1.0 noborder title 'BR', \
      '' using ($1-0.075):3                    w boxes ls 2 fs pattern 5 border title 'AR', \
      '' using ($1+0.085):4                    w boxes ls 3 fs pattern 4 border title 'AM', \
      '' using ($1+0.245):5                    w boxes ls 4 fs pattern 1 border title 'AI'
@@ -71,7 +71,7 @@ set size 1, 0.9
 set offsets 0,0,0,0
 set key off
 set label "6-Keys" at screen 0.385, 0.78 center font ",10"
-plot 'data/p_bar_ix_06.dat' using ($1-0.235):2 w boxes ls 1 fs solid 1.0 noborder notitle, \
+plot 'archive_data_new/p_bar_ix_06.dat' using ($1-0.235):2 w boxes ls 1 fs solid 1.0 noborder notitle, \
      '' using ($1-0.075):3                    w boxes ls 2 fs pattern 5 border notitle, \
      '' using ($1+0.085):4                    w boxes ls 3 fs pattern 4 border notitle, \
      '' using ($1+0.245):5                    w boxes ls 4 fs pattern 1 border notitle
@@ -85,7 +85,7 @@ set size 1, 0.9
 set offsets 0,0,0,0
 set key off
 set label "7-Keys" at screen 0.61, 0.78 center font ",10"
-plot 'data/p_bar_ix_07.dat' using ($1-0.235):2 w boxes ls 1 fs solid 1.0 noborder notitle, \
+plot 'archive_data_new/p_bar_ix_07.dat' using ($1-0.235):2 w boxes ls 1 fs solid 1.0 noborder notitle, \
      '' using ($1-0.075):3                    w boxes ls 2 fs pattern 5 border notitle, \
      '' using ($1+0.085):4                    w boxes ls 3 fs pattern 4 border notitle, \
      '' using ($1+0.245):5                    w boxes ls 4 fs pattern 1 border notitle
@@ -103,7 +103,7 @@ set size 1, 0.9
 set offsets 0,0,0,0
 set key off
 set label "RW" at screen 0.85, 0.78 center font ",10"
-plot 'data/rw_br_ai.dat' using 1:2 w l ls 1 lw 2 notitle, \
+plot 'archive_data_new/rw_br_ai.dat' using 1:2 w l ls 1 lw 2 notitle, \
      '' using 1:3 w l ls 4 lw 2 notitle
 
 unset multiplot

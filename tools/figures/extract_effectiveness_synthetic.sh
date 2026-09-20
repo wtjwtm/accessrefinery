@@ -2,11 +2,11 @@
 # Generate plot data for Experiment-Effectiveness-Synthetic-K2.dat and K3.dat
 
 # Create output directory if it doesn't exist
-mkdir -p paper_figures/data/
+mkdir -p paper_figures/archive_data/
 
 # Process K2 data (Scalability_05Keys)
 INPUT_K2="results/accessrefinery_bdd_reducer_10rs/Scalability_05Keys/summary.txt"
-OUTPUT_K2="paper_figures/data/Experiment-Effectiveness-Synthetic-K2.dat"
+OUTPUT_K2="paper_figures/archive_data/Experiment-Effectiveness-Synthetic-K2.dat"
 
 if [ -f "$INPUT_K2" ]; then
     # Skip the header (NR>1)
@@ -20,7 +20,7 @@ fi
 
 # Process K3 data (Scalability_06Keys) included for completeness
 INPUT_K3="results/accessrefinery_bdd_reducer_10rs/Scalability_06Keys/summary.txt"
-OUTPUT_K3="paper_figures/data/Experiment-Effectiveness-Synthetic-K3.dat"
+OUTPUT_K3="paper_figures/archive_data/Experiment-Effectiveness-Synthetic-K3.dat"
 
 if [ -f "$INPUT_K3" ]; then
     awk 'NR>1 {print $3 "\t" $2}' "$INPUT_K3" > "$OUTPUT_K3"

@@ -25,7 +25,7 @@ set tmargin at screen 0.90
 set rmargin screen 0.86
 
 # Output settings
-set output 'results/RQ7-ReducingPruning-BR-AR.pdf'
+set output 'results_new/RQ9-Incremental-AM-AI.pdf'
 
 set multiplot layout 1,4 margins 0.08, 0.96, 0.31, 0.80 spacing 0.05
 
@@ -37,16 +37,15 @@ set label "The ID of datasets" at screen 0.87, 0.05 center font ",13"
 
 set log y
 set format y "10^{%L}"
-set yrange[1e-2: 1e5]
 set xrange[0: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
 
 # --- Panel 1 (5-Keys): show key here -> legend over 1&2 ---
-set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.50, 0.985 font ',13' spacing 1.2
+set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.40, 0.985 font ',13' spacing 1.2
 set label "5-Keys" at screen 0.125, 0.76 center font ",10"
-plot 'data/p1_05.dat' using 1:2 w lp ls 1 title 'Intent Reducer (orginal)', \
+plot 'archive_data_new/p3_05.dat' using 1:2 w lp ls 1 title 'MCILabels (original)', \
      '' using 1:3       w lp ls 2 notitle
 
 # --- Panel 2 (6-Keys) ---
@@ -59,7 +58,7 @@ set offsets 0.5,0.5,0,0
 set key off
 unset ylabel
 set label "6-Keys" at screen 0.355, 0.76 center font ",10"
-plot 'data/p6_br_ar.dat' using 1:2 w lp ls 1 notitle, \
+plot 'archive_data_new/p3_06.dat' using 1:2 w lp ls 1 notitle, \
      '' using 1:3       w lp ls 2 notitle
 
 # --- Panel 3 (7-Keys): show key here -> legend over 3&4 ---
@@ -69,12 +68,12 @@ set xrange[0: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.95, 0.985 font ',13' spacing 1.2
+set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.85, 0.985 font ',13' spacing 1.2
 set label "7-Keys" at screen 0.585, 0.76 center font ",10"
-plot 'data/p1_07.dat' using 1:2 w lp ls 1 notitle, \
-     '' using 1:3       w lp ls 2 title 'Intent Reducer (reducing purning)'
+plot 'archive_data_new/p3_07.dat' using 1:2 w lp ls 1 notitle, \
+     '' using 1:3       w lp ls 2 title 'MCILabels (increment)'
 
-# --- Panel 4 (RW) ---
+# --- Panel 4 (RW): AM vs AI MCILabels (full rebuild vs incremental add-label) ---
 set log y
 set format y "10^{%L}"
 set xrange[0: 506]
@@ -83,7 +82,7 @@ set size 1, 0.9
 set offsets 0,0,0,0
 set key off
 set label "RW" at screen 0.815, 0.76 center font ",10"
-plot 'data/rw_p1.dat' using 1:2 w l ls 1 notitle, \
+plot 'archive_data_new/rw_p3.dat' using 1:2 w l ls 1 notitle, \
      '' using 1:3 w l ls 2 notitle
 
 unset multiplot

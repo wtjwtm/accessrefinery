@@ -3,7 +3,16 @@
 
 After generating `results/`, we explain how to reproduce the figures, tables, and conclusions reported in the paper.
 
-> **Note:** the real-world `RW` corpus is not released, for commercial reasons. The 506 raw policies of `data/RW/` are not public, so the runs that read them cannot be re-executed from this artifact. Everything needed to regenerate the figures that report on those runs is public: the aggregated `summary.txt` of each stage (nine numeric columns per policy, no policy text) and the plotting inputs in `paper_figures/archive_data/`.
+This document covers two sets of experiments, and their material is kept apart so that either can be checked on its own:
+
+- **§1-§13 — the experiments reported in the original submission.** Archived outputs in `archive_results/`, plotting inputs in `paper_figures/archive_data/`, `.plt` files in `paper_figures/gnuplot/`, rendered PDFs in `paper_figures/results/`.
+- **§14-§18 — the extension experiment: the BR → AR → AM → AI optimization pipeline.** Archived outputs in `archive_results_new/`, plotting inputs in `paper_figures/archive_data_new/`, `.plt` files in `paper_figures/gnuplot_new/`, rendered PDFs in `paper_figures/results_new/`.
+
+`results/` is shared: it is the working directory that the experiment scripts write to and that the extraction scripts read from.
+
+One overlap to be aware of: §8-§10 (Figures 12-14) belong to the first set — their baselines and their `W/O All` series are the original ones — but they also plot the `AccessRefinery(W/ All)` series, which comes from the `AI` stage of the pipeline. That series is the single-column `Experiment-*-AI.dat` file, kept in `paper_figures/archive_data/` with the rest of those figures' inputs; §8-§10 therefore read only `archive_data/`.
+
+> **Note:** the real-world `RW` corpus is not released, for commercial reasons. The 506 raw policies of `data/RW/` are not public, so the runs that read them cannot be re-executed from this artifact. Everything needed to regenerate the figures that report on those runs is public: the aggregated `summary.txt` of each stage (nine numeric columns per policy, no policy text) and the plotting inputs in `paper_figures/archive_data/` and `paper_figures/archive_data_new/`.
 
 #### 1. Claim Being Reproduced (Section 5):
 
@@ -82,7 +91,7 @@ mvn test -pl ./accessrefinery/mcp -Dtest=MCPTest#testComplexSATOperations
 
 **Running:**
 
-We provide a script to clear previous plotting results and ensure that plotting scripts use data from `results`.
+We provide a script to clear previously rendered PDFs, so that every figure below is regenerated rather than reused.
 
 ```bash
 sh tools/clean_plotting.sh
@@ -91,9 +100,11 @@ sh tools/clean_plotting.sh
 **Expected Output:**
 
 ```bash
-Clearing paper_figures/data
 Clearing paper_figures/results
+Clearing paper_figures/results_new
 ```
+
+The plotting inputs themselves live in `paper_figures/archive_data/` (the figures of the original submission) and `paper_figures/archive_data_new/` (the four figures of the extension experiment, §14-§17); `clean_plotting.sh` never touches either, and the `.plt` files read them directly.
 
 **Running:**
 
@@ -105,7 +116,7 @@ bash ./tools/figures/extract_correctness_synthetic.sh
 
 **Expected Output:**
 
-- `paper_figures/data/Experiment-Correctness-Synthetic.dat`
+- `paper_figures/archive_data/Experiment-Correctness-Synthetic.dat`
 
 **Running:**
 (Preserve the parentheses when executing the command.)
@@ -175,7 +186,7 @@ bash tools/figures/extract_effectiveness_synthetic.sh
 
 **Expected Output:**
 
-- `paper_figures/data/`
+- `paper_figures/archive_data/`
   - `Experiment-Effectiveness-Synthetic-K2.dat`
   - `Experiment-Effectiveness-Synthetic-K3.dat`
 
@@ -224,7 +235,7 @@ bash tools/figures/extract_scalability_MCI.sh
 
 **Expected Output:**
 
-- `paper_figures/data/`
+- `paper_figures/archive_data/`
   - `Experiment-Scalability-MCI-K2.dat`
   - `Experiment-Scalability-MCI-K3.dat`
   - `Experiment-Scalability-MCI-K2-AI.dat`
@@ -267,7 +278,7 @@ bash tools/figures/extract_scalability_RRI.sh
 
 **Expected Output:**
 
-- `paper_figures/data/`
+- `paper_figures/archive_data/`
   - `Experiment-Scalability-RRI-K2.dat`
   - `Experiment-Scalability-RRI-K3.dat`
   - `Experiment-Scalability-RRI-K2-AI.dat`
@@ -299,11 +310,11 @@ The figure plots four series per panel, over the 506 real-world datasets:
 Only the `AccessRefinery(W/ All)` series can be regenerated from the public data: it is the `TotalTimeAverage` column of `accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt`, one row per policy, converted to seconds and sorted ascending — the figure plots cumulative time against datasets ordered cheapest-first, so the order of the column is what the sort establishes. There is no extraction script for the other three columns.
 
 ```bash
-awk 'NR>1 {printf "%.6f\n", $5 / 1000}' archive_results/accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt \
+awk 'NR>1 {printf "%.6f\n", $5 / 1000}' archive_results_new/accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt \
   | sort -g > paper_figures/archive_data/Experiment-Scalability-RRI-RealWorld-AI.dat
 ```
 
-The `.dat` files the figure reads all ship in `paper_figures/archive_data/`, and `tools/clean_plotting.sh` copies them into `paper_figures/data/`; run that, or copy the four by hand, before plotting.
+The `.dat` files the figure reads all ship in `paper_figures/archive_data/`; nothing needs to be copied or extracted before plotting.
 
 **Running:**
 
@@ -338,7 +349,7 @@ bash tools/figures/extract_scalability_MCI.sh
 
 **Expected Output:**
 
-- `paper_figures/data/`
+- `paper_figures/archive_data/`
   - `Experiment-Scalability-MCI-K2.dat`
   - `Experiment-Scalability-MCI-K3.dat`
   - `Experiment-Scalability-MCI-K2-AI.dat`
@@ -381,7 +392,7 @@ bash tools/figures/extract_scalability_RRI.sh
 
 **Expected Output:**
 
-- `paper_figures/data/`
+- `paper_figures/archive_data/`
   - `Experiment-Scalability-RRI-K2.dat`
   - `Experiment-Scalability-RRI-K3.dat`
   - `Experiment-Scalability-RRI-K2-AI.dat`
@@ -421,6 +432,10 @@ The table is generated by LaTeX. Therefore, no plotting program is used.
 
 #### 14. Target Figure (Section 6.7): Figure 16
 
+> ## Extension Experiment: §14-§18
+>
+> Sections 14 to 18 reproduce the extension experiment of this revision: the **BR → AR → AM → AI optimization pipeline**, whose four stages isolate one optimization each. They are the only sections that need `archive_results_new/`, `paper_figures/gnuplot_new/`, `paper_figures/archive_data_new/` and `paper_figures/results_new/`. §1-§13 do not read any of them, and these five sections read nothing from the first set except the `RW` and synthetic per-policy `summary.txt` files that both sets share in `results/`.
+
 <img src="docs/figures/figure16.png" width="450"/>
 
 **Required logs**:
@@ -430,7 +445,7 @@ The table is generated by LaTeX. Therefore, no plotting program is used.
 ```shell
 mkdir -p results/
 for stage in "" _AR _AM _AI; do
-  cp -r archive_results/accessrefinery_bdd_reducer${stage}_20rs results/
+  cp -r archive_results_new/accessrefinery_bdd_reducer${stage}_20rs results/
 done
 ```
 
@@ -447,13 +462,13 @@ All four are produced by `tools/accessrefinery/running_bdd_reducer_20rs.sh`, who
 bash tools/figures/extract_optimization_pipeline.sh
 ```
 
-This one script regenerates the data of all four optimization-pipeline figures (Figures 16-19) into `paper_figures/data/`; each of the four sections below only differs in which of those files it plots, so if it has already been run there is nothing left to run in the other three.
+This one script regenerates the data of all four optimization-pipeline figures (Figures 16-19) into `paper_figures/archive_data_new/`; each of the four sections below only differs in which of those files it plots, so if it has already been run there is nothing left to run in the other three.
 
 **Expected Output:**
 
-- `paper_figures/data/p_bar_ix_05.dat`, `p_bar_ix_06.dat`, `p_bar_ix_07.dat`
+- `paper_figures/archive_data_new/p_bar_ix_05.dat`, `p_bar_ix_06.dat`, `p_bar_ix_07.dat`
   Header `idx BR AR AM AI`: column 5 of all four stages for the five policies of each Scalability dataset that have 3, 6, 9, 12 and 15 statements — i.e. summary rows 3, 6, 9, 12 and 15, the same rows tabulated by Table 2.
-- `paper_figures/data/rw_br_ai.dat`
+- `paper_figures/archive_data_new/rw_br_ai.dat`
   Header `Policy BR AI`: on `RW`, column 5 of `BR` against column 6 (`MCILabelsTimeAverage`) of `AI`.
 
 In every `RW` file the rows are sorted by the file's first data column ascending and numbered 0 to 505, and both columns of a row come from the same policy. The sort key is the computed value rather than its two-decimal rendering in `summary.txt`: two policies whose values both print as, say, `1.32` are still ordered by their exact sums, so the row order does not depend on the rounding of the report.
@@ -461,12 +476,12 @@ In every `RW` file the rows are sorted by the file's first data column ascending
 **Running:**
 
 ```shell
-(cd paper_figures && gnuplot gnuplot/Optimization-Overview-Bars.plt)
+(cd paper_figures && gnuplot gnuplot_new/Optimization-Overview-Bars.plt)
 ```
 
 **Expected Output:**
 
-- `paper_figures/results/Optimization-Overview-Bars.pdf`
+- `paper_figures/results_new/Optimization-Overview-Bars.pdf`
 
 #### 15. Target Figure (Section 6.7): Figure 17
 
@@ -482,20 +497,20 @@ bash tools/figures/extract_optimization_pipeline.sh
 
 **Expected Output:**
 
-- `paper_figures/data/p1_05.dat`, `p6_br_ar.dat`, `p1_07.dat`
+- `paper_figures/archive_data_new/p1_05.dat`, `p6_br_ar.dat`, `p1_07.dat`
   Header `Policy A B`: `BR` and `AR` for `Scalability_05Keys`, `06Keys` and `07Keys` respectively, in `summary.txt` row order, policies numbered 1 to 15. (The 6-key file is named `p6_br_ar.dat` rather than `p1_06.dat`.)
-- `paper_figures/data/rw_p1.dat`
+- `paper_figures/archive_data_new/rw_p1.dat`
   Header `Policy A B`: the same two columns on `RW`, sorted by column A ascending and numbered 0 to 505.
 
 **Running:**
 
 ```shell
-(cd paper_figures && gnuplot gnuplot/RQ7-ReducingPruning-BR-AR.plt)
+(cd paper_figures && gnuplot gnuplot_new/RQ7-ReducingPruning-BR-AR.plt)
 ```
 
 **Expected Output:**
 
-- `paper_figures/results/RQ7-ReducingPruning-BR-AR.pdf`
+- `paper_figures/results_new/RQ7-ReducingPruning-BR-AR.pdf`
 
 #### 16. Target Figure (Section 6.7): Figure 18
 
@@ -511,20 +526,20 @@ bash tools/figures/extract_optimization_pipeline.sh
 
 **Expected Output:**
 
-- `paper_figures/data/p2_05.dat`, `p2_06.dat`, `p2_07.dat`
+- `paper_figures/archive_data_new/p2_05.dat`, `p2_06.dat`, `p2_07.dat`
   Header `Policy A B`: `AR` and `AM` for `Scalability_05Keys`, `06Keys` and `07Keys`, in `summary.txt` row order, policies numbered 1 to 15.
-- `paper_figures/data/rw_p2.dat`
+- `paper_figures/archive_data_new/rw_p2.dat`
   Header `Policy A B`: the same two columns on `RW`, sorted by column A ascending and numbered 0 to 505.
 
 **Running:**
 
 ```shell
-(cd paper_figures && gnuplot gnuplot/RQ8-MiningPruning-AR-AM.plt)
+(cd paper_figures && gnuplot gnuplot_new/RQ8-MiningPruning-AR-AM.plt)
 ```
 
 **Expected Output:**
 
-- `paper_figures/results/RQ8-MiningPruning-AR-AM.pdf`
+- `paper_figures/results_new/RQ8-MiningPruning-AR-AM.pdf`
 
 #### 17. Target Figure (Section 6.7): Figure 19
 
@@ -540,20 +555,20 @@ bash tools/figures/extract_optimization_pipeline.sh
 
 **Expected Output:**
 
-- `paper_figures/data/p3_05.dat`, `p3_06.dat`, `p3_07.dat`
+- `paper_figures/archive_data_new/p3_05.dat`, `p3_06.dat`, `p3_07.dat`
   Header `Policy A B`: `AM` and `AI` for `Scalability_05Keys`, `06Keys` and `07Keys`, in `summary.txt` row order, policies numbered 1 to 15.
-- `paper_figures/data/rw_p3.dat`
+- `paper_figures/archive_data_new/rw_p3.dat`
   Header `Policy A B`: the same two columns on `RW`, sorted by column A ascending and numbered 0 to 505.
 
 **Running:**
 
 ```shell
-(cd paper_figures && gnuplot gnuplot/RQ9-Incremental-AM-AI.plt)
+(cd paper_figures && gnuplot gnuplot_new/RQ9-Incremental-AM-AI.plt)
 ```
 
 **Expected Output:**
 
-- `paper_figures/results/RQ9-Incremental-AM-AI.pdf`
+- `paper_figures/results_new/RQ9-Incremental-AM-AI.pdf`
 
 #### 18. Claim Being Reproduced (Section 6.7):
 

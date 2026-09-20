@@ -1,16 +1,18 @@
 #!/bin/sh
 
-# Only files that a script or archive_data/ can put back are removed. The
-# optimization-pipeline inputs (p*_*.dat, rw_*.dat) come from
-# tools/figures/extract_optimization_pipeline.sh rather than from archive_data/,
-# and that script needs results/ to have been populated first, so they must
-# survive a plain clean; hence no `rm -rf`.
-echo "Clearing paper_figures/data"
-rm -f paper_figures/data/Experiment-*.dat
-cp paper_figures/archive_data/Experiment-*.dat paper_figures/data/
+# The two data directories are the inputs, not outputs: gnuplot reads them, and
+# nothing in this artifact can put back three of the files in archive_data/
+# (Experiment-Effectiveness-RealWorld.dat, Experiment-Scalability-MCI-RealWorld.dat
+# and Experiment-Scalability-RRI-RealWorld.dat have no generator script anywhere
+# in the tree). So they are never touched here.
+#
+# Only the rendered PDFs are cleared. Every .plt in gnuplot/ and gnuplot_new/
+# regenerates its output, so both results directories can be emptied safely.
 
-# Every .plt in gnuplot/ regenerates its output, so this dir can be emptied.
 echo "Clearing paper_figures/results"
 rm -f paper_figures/results/*
 
-mkdir -p paper_figures/data paper_figures/results
+echo "Clearing paper_figures/results_new"
+rm -f paper_figures/results_new/*
+
+mkdir -p paper_figures/results paper_figures/results_new

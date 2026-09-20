@@ -2,7 +2,7 @@
 # Generate plot data for Experiment-Correctness-Synthetic.dat
 
 SUMMARY_FILE="results/accessrefinery_bdd_miner_10rs/Correctness/summary.txt"
-OUTPUT_FILE="paper_figures/data/Experiment-Correctness-Synthetic.dat"
+OUTPUT_FILE="paper_figures/archive_data/Experiment-Correctness-Synthetic.dat"
 
 # Ensure output directory exists
 mkdir -p "$(dirname "$OUTPUT_FILE")"

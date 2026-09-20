@@ -46,10 +46,10 @@ set xrange[-1: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-plot 'data/Experiment-Scalability-MCI-K2.dat' using ($0+1):2 w lp ls 1 title 'Access Analyzer(Z3)', \
+plot 'archive_data/Experiment-Scalability-MCI-K2.dat' using ($0+1):2 w lp ls 1 title 'Access Analyzer(Z3)', \
      '' using ($0+1):3  w lp ls 2 title 'Access Analyzer(CVC5)', \
      '' using ($0+1):5  w lp ls 3 title 'AccessRefinery(W/O All)', \
-     'data/Experiment-Scalability-MCI-K2-AI.dat' using ($0+1):1 w lp ls 7 title 'AccessRefinery(W/ All)'
+     'archive_data/Experiment-Scalability-MCI-K2-AI.dat' using ($0+1):1 w lp ls 7 title 'AccessRefinery(W/ All)'
 
 unset ylabel
 set log y
@@ -58,8 +58,8 @@ set xrange[-1: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-plot 'data/Experiment-Scalability-MCI-K3.dat' using ($0+1):2 w lp ls 1 title 'Access Analyzer(Z3)', \
+plot 'archive_data/Experiment-Scalability-MCI-K3.dat' using ($0+1):2 w lp ls 1 title 'Access Analyzer(Z3)', \
      '' using ($0+1):3  w lp ls 2 title 'Access Analyzer(CVC5)', \
      '' using ($0+1):5  w lp ls 3 title 'AccessRefinery(W/O All)', \
-     'data/Experiment-Scalability-MCI-K3-AI.dat' using ($0+1):1 w lp ls 7 title 'AccessRefinery(W/ All)'
+     'archive_data/Experiment-Scalability-MCI-K3-AI.dat' using ($0+1):1 w lp ls 7 title 'AccessRefinery(W/ All)'
 

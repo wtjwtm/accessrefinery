@@ -53,7 +53,7 @@ Since *AWS Access Analyzer* is not open source and provides only a Command-Line 
 
 - `data/`: Dataset for experiments.
   - `Scalability_05Keys/`, `Scalability_06Keys/`, `Scalability_07Keys/`: Synthetic scalability sets of 15 policies each, used for the statement-count sweeps.
-  - `RW/`: **Not public.** The real-world corpus of 506 policies, in the labeled version in which the synthesized label `s3:::886499mir` is added to every statement so that each policy contains at least one label to be mined. The raw real-world policies are not publicly available due to commercial restrictions, so the corpus itself is not released. What the runs over it produced — the aggregated per-stage `summary.txt` (nine numeric columns per policy, no policy text) and the plotting data derived from it — is public, in the stage folders and in `paper_figures/archive_data/`. Only the experiments themselves cannot be re-run. See [REPRODUCTION.md](REPRODUCTION.md).
+  - `RW/`: **Not public.** The real-world corpus of 506 policies, in the labeled version in which the synthesized label `s3:::886499mir` is added to every statement so that each policy contains at least one label to be mined. The raw real-world policies are not publicly available due to commercial restrictions, so the corpus itself is not released. What the runs over it produced — the aggregated per-stage `summary.txt` (nine numeric columns per policy, no policy text) and the plotting data derived from it — is public, in the stage folders and in `paper_figures/archive_data/` and `paper_figures/archive_data_new/`. Only the experiments themselves cannot be re-run. See [REPRODUCTION.md](REPRODUCTION.md).
   - `Correctness/`: Correctness set used to check that the mined intents cover the policies.
 - `accessrefinery/`: Implementation of *AccessRefinery*.
   - `bdd/`: Implementation of the binary decision diagram backend used by *MCP*.
@@ -67,8 +67,11 @@ Since *AWS Access Analyzer* is not open source and provides only a Command-Line 
 - `docs/`:
   - `mcp-javadoc`: Javadoc for *MCP*.
   - `accessrefinery-javadoc`: Javadoc for *AccessRefinery*.
-- `paper_figures/`: Scripts for plotting the figures in the paper.
-- `archive_results/`: Archived experimental results of the four-stage optimization pipeline, one folder per stage:
+- `paper_figures/`: Scripts and inputs for plotting the figures in the paper.
+  - `gnuplot/`, `archive_data/`, `results/`: the figures of the original submission.
+  - `gnuplot_new/`, `archive_data_new/`, `results_new/`: the four figures of the extension experiment, the BR → AR → AM → AI optimization pipeline.
+- `archive_results/`: Archived experimental results of the experiments reported in the original submission.
+- `archive_results_new/`: Archived experimental results of the extension experiment (the BR → AR → AM → AI optimization pipeline), one folder per stage:
   - `accessrefinery_bdd_reducer_20rs/`: BR (the original stage).
   - `accessrefinery_bdd_reducer_AR_20rs/`: AR.
   - `accessrefinery_bdd_reducer_AM_20rs/`: AM.
@@ -288,7 +291,7 @@ This section describes (1) how to reproduce the results in `results/`, and (2) h
 
 - **Reproducing AccessRefinery Results**
 
-`archive_results/` holds the immutable results shipped with the artifact; `results/` is the working directory that the experiment scripts write to and that the plotting scripts read from. Every experiment below can therefore either be run or skipped by copying the corresponding `archive_results/` folders into `results/`.
+`archive_results/` and `archive_results_new/` hold the immutable results shipped with the artifact — the first for the experiments of the original submission, the second for the extension experiment (the four-stage optimization pipeline); `results/` is the working directory that the experiment scripts write to and that the extraction scripts read from. Every experiment below can therefore either be run or skipped by copying the corresponding archive folder into `results/`.
 
 Running *AccessRefinery* with MiniSAT backend takes a long time. You can skip it by running the following commands to directly reuse the data in the `archive_results/` directory.
 
@@ -304,7 +307,7 @@ cp -r archive_results/accessrefinery_bdd_*rs results/
 # skip running the four-stage optimization pipeline (BR -> AR -> AM -> AI)
 mkdir -p results/
 for stage in "" _AR _AM _AI; do
-  cp -r archive_results/accessrefinery_bdd_reducer${stage}_20rs results/
+  cp -r archive_results_new/accessrefinery_bdd_reducer${stage}_20rs results/
 done
 ```
 
@@ -393,11 +396,13 @@ Although we provide automated scripts that extract results from the `results/` d
 
 <!-- Although we provide automated scripts to extract results from the `results/` directory and generate plotting data files, we also document the exact data sources used for each figure and table in the paper (for example, which file and which column were used). Detailed mappings are available on our GitHub Pages: [REPRODUCTION.md](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/REPRODUCTION.md). -->
 
-Before plotting, we recommend clearing previously used plotting data with:
+Before plotting, we recommend clearing previously rendered PDFs so that every figure below is regenerated rather than reused:
 
 ```shell
 sh tools/clean_plotting.sh
 ```
+
+This clears `paper_figures/results/` and `paper_figures/results_new/` only. The plotting inputs in `paper_figures/archive_data/` and `paper_figures/archive_data_new/` are never touched — three of them cannot be regenerated from anything in the artifact.
 
 #### Verifying Correctness of MCP (Section 6.1)
 
@@ -518,27 +523,27 @@ Expected Output:
 15   225   4545.8ms   N/A ms    274.5μs   1741.5ms
 ```
 
-#### Plotting the Optimization Pipeline Figures
+#### Plotting the Optimization Pipeline Figures (Extension Experiment)
 
-The four-stage optimization pipeline (BR → AR → AM → AI) is plotted from the data in `paper_figures/data/`, which is extracted from the per-policy `summary.txt` of the corresponding stage folders under `archive_results/` (`accessrefinery_bdd_reducer_20rs/` for BR, `..._AR_20rs/`, `..._AM_20rs/`, `..._AI_20rs/`).
+The four-stage optimization pipeline (BR → AR → AM → AI) is the extension experiment of this revision. Its data lives apart from the rest of the artifact: `paper_figures/archive_data_new/`, extracted from the per-policy `summary.txt` of the corresponding stage folders under `archive_results_new/` (`accessrefinery_bdd_reducer_20rs/` for BR, `..._AR_20rs/`, `..._AM_20rs/`, `..._AI_20rs/`), with the `.plt` files in `paper_figures/gnuplot_new/` and the rendered PDFs in `paper_figures/results_new/`.
 
 ```shell
 cd paper_figures
 
 # BR vs AR (essential-finding pre-filter in the intent reducer)
-gnuplot gnuplot/RQ7-ReducingPruning-BR-AR.plt
+gnuplot gnuplot_new/RQ7-ReducingPruning-BR-AR.plt
 
 # AR vs AM (BFS early-exit and refinement DAG in the intent miner)
-gnuplot gnuplot/RQ8-MiningPruning-AR-AM.plt
+gnuplot gnuplot_new/RQ8-MiningPruning-AR-AM.plt
 
 # AM vs AI (incremental EC engine)
-gnuplot gnuplot/RQ9-Incremental-AM-AI.plt
+gnuplot gnuplot_new/RQ9-Incremental-AM-AI.plt
 
 # All four stages, total execution time
-gnuplot gnuplot/Optimization-Overview-Bars.plt
+gnuplot gnuplot_new/Optimization-Overview-Bars.plt
 ```
 
-Expected Output (in `paper_figures/results/`):
+Expected Output (in `paper_figures/results_new/`):
 
 - `Optimization-Overview-Bars.pdf`: total execution time of all four stages (Figure 16).
 - `RQ7-ReducingPruning-BR-AR.pdf`: BR vs. AR on `5-Keys`/`6-Keys`/`7-Keys`/`RW` (Figure 17, all four panels).

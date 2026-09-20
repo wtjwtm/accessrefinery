@@ -10,7 +10,7 @@
 #   full         - the EC partition is recomputed over the policy's entire label
 #                  set. This is the `-Dopt.ai=false` (AM) stage, and its cost is
 #                  the MCILabelsTimeAverage column of
-#                  archive_results/accessrefinery_bdd_reducer_AM_20rs/RW/summary.txt
+#                  archive_results_new/accessrefinery_bdd_reducer_AM_20rs/RW/summary.txt
 #   incremental  - the new label is added on top of the already processed data,
 #                  touching only the ECs it can belong to.
 #
@@ -45,8 +45,8 @@ set -e
 
 JAR=target/accessrefinery-1.0.jar
 PRIME=results/RW_label_free
-AM_ARCHIVE=archive_results/accessrefinery_bdd_reducer_AM_20rs/RW/summary.txt
-AI_ARCHIVE=archive_results/accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt
+AM_ARCHIVE=archive_results_new/accessrefinery_bdd_reducer_AM_20rs/RW/summary.txt
+AI_ARCHIVE=archive_results_new/accessrefinery_bdd_reducer_AI_20rs/RW/summary.txt
 OUT=result/RW/summary.txt
 
 PY=$(command -v python3 || command -v python || true)
@@ -64,7 +64,7 @@ fi
 "$PY" tools/accessrefinery/make_label_free_rw.py data/RW "$PRIME"
 
 # 2. Measure. Input data/RW/ -> output result/RW/, the layout of the RW folder
-#    inside each archive_results stage directory.
+#    inside each archive_results_new stage directory.
 rm -f "$OUT"
 java -Dinc.independent=true \
      -Dmcp.labelinc=true \

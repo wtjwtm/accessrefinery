@@ -45,13 +45,13 @@ set ylabel "# of Intents" offset 1.5,0
 set xrange [0: 520]
 set yrange [0: 90]
 set ytics 20
-plot 'data/Experiment-Effectiveness-RealWorld.dat' using 2 w l ls 3 t''
+plot 'archive_data/Experiment-Effectiveness-RealWorld.dat' using 2 w l ls 3 t''
 
 unset ylabel
 set boxwidth 0.5
 set xrange [0: 13]
 set yrange [0: 5]
 set ytics 1
-plot 'data/Experiment-Correctness-Synthetic.dat' using ($0+1):2 with boxes ls 3 fs pattern 7 notitle
+plot 'archive_data/Experiment-Correctness-Synthetic.dat' using ($0+1):2 with boxes ls 3 fs pattern 7 notitle
 
 unset multiplot

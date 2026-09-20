@@ -11,29 +11,36 @@
 #   -Dopt.ai=false   disable the incremental EC engine + cross-policy factory
 #
 # The -D flags must precede -jar. Every stage runs the same four datasets and
-# archives its `result/` tree under its own directory name.
+# writes its `result/` tree to results/<stage>/, the working directory that
+# tools/figures/extract_optimization_pipeline.sh reads.
+#
+# The shipped copies of these four folders live in archive_results_new/, which
+# this script never touches; check the regenerated results/ against them.
 #
 # The RW archive (data/RW/) is the real-world corpus with the synthesized label
 # s3:::886499mir added to every statement; it is stored under the folder name
-# "RW" inside each stage's archive directory.
+# "RW" inside each stage's results directory.
 
 run_stage() {
-  local archive=$1; shift
+  local name=$1; shift
   java "$@" -jar target/accessrefinery-1.0.jar -m -r --round 20 -f data/RW/
   java "$@" -jar target/accessrefinery-1.0.jar -m -r --round 20 -f data/Scalability_05Keys/
   java "$@" -jar target/accessrefinery-1.0.jar -m -r --round 20 -f data/Scalability_06Keys/
   java "$@" -jar target/accessrefinery-1.0.jar -m -r --round 20 -f data/Scalability_07Keys/
-  mv result/ "$archive"
+  # Replace the previous working copy; the pristine one stays in
+  # archive_results_new/. `mv result dst` would nest the tree inside dst.
+  rm -rf "results/$name"
+  mv result "results/$name"
 }
 
 # BR - original batch engine, no optimization
-run_stage accessrefinery_bdd_reducer_20rs/ -Dopt.ar=false -Dopt.am=false -Dopt.ai=false
+run_stage accessrefinery_bdd_reducer_20rs -Dopt.ar=false -Dopt.am=false -Dopt.ai=false
 
 # AR - BR + essential-finding pre-filter
-run_stage accessrefinery_bdd_reducer_AR_20rs/ -Dopt.am=false -Dopt.ai=false
+run_stage accessrefinery_bdd_reducer_AR_20rs -Dopt.am=false -Dopt.ai=false
 
 # AM - AR + miner early-exit and refinement DAG
-run_stage accessrefinery_bdd_reducer_AM_20rs/ -Dopt.ai=false
+run_stage accessrefinery_bdd_reducer_AM_20rs -Dopt.ai=false
 
 # AI - AM + incremental EC engine and cross-policy shared factory (all defaults)
-run_stage accessrefinery_bdd_reducer_AI_20rs/
+run_stage accessrefinery_bdd_reducer_AI_20rs

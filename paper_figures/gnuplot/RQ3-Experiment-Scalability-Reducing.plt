@@ -47,10 +47,10 @@ set xrange[-1: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-plot 'data/Experiment-Scalability-RRI-K2.dat' using ($0+1):1 w lp ls 1 title 'Baseline(Z3)', \
+plot 'archive_data/Experiment-Scalability-RRI-K2.dat' using ($0+1):1 w lp ls 1 title 'Baseline(Z3)', \
      '' using ($0+1):2  w lp ls 2 title 'Baseline(CVC5)', \
      '' using ($0+1):4  w lp ls 3 title 'AccessRefinery(W/O All)', \
-     'data/Experiment-Scalability-RRI-K2-AI.dat' using ($0+1):1 w lp ls 7 title 'AccessRefinery(W/ All)'
+     'archive_data/Experiment-Scalability-RRI-K2-AI.dat' using ($0+1):1 w lp ls 7 title 'AccessRefinery(W/ All)'
 
 unset ylabel
 set log y
@@ -59,7 +59,7 @@ set xrange[-1: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-plot 'data/Experiment-Scalability-RRI-K3.dat' using ($0+1):1 w lp ls 1 title 'Baseline(Z3)', \
+plot 'archive_data/Experiment-Scalability-RRI-K3.dat' using ($0+1):1 w lp ls 1 title 'Baseline(Z3)', \
      '' using ($0+1):2  w lp ls 2 title 'Baseline(CVC5)', \
      '' using ($0+1):4  w lp ls 3 title 'AccessRefinery(W/O All)', \
-     'data/Experiment-Scalability-RRI-K3-AI.dat' using ($0+1):1 w lp ls 7 title 'AccessRefinery(W/ All)'
+     'archive_data/Experiment-Scalability-RRI-K3-AI.dat' using ($0+1):1 w lp ls 7 title 'AccessRefinery(W/ All)'

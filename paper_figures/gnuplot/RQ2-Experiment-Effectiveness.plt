@@ -46,7 +46,7 @@ set xrange[0: 520]
 set xtics 150
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-plot 'data/Experiment-Effectiveness-RealWorld.dat' using 2 w l ls 2 t'Before Reducing', \
+plot 'archive_data/Experiment-Effectiveness-RealWorld.dat' using 2 w l ls 2 t'Before Reducing', \
 	'' using 3 w l ls 3 t'After Reducing'
 
 set log y
@@ -58,7 +58,7 @@ set xrange[0: 15]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-plot 'data/Experiment-Effectiveness-Synthetic-K2.dat' using ($0+1):2 w lp ls 2 t'Before Reducing', \
+plot 'archive_data/Experiment-Effectiveness-Synthetic-K2.dat' using ($0+1):2 w lp ls 2 t'Before Reducing', \
 	'' using ($0+1):1 w lp ls 3 t'After Reducing'
 
 set log y
@@ -68,7 +68,7 @@ set xrange[0: 15]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-plot 'data/Experiment-Effectiveness-Synthetic-K3.dat' using ($0+1):2 w lp ls 2 t'Before Reducing', \
+plot 'archive_data/Experiment-Effectiveness-Synthetic-K3.dat' using ($0+1):2 w lp ls 2 t'Before Reducing', \
 	'' using ($0+1):1 w lp ls 3 t'After Reducing'
 
 # End of output

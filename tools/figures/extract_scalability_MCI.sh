@@ -1,5 +1,5 @@
 #!/bin/bash
-mkdir -p paper_figures/data/
+mkdir -p paper_figures/archive_data/
 process_dir() {
     local dir_name=$1
     local out_file=$2
@@ -72,8 +72,8 @@ ai_series() {
     done
 }
 
-process_dir "Scalability_05Keys" "paper_figures/data/Experiment-Scalability-MCI-K2.dat"
-process_dir "Scalability_06Keys" "paper_figures/data/Experiment-Scalability-MCI-K3.dat"
-ai_series "Scalability_05Keys" "paper_figures/data/Experiment-Scalability-MCI-K2-AI.dat" "6+7"
-ai_series "Scalability_06Keys" "paper_figures/data/Experiment-Scalability-MCI-K3-AI.dat" "6+7"
+process_dir "Scalability_05Keys" "paper_figures/archive_data/Experiment-Scalability-MCI-K2.dat"
+process_dir "Scalability_06Keys" "paper_figures/archive_data/Experiment-Scalability-MCI-K3.dat"
+ai_series "Scalability_05Keys" "paper_figures/archive_data/Experiment-Scalability-MCI-K2-AI.dat" "6+7"
+ai_series "Scalability_06Keys" "paper_figures/archive_data/Experiment-Scalability-MCI-K3-AI.dat" "6+7"
 echo "Done extracting scalability MCI data."

@@ -9,6 +9,8 @@
 #   accessrefinery_bdd_reducer_AM_20rs/  AM  (-Dopt.ai=false)
 #   accessrefinery_bdd_reducer_AI_20rs/  AI  (defaults)
 #
+# The shipped copies of these four folders are in archive_results_new/.
+#
 # summary.txt columns (1-based):
 #   1 NumberStatement          2 NumberMCI                   3 NumberRRI
 #   4 MCISolvingRoundAverage   5 TotalTimeAverage            6 MCILabelsTimeAverage
@@ -44,7 +46,7 @@ AR=results/accessrefinery_bdd_reducer_AR_20rs
 AM=results/accessrefinery_bdd_reducer_AM_20rs
 AI=results/accessrefinery_bdd_reducer_AI_20rs
 
-OUT=paper_figures/data
+OUT=paper_figures/archive_data_new
 mkdir -p "$OUT"
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT

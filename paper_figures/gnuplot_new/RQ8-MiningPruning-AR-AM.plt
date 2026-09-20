@@ -25,7 +25,7 @@ set tmargin at screen 0.90
 set rmargin screen 0.86
 
 # Output settings
-set output 'results/RQ8-MiningPruning-AR-AM.pdf'
+set output 'results_new/RQ8-MiningPruning-AR-AM.pdf'
 
 set multiplot layout 1,4 margins 0.08, 0.96, 0.31, 0.80 spacing 0.05
 
@@ -45,7 +45,7 @@ set offsets 0.5,0.5,0,0
 # --- Panel 1 (5-Keys): show key here -> legend over 1&2 ---
 set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.50, 0.985 font ',13' spacing 1.2
 set label "5-Keys" at screen 0.125, 0.76 center font ",10"
-plot 'data/p2_05.dat' using 1:2 w lp ls 1 title 'Intent Miner (original)', \
+plot 'archive_data_new/p2_05.dat' using 1:2 w lp ls 1 title 'Intent Miner (original)', \
      '' using 1:3       w lp ls 2 notitle
 
 # --- Panel 2 (6-Keys) ---
@@ -58,7 +58,7 @@ set offsets 0.5,0.5,0,0
 set key off
 unset ylabel
 set label "6-Keys" at screen 0.355, 0.76 center font ",10"
-plot 'data/p2_06.dat' using 1:2 w lp ls 1 notitle, \
+plot 'archive_data_new/p2_06.dat' using 1:2 w lp ls 1 notitle, \
      '' using 1:3       w lp ls 2 notitle
 
 # --- Panel 3 (7-Keys): show key here -> legend over 3&4 ---
@@ -70,7 +70,7 @@ set size 1, 0.9
 set offsets 0.5,0.5,0,0
 set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.95, 0.985 font ',13' spacing 1.2
 set label "7-Keys" at screen 0.585, 0.76 center font ",10"
-plot 'data/p2_07.dat' using 1:2 w lp ls 1 notitle, \
+plot 'archive_data_new/p2_07.dat' using 1:2 w lp ls 1 notitle, \
      '' using 1:3       w lp ls 2 title 'Intent Miner (mining incremental)'
 
 # --- Panel 4 (RW) ---
@@ -82,7 +82,7 @@ set size 1, 0.9
 set offsets 0,0,0,0
 set key off
 set label "RW" at screen 0.815, 0.76 center font ",10"
-plot 'data/rw_p2.dat' using 1:2 w l ls 1 notitle, \
+plot 'archive_data_new/rw_p2.dat' using 1:2 w l ls 1 notitle, \
      '' using 1:3 w l ls 2 notitle
 
 unset multiplot

@@ -37,17 +37,17 @@ set multiplot layout 1,2 margins 0.15, 0.96, 0.26, 0.63 spacing 0.09
 set ylabel "Time (s)"
 set ytics font ", 13"
 set key width -0.9 Left vertical maxrows 4 maxcols 1 reverse samplen 1 at screen 0.50, 0.99 font ',13' spacing 1.2
-plot 'data/Experiment-Scalability-MCI-RealWorld.dat' \
+plot 'archive_data/Experiment-Scalability-MCI-RealWorld.dat' \
      using ($0+1):1 smooth cumulative with lines ls 1 title 'Access Analyzer(Z3)', \
      '' using ($0+1):2 smooth cumulative with lines ls 2 title 'Access Analyzer(CVC5)', \
      '' using ($0+1):4 smooth cumulative with lines ls 3 title 'AccessRefinery(W/O All)', \
-     'data/Experiment-Scalability-RRI-RealWorld-AI.dat' using ($0+1):1 smooth cumulative with lines ls 7 title 'AccessRefinery(W/ All)'
+     'archive_data/Experiment-Scalability-RRI-RealWorld-AI.dat' using ($0+1):1 smooth cumulative with lines ls 7 title 'AccessRefinery(W/ All)'
 
 # Plot the second subplot: RRI experiment results
 unset ylabel
 set key width -0.9 Left vertical maxrows 4 maxcols 1 reverse samplen 1 at screen 1.00, 0.99 font ',13' spacing 1.2
-plot 'data/Experiment-Scalability-RRI-RealWorld.dat' \
+plot 'archive_data/Experiment-Scalability-RRI-RealWorld.dat' \
      using ($0+1):1 smooth cumulative with lines ls 1 title 'Baseline(Z3)', \
      '' using ($0+1):2 smooth cumulative with lines ls 2 title 'Baseline(CVC5)', \
      '' using ($0+1):4 smooth cumulative with lines ls 3 title 'AccessRefinery(W/O All)', \
-     'data/Experiment-Scalability-RRI-RealWorld-AI.dat' using ($0+1):1 smooth cumulative with lines ls 7 title 'AccessRefinery(W/ All)'
+     'archive_data/Experiment-Scalability-RRI-RealWorld-AI.dat' using ($0+1):1 smooth cumulative with lines ls 7 title 'AccessRefinery(W/ All)'
