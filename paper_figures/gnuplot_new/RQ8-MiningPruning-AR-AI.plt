@@ -25,30 +25,43 @@ set tmargin at screen 0.90
 set rmargin screen 0.86
 
 # Output settings
-set output 'results_new/RQ8-MiningPruning-AR-AM.pdf'
+set output 'results_new/RQ8-MiningPruning-AR-AI.pdf'
 
 set multiplot layout 1,4 margins 0.08, 0.96, 0.31, 0.80 spacing 0.05
 
 # vertical y-axis title on the far left, inside the canvas
 set label "Time (ms)" rotate by 90 at screen 0.025, 0.55 center font ",11.77"
 
-set label "# of allow statements" at screen 0.42, 0.05 center font ",11.77"
-set label "The ID of datasets" at screen 0.87, 0.05 center font ",11.77"
+set label "The ID of datasets" at screen 0.171, 0.05 center font ",11.77"
+set label "# of allow statements" at screen 0.636, 0.05 center font ",11.77"
 
+# --- Panel 1 (Real-world) ---
+set log y
+set format y "10^{%L}"
+set xrange[0: 506]
+set xtics 0,150,450
+set yrange[1e-2: 1e5]
+set size 1, 0.9
+set offsets 0,0,0,0
+set key off
+set label "Real-world" at screen 0.135, 0.76 center font ",11.77"
+plot 'archive_data_new/rerun10b/rw_p2ai.dat' using 1:2 w l ls 1 lw 4 notitle, \
+     '' using 1:3 w l ls 2 lw 4 notitle
+
+# --- Panel 2 (5-Keys): show key here -> legend over 1&2 ---
+unset yrange
 set log y
 set format y "10^{%L}"
 set xrange[0: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-
-# --- Panel 1 (5-Keys): show key here -> legend over 1&2 ---
 set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.50, 0.985 font ',11.77' spacing 1.2
-set label "5-Keys" at screen 0.125, 0.76 center font ",11.77"
-plot 'archive_data_new/p2_05.dat' using 1:2 w lp ls 1 title 'Intent Miner (original)', \
+set label "5-Keys" at screen 0.355, 0.76 center font ",11.77"
+plot 'archive_data_new/rerun10b/p2ai_05.dat' using 1:2 w lp ls 1 title 'Intent Miner (original)', \
      '' using 1:3       w lp ls 2 notitle
 
-# --- Panel 2 (6-Keys) ---
+# --- Panel 3 (6-Keys) ---
 set log y
 set format y "10^{%L}"
 set xrange[0: 16]
@@ -57,11 +70,11 @@ set size 1, 0.9
 set offsets 0.5,0.5,0,0
 set key off
 unset ylabel
-set label "6-Keys" at screen 0.355, 0.76 center font ",11.77"
-plot 'archive_data_new/p2_06.dat' using 1:2 w lp ls 1 notitle, \
+set label "6-Keys" at screen 0.585, 0.76 center font ",11.77"
+plot 'archive_data_new/rerun10b/p2ai_06.dat' using 1:2 w lp ls 1 notitle, \
      '' using 1:3       w lp ls 2 notitle
 
-# --- Panel 3 (7-Keys): show key here -> legend over 3&4 ---
+# --- Panel 4 (7-Keys): show key here -> legend over 3&4 ---
 set log y
 set format y "10^{%L}"
 set xrange[0: 16]
@@ -69,20 +82,8 @@ set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
 set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.95, 0.985 font ',11.77' spacing 1.2
-set label "7-Keys" at screen 0.585, 0.76 center font ",11.77"
-plot 'archive_data_new/p2_07.dat' using 1:2 w lp ls 1 notitle, \
+set label "7-Keys" at screen 0.815, 0.76 center font ",11.77"
+plot 'archive_data_new/rerun10b/p2ai_07.dat' using 1:2 w lp ls 1 notitle, \
      '' using 1:3       w lp ls 2 title 'Intent Miner (Incremental MCP)'
-
-# --- Panel 4 (RW) ---
-set log y
-set format y "10^{%L}"
-set xrange[0: 506]
-set xtics 0,150,450
-set size 1, 0.9
-set offsets 0,0,0,0
-set key off
-set label "RW" at screen 0.825, 0.76 center font ",11.77"
-plot 'archive_data_new/rw_p2.dat' using 1:2 w l ls 1 lw 4 notitle, \
-     '' using 1:3 w l ls 2 lw 4 notitle
 
 unset multiplot

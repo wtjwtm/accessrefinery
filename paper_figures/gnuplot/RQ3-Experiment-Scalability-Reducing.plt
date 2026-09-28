@@ -1,4 +1,4 @@
-set terminal pdfcairo font "Times New Roman,13" linewidth 1 rounded fontscale 1.35 size 26cm, 11cm
+set terminal pdfcairo font "Times New Roman,11.27" linewidth 1 rounded fontscale 1.35 size 26cm, 9cm
 
 # Line style for axes
 set style line 80 lt rgb "#808080"
@@ -25,8 +25,7 @@ set xtics font ", 11"
 set ytics font ", 11"
 set boxwidth 0.9
 
-# Set key and margin properties
-set key maxrows 2 reverse samplen 1 at screen 0.5, 0.92 center font ',13' spacing 1.0
+set key width -0.9 Left vertical maxrows 2 maxcols 2 reverse samplen 1 at screen 1.0, 1.00 font ',11.27' spacing 1.0
 set bmargin screen 0.33
 set tmargin at screen 0.9
 set rmargin screen 0.87
@@ -34,11 +33,11 @@ set rmargin screen 0.87
 # Output settings
 set output 'results/RQ3-Experiment-Scalability-Reducing.pdf'
 
-set label "# of Allow statements" at screen 0.54, 0.06 center font ",13"
-set label "5-Keys" at screen 0.183, 0.71 center font ",13"
-set label "6-Keys" at screen 0.651, 0.71 center font ",13"
+set label "# of Allow statements" at screen 0.54, 0.06 center font ",11.27"
+set label "5-Keys" at screen 0.175, 0.75 center font ",11.27"
+set label "6-Keys" at screen 0.690, 0.75 center font ",11.27"
 
-set multiplot layout 1,2 margins 0.13, 0.96, 0.31, 0.76 spacing 0.09
+set multiplot layout 1,2 margins 0.13, 0.96, 0.31, 0.80 spacing 0.20
 
 set log y
 set format y "10^{%L}"

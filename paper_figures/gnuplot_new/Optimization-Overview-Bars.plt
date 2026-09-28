@@ -51,12 +51,12 @@ set object 2 rect from screen 0.218, 0.956 to screen 0.246, 0.982 fc rgb "#2b8cb
 set object 3 rect from screen 0.450, 0.956 to screen 0.478, 0.982 fc rgb "#74c476" fillstyle pattern 4 border lc rgb "#74c476" lw 1
 set object 4 rect from screen 0.710, 0.956 to screen 0.738, 0.982 fc rgb "#00A000" fillstyle pattern 1 border lc rgb "#00A000" lw 1
 set label 20 "Original"          at screen 0.114, 0.970 left font ",13"
-set label 21 "Purning Reducer"   at screen 0.254, 0.970 left font ",13"
+set label 21 "Pruning Reducer"   at screen 0.254, 0.970 left font ",13"
 set label 22 "Incremental Miner" at screen 0.486, 0.970 left font ",13"
 set label 23 "Incremental MCP"   at screen 0.746, 0.970 left font ",13"
 
 # --- Panel 1 (5-Keys) ---
-set label "5-Keys" at screen 0.155, 0.78 center font ",10"
+set label "5-Keys" at screen 0.155, 0.78 center font ",13"
 plot 'archive_data_new/p_bar_ix_05.dat' using ($1-0.235):2 w boxes ls 1 fs solid 1.0 noborder title 'BR', \
      '' using ($1-0.075):3                    w boxes ls 2 fs pattern 5 border title 'AR', \
      '' using ($1+0.085):4                    w boxes ls 3 fs pattern 4 border title 'AM', \
@@ -70,7 +70,7 @@ set yrange[1: 100000]
 set size 1, 0.9
 set offsets 0,0,0,0
 set key off
-set label "6-Keys" at screen 0.385, 0.78 center font ",10"
+set label "6-Keys" at screen 0.385, 0.78 center font ",13"
 plot 'archive_data_new/p_bar_ix_06.dat' using ($1-0.235):2 w boxes ls 1 fs solid 1.0 noborder notitle, \
      '' using ($1-0.075):3                    w boxes ls 2 fs pattern 5 border notitle, \
      '' using ($1+0.085):4                    w boxes ls 3 fs pattern 4 border notitle, \
@@ -84,7 +84,7 @@ set yrange[1: 100000]
 set size 1, 0.9
 set offsets 0,0,0,0
 set key off
-set label "7-Keys" at screen 0.61, 0.78 center font ",10"
+set label "7-Keys" at screen 0.61, 0.78 center font ",13"
 plot 'archive_data_new/p_bar_ix_07.dat' using ($1-0.235):2 w boxes ls 1 fs solid 1.0 noborder notitle, \
      '' using ($1-0.075):3                    w boxes ls 2 fs pattern 5 border notitle, \
      '' using ($1+0.085):4                    w boxes ls 3 fs pattern 4 border notitle, \
@@ -102,7 +102,7 @@ set yrange[1e-2: 1e5]
 set size 1, 0.9
 set offsets 0,0,0,0
 set key off
-set label "RW" at screen 0.85, 0.78 center font ",10"
+set label "RW" at screen 0.86, 0.78 center font ",13"
 plot 'archive_data_new/rw_br_ai.dat' using 1:2 w l ls 1 lw 2 notitle, \
      '' using 1:3 w l ls 4 lw 2 notitle
 

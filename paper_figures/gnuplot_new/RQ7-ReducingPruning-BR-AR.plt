@@ -1,4 +1,4 @@
-set terminal pdfcairo font "Times New Roman,13" linewidth 1 rounded fontscale 1.35 size 33.8cm, 9cm
+set terminal pdfcairo font "Times New Roman,11.77" linewidth 1 rounded fontscale 1.35 size 33.8cm, 9cm
 
 # Set background and axes styles
 set style line 80 lt rgb "#808080"
@@ -30,26 +30,41 @@ set output 'results_new/RQ7-ReducingPruning-BR-AR.pdf'
 set multiplot layout 1,4 margins 0.08, 0.96, 0.31, 0.80 spacing 0.05
 
 # vertical y-axis title on the far left, inside the canvas
-set label "Time (ms)" rotate by 90 at screen 0.025, 0.55 center font ",13"
+set label "Time (ms)" rotate by 90 at screen 0.025, 0.55 center font ",11.77"
 
-set label "# of allow statements" at screen 0.42, 0.05 center font ",13"
-set label "The ID of datasets" at screen 0.87, 0.05 center font ",13"
+set label "The ID of datasets" at screen 0.171, 0.05 center font ",11.77"
+set label "# of allow statements" at screen 0.636, 0.05 center font ",11.77"
 
 set log y
 set format y "10^{%L}"
 set yrange[1e-2: 1e5]
+# Only every other decade is labelled: eight labels 10^-2..10^5 on a 4.4 cm
+# panel were too dense.
+set ytics (1e-2, 1e0, 1e2, 1e4)
+
+# --- Panel 1 (Real-world) ---
+set xrange[0: 506]
+set xtics 0,150,450
+set size 1, 0.9
+set offsets 0,0,0,0
+set key off
+set label "Real-world" at screen 0.135, 0.76 center font ",11.77"
+plot 'archive_data_new/rw_p1.dat' using 1:2 w l ls 1 lw 4 notitle, \
+     '' using 1:3 w l ls 2 lw 4 notitle
+
+# --- Panel 2 (5-Keys): show key here -> legend over 2&3 ---
+set log y
+set format y "10^{%L}"
 set xrange[0: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-
-# --- Panel 1 (5-Keys): show key here -> legend over 1&2 ---
-set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.50, 0.985 font ',13' spacing 1.2
-set label "5-Keys" at screen 0.125, 0.76 center font ",10"
-plot 'archive_data_new/p1_05.dat' using 1:2 w lp ls 1 title 'Intent Reducer (orginal)', \
+set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.50, 0.985 font ',11.77' spacing 1.2
+set label "5-Keys" at screen 0.355, 0.76 center font ",11.77"
+plot 'archive_data_new/p1_05.dat' using 1:2 w lp ls 1 title 'Intent Reducer (original)', \
      '' using 1:3       w lp ls 2 notitle
 
-# --- Panel 2 (6-Keys) ---
+# --- Panel 3 (6-Keys) ---
 set log y
 set format y "10^{%L}"
 set xrange[0: 16]
@@ -58,32 +73,20 @@ set size 1, 0.9
 set offsets 0.5,0.5,0,0
 set key off
 unset ylabel
-set label "6-Keys" at screen 0.355, 0.76 center font ",10"
+set label "6-Keys" at screen 0.585, 0.76 center font ",11.77"
 plot 'archive_data_new/p6_br_ar.dat' using 1:2 w lp ls 1 notitle, \
      '' using 1:3       w lp ls 2 notitle
 
-# --- Panel 3 (7-Keys): show key here -> legend over 3&4 ---
+# --- Panel 4 (7-Keys): show key here -> legend over 3&4 ---
 set log y
 set format y "10^{%L}"
 set xrange[0: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.95, 0.985 font ',13' spacing 1.2
-set label "7-Keys" at screen 0.585, 0.76 center font ",10"
+set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.95, 0.985 font ',11.77' spacing 1.2
+set label "7-Keys" at screen 0.815, 0.76 center font ",11.77"
 plot 'archive_data_new/p1_07.dat' using 1:2 w lp ls 1 notitle, \
-     '' using 1:3       w lp ls 2 title 'Intent Reducer (reducing purning)'
-
-# --- Panel 4 (RW) ---
-set log y
-set format y "10^{%L}"
-set xrange[0: 506]
-set xtics 0,150,450
-set size 1, 0.9
-set offsets 0,0,0,0
-set key off
-set label "RW" at screen 0.815, 0.76 center font ",10"
-plot 'archive_data_new/rw_p1.dat' using 1:2 w l ls 1 notitle, \
-     '' using 1:3 w l ls 2 notitle
+     '' using 1:3       w lp ls 2 title 'Intent Reducer (Pruning Reducer)'
 
 unset multiplot

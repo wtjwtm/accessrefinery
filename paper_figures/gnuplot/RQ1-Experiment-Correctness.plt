@@ -36,7 +36,7 @@ set boxwidth 0.9
 
 # Set labels
 set label "The ID of datasets" at screen 0.54, 0.06 center font ",13"
-set label "Real-world" at screen 0.185, 0.90 center font ",13"
+set label "Real-world" at screen 0.195, 0.90 center font ",13"
 set label "Synthetic" at screen 0.655, 0.90 center font ",13"
 
 # Multiplot layout and axis settings

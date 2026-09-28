@@ -44,7 +44,7 @@ set offsets 0.5,0.5,0,0
 
 # --- Panel 1 (5-Keys): show key here -> legend over 1&2 ---
 set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.40, 0.985 font ',13' spacing 1.2
-set label "5-Keys" at screen 0.125, 0.76 center font ",10"
+set label "5-Keys" at screen 0.125, 0.76 center font ",13"
 plot 'archive_data_new/p3_05.dat' using 1:2 w lp ls 1 title 'MCILabels (original)', \
      '' using 1:3       w lp ls 2 notitle
 
@@ -57,7 +57,7 @@ set size 1, 0.9
 set offsets 0.5,0.5,0,0
 set key off
 unset ylabel
-set label "6-Keys" at screen 0.355, 0.76 center font ",10"
+set label "6-Keys" at screen 0.355, 0.76 center font ",13"
 plot 'archive_data_new/p3_06.dat' using 1:2 w lp ls 1 notitle, \
      '' using 1:3       w lp ls 2 notitle
 
@@ -69,7 +69,7 @@ set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
 set key width -0.9 Left vertical maxrows 1 reverse samplen 1 at screen 0.85, 0.985 font ',13' spacing 1.2
-set label "7-Keys" at screen 0.585, 0.76 center font ",10"
+set label "7-Keys" at screen 0.585, 0.76 center font ",13"
 plot 'archive_data_new/p3_07.dat' using 1:2 w lp ls 1 notitle, \
      '' using 1:3       w lp ls 2 title 'MCILabels (increment)'
 
@@ -81,7 +81,7 @@ set xtics 0,150,450
 set size 1, 0.9
 set offsets 0,0,0,0
 set key off
-set label "RW" at screen 0.815, 0.76 center font ",10"
+set label "RW" at screen 0.825, 0.76 center font ",13"
 plot 'archive_data_new/rw_p3.dat' using 1:2 w l ls 1 notitle, \
      '' using 1:3 w l ls 2 notitle
 
