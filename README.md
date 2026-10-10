@@ -15,12 +15,11 @@ by [Ning Kang](https://xjtu-netverify.github.io/people/nkang/), [Peng Zhang](htt
 
 Moreover, the artifact includes the full implementations of *AccessRefinery* and the baseline reimplementation of *Access Analyzer*, along with datasets, archived results, experiment scripts, and plotting scripts to reproduce the results reported in the paper. For technical details, see our [FSE 2026 paper](https://xjtu-netverify.github.io/papers/AccessRefinery/accessrefinery_final_version.pdf).
 
-> The code for the conference version has received the **Available** and **Reusable** badges.
+> The [code](XXX) for the conference version has received the **Available** and **Reusable** badges.
 
 ### Journal Version
 
 We observe that EC partitioning dominates the overall time for both intent mining and intent reduction, accounting for 71--98% and 16--93% of the total time, respectively.
-
 We further extend our previous work published at FSE 2026 by accelerating EC partitioning for both intent mining and intent reduction. The proposed optimizations provide an additional approximately 10× speedup for **AccessRefinery**.
 
 - For intent mining, we extend MCP to support incremental preprocessing, enabling the results of EC partitioning to be efficiently updated as new variables or values are added. This technique is denoted as **Incremental MCP**.
@@ -207,8 +206,8 @@ Command-line options:
 - `-f, --file <path>` : Input path for policy files (must be under `data/`).
 - `-s, --sat` : Use SAT to encode bit-vectors (default is BDD).
 - `--round <number>` : Number of mining rounds (to reduce experimental bias).
-- **`[Journal Extension]`** `` `-i, --increment` : Enable *Incremental MCP*.
-- **`[Journal Extension]`** `` `-p, --pruning` : Enable *Intent Pruning*.
+- **`[Journal Extension]`** `-i, --increment` : Enable *Incremental MCP*.
+- **`[Journal Extension]`** `-p, --pruning` : Enable *Intent Pruning*.
 
 **Example:**
 
@@ -237,105 +236,51 @@ In addition, one file is generated in the current path:
 
 - `accessrefinery.log` : Records the running log.
 
-### Using reimplemented Access Analzyer (Baseline)
-
-see [AccessAnalyzerUsage.md](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/docs/AccessAnalyzerUsage.md)
-
 ## Running Experiments
 
 This section describes (1) how to reproduce the results in `results/`, and (2) how to reproduce to the corresponding figures, tables, and conclusions in the paper from `results/`.
 
 *We omit the results for the real-world datasets because of commercial restrictions.*
 
-### Reproducing  Results
+**`[Journal Extension]`** *Here, we present only the experiments about the journal version. 
+For the experiments about the conference version, see [Github]().*
 
-- **Reproducing AccessRefinery Results**
+### Peproducing Results
 
-Running *AccessRefinery* with MiniSAT backend takes a long time. You can skip it by running the following commands to directly reuse the data in the `archive_results/` directory.
+First, we need to collect the results from Access Analyzer and AccessRefinery. For instructions on how to obtain these results, see [README-FSE26](README-FSE26.md/#reproducing--results).
 
 ```shell
-# skip running AccessRefinery with the MiniSAT backend
 mkdir -p results/ 
+# copy results if Access Analzyer with CVC5 and Z3 backend
+cp -r archive_results/accessanalyzer_*rs results/
+# copy results of AccessRefinery with the MiniSAT backend
 cp -r archive_results/accessrefinery_sat_*rs results/
-
-# skip running AccessRefinery with the BDD backend
-mkdir -p results/ 
+# copy results of AccessRefinery with the BDD backend
 cp -r archive_results/accessrefinery_bdd_*rs results/
 ```
 
-The following scripts invoke `target/accessrefinery-1.0.jar`.
+You can skip running *AccessRefinery* with *Incremental MCP* and *Intent Pruning* by running the following commands to directly reuse the data in the `archive_results_journal/` directory.
 
-```shell
-# The execution takes about 7 minutes.
-sh tools/accessrefinery/running_bdd_miner.sh
-
-# The execution takes about 8 minutes.
-sh tools/accessrefinery/running_bdd_reducer.sh
-
-# The execution takes about 80 minutes.
-sh tools/accessrefinery/running_sat_miner.sh
-
-# The execution takes >12 hours.
-sh tools/accessrefinery/running_sat_reducer.sh
 ```
-
-Expected Output:
-
-- `results/`: All experiments are run for 10 rounds, and average time is reported.
-
-  - `accessrefinery_bdd_miner_10rs/`: intent mining using JavaBDD.
-  - `accessrefinery_sat_miner_10rs/`: intent mining using MiniSAT.
-  - `accessrefinery_bdd_reducer_10rs/`: intent mining and reduction using JavaBDD.
-  - `accessrefinery_sat_reducer_3rs/`: intent mining and reduction using MiniSAT (limited to 3 rounds due to slow execution).
-
-- **`[Journal Extension]`** **Reproducing AccessRefinery Results in Journal Version**
-
-- **Reproducing Reimplemented Access Analyzer Results**
-
-This section takes a long time to run. You can skip it by running the following commands to directly reuse the data in the `archive_results/` directory.
-
 ```shell
-mkdir -p results/ 
-cp -r archive_results/accessanalyzer_*rs results/
+cp -r archive_results_journal/accessanalyzer_*rs results/
 ```
 
 The following scripts invoke `target/accessanalyzer-1.0.jar`.
 
 ```shell
-# The execution takes about 5 hours.
-bash tools/accessanalyzer-reimpl/mining_miner_cvc5.sh
-
-# The execution takes about 4 hours.
-# The time is less than that of AccessRefinery, because of an early timeout.
-bash tools/accessanalyzer-reimpl/mining_reducer_cvc5.sh
-
-# The execution takes about 4 hours
-bash tools/accessanalyzer-reimpl/mining_miner_z3.sh
-
-# The execution takes about 4 hours
-bash tools/accessanalyzer-reimpl/mining_reducer_z3.sh
+# The execution takes about 80 minutes.
+sh tools/accessrefinery/running_bdd_reducer_20rs.sh
 ```
 
 *Note: `Ctrl + C` or `Ctrl + Z` end the scripts*
 
 Expected Output:
 
-- `results/`: All results run for one round due to limited execution time.
-  - `accessanalyzer_z3_miner_1rs/`: intent mining using Z3 Solver.
-  - `accessanalyzer_cvc5_miner_1rs/`: intent mining using CVC5 Solver.
-  - `accessanalyzer_z3_reducer_1rs/`: intent mining and reduction using Z3 Solver.
-  - `accessanalyzer_cvc5_reducer_1rs/`: intent mining and reduction using CVC5 Solver.
-
-- **Reproducing AWS Access Analyzer via CLI Results**
-
-Because invoking Access Analyzer via CLI requires a private AWS account, we do not provide this step. However, we still provide scripts for developers; see [AccessAnalyzerCLI.md](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/baselines/accessanalyzer-cli/AccessAnalyzerCLI.md) for details.
-
- We strongly recommend skipping this step and directly using the results in `archive_results/accessanalyzer_cli/`, since the setup is complex and requires AWS account registration, billing configuration, and CLI credential setup.
-
-```shell
-mkdir -p results/
-cp -r archive_results/accessanalyzer_cli/ results/accessanalyzer_cli/
-```
+- `results/`: All experiments are run for 20 rounds, and average time is reported.
+  - `accessrefinery_bdd_reducer_IncrementalMCP_20rs/`: applying *Incremental MCP* for intent mining.
+  - `accessrefinery_bdd_reducer_IntentPruningt_20rs/`: applying *Intent Pruning* for intent reduction.
+  - `accessrefinery_bdd_reducer_Both_20rs/`: applying *Incremental MCP* and *Intent Pruning* at the same time.
 
 ### Reproducing Claims in the Paper
 
@@ -347,129 +292,86 @@ Before plotting, we recommend clearing previously used plotting data with:
 sh tools/clean_plotting.sh
 ```
 
-#### Verifying Correctness of MCP (Section 6.1)
+#### Plotting Figure 14 (Section 7.3)
 
 ```shell
-# The execution takes about 3 minutes.
-mvn install
-mvn test -pl ./accessrefinery/mcp -Dtest=MCPTest.java#testComplexSATOperations
-```
-
-```text
-[INFO] ------------------------------------------------------------------------
-[INFO] BUILD SUCCESS
-[INFO] ------------------------------------------------------------------------
-[INFO] Total time:  1.212 s
-[INFO] Finished at: 2026-04-10T17:10:38+08:00
-[INFO] ------------------------------------------------------------------------
-```
-
-#### Plotting Figure 10（Section 6.1）
-
-```shell
-bash ./tools/figures/extract_correctness_synthetic.sh
-(cd paper_figures && gnuplot gnuplot/RQ1-Experiment-Correctness.plt)
+# ... /to yijia
 ```
 
 Expected Output:
 
-- `paper_figures/results/RQ1-Experiment-Correctness.pdf`
+- 
 
-#### Verifying Correctness of Intent Miner (Section 6.1)
+
+#### Plotting Figure 15 (Section 7.3)
 
 ```shell
-# Compare AccessRefinery and AWS Access Analyzer via CLI
-sh tools/accessrefinery/running_accessrefinery_miner_compare.sh
-
-# Compare AccessRefinery and reimplemented Access Analyzer
-sh tools/accessanalyzer-reimpl/running_accessanalyzer_compare_with_refinery.sh
+#... /to yijia
 ```
 
 Expected Output:
 
-- `results/`
-  - `accessrefinery_miner_compare_results/*.log`
-  - `accessanalyzer_miner_compare_results_with_refinery/*.log`
+- 
 
-#### Verifying Correctness of Intent Reducer (Section 6.1)
+#### Plotting Figure 16 (Section 7.4)
 
 ```shell
-# The execution takes about 5 hour.
-bash ./tools/accessanalyzer-reimpl/check_coverage.sh
+#... /to yijia
 ```
 
 Expected Output:
 
-- `results/coverage_check/`
-  - `Correctness/*_coverage.log`
-  - `Scalability_05Keys/*_coverage.log`
-  - `Scalability_06Keys/*_coverage.log`
+- 
 
-#### Plotting Figure 11 (Section 6.2)
+#### Plotting Figure 18 (Section 7.7)
 
 ```shell
-bash tools/figures/extract_effectiveness_synthetic.sh
-(cd paper_figures && gnuplot gnuplot/RQ2-Experiment-Effectiveness.plt)
+#... /to yijia
 ```
 
 Expected Output:
 
-- `paper_figures/results/RQ2-Experiment-Effectiveness.pdf`
+- 
 
-#### Plotting Figure 12 (Section 6.3)
+#### Plotting Figure 19 (Section 7.7)
 
 ```shell
-bash tools/figures/extract_scalability_MCI.sh
-(cd paper_figures && gnuplot gnuplot/RQ3-Experiment-Scalability-Mining.plt)
+#... /to yijia
 ```
 
 Expected Output:
 
-- `paper_figures/results/RQ3-Experiment-Scalability-Mining.pdf`
+- 
 
-#### Plotting Figure 13 (Section 6.3)
+#### Plotting Figure 19 (Section 7.7)
 
 ```shell
-bash tools/figures/extract_scalability_RRI.sh
-(cd paper_figures && gnuplot gnuplot/RQ3-Experiment-Scalability-Reducing.plt)
+#... /to yijia
 ```
 
 Expected Output:
 
-- `paper_figures/results/RQ3-Experiment-Scalability-Reducing.pdf`
+- 
 
-#### Plotting Figure 15 (Section 6.5)
+
+#### Plotting Figure 20 (Section 7.8)
 
 ```shell
-bash tools/figures/extract_scalability_RRI.sh
-(cd paper_figures && gnuplot gnuplot/RQ5-Experiment-MicroBenchmark-Reducing.plt)
+#... /to yijia
 ```
 
 Expected Output:
 
-- `paper_figures/results/RQ5-Experiment-MicroBenchmark-Reducing.pdf`
+- 
 
-#### Plotting Table 2 (Section 6.6)
-
-```shell
-bash tools/figures/generate_table.sh
-```
-
-Expected Output:
-
-```text
-3    9     192.1ms    28.0ms    77.5μs    54.5ms
-6    36    756.3ms    245.3ms   64.4μs    189.7ms
-9    81    1517.3ms   987.0ms   104.1μs   394.3ms
-12   144   3122.2ms   4979.3ms  190.2μs   1011.7ms
-15   225   4545.8ms   N/Ams     274.5μs   1741.5ms
-```
 
 ## For Developers
 
 - We develop *AccessRefinery* in VS Code, see [VSCODE.md](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/docs/vscode-develop/VSCODE.md).
 
 - We provide Javadoc documentation for *MCP* in `docs/mcp-javadoc/`, available on [GitHub Pages](https://916267142.github.io/mcp.github.io/), and for *AccessRefinery* in `docs/accessrefinery-javadoc/`, available on [GitHub Pages](https://916267142.github.io/accessrefinery.github.io/).
+
+> Note: The comments and Javadoc were generated by GitHub Copilot; the source code was not AI-generated.
 
 ## License
 
