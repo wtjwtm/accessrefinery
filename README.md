@@ -266,13 +266,13 @@ You can skip running *AccessRefinery* with *Incremental MCP* and *Intent Pruning
 cp -r archive_results_journal/accessanalyzer_*rs results/
 ```
 
+Or, you can obtain the results of *AccessRefinery* with optimizations using the following commands.
 The following scripts invoke `target/accessanalyzer-1.0.jar`.
 
 ```shell
 # The execution takes about 80 minutes.
 sh tools/accessrefinery/running_bdd_reducer_20rs.sh
 ```
-
 *Note: `Ctrl + C` or `Ctrl + Z` end the scripts*
 
 Expected Output:
