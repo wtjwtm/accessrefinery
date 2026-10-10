@@ -35,11 +35,15 @@ public class MCPIntent {
      */
     private static MCPFactory _mcpFactory;
     /**
-     * -Dopt.refinement: whether getMCPNode() may build on the parent's node via the refinement DAG.
-     * Cached once because getMCPNode() is on the miner's hot path and system properties are
-     * only set at JVM startup.
+     * Whether getMCPNode() may build on the parent's node via the refinement DAG, i.e.
+     * whether the Incremental MCP stage ({@code -i, --increment}) is on. Read at the use
+     * site rather than cached in a static final: the stage is selected by CmdRun at run
+     * time, so a cached copy would freeze whatever the flag held when this class happened
+     * to be loaded.
      */
-    private static final boolean OPT_REFINEMENT = Parameter.isOptRefinement();
+    private static boolean optRefinement() {
+        return Parameter.isOptRefinement();
+    }
     /**
      * Domain values for this intent.
      */
@@ -213,7 +217,7 @@ public class MCPIntent {
         if(_mcpNode != null) {
             return _mcpNode;
         }
-        if(OPT_REFINEMENT && _parentIntent != null && _refinedKey != null) {
+        if(optRefinement() && _parentIntent != null && _refinedKey != null) {
             // Incremental (refinement-DAG): this intent differs from its parent in exactly one
             // domain (refinement), so child.node = parentNode ∧ var(refinedKey). Because refinement
             // narrows the domain (var(child) ⊆ var(parent)), the conjunction with the parent node

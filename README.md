@@ -49,8 +49,7 @@ Since *AWS Access Analyzer* is not open source and provides only a Command-Line 
 - `docs/`:
   - `mcp-javadoc`: Javadoc for *MCP*.
   - `accessrefinery-javadoc`: Javadoc for *AccessRefinery*.
-- `paper_figures/`: Scripts for plotting the figures in the paper.
-- `archive_results/`: Archived experimental results.
+- `paper_figures_journal/`: Scripts for plotting the figures in the paper.
 - **`[Journal Extension]`** `archive_results_journal/`:  Archived experimental result of journal version.
 
 
@@ -170,7 +169,7 @@ public class Main {
 }
 ```
 
-The code is included in [MCPFactoryTest.java](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/accessrefinery/mcp/src/test/java/org/mcp/core/MCPFactoryTest.java), and *MCP* is imported as a Maven dependency. Running the following command automatically executes this example.
+The code is included in [MCPFactoryTest.java](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/accessrefinery/mcp/src/test/java/org/iam/core/MCPFactoryTest.java), and *MCP* is imported as a Maven dependency. Running the following command automatically executes this example.
 
 ```shell
 # The execution takes about 3 minutes.
@@ -205,8 +204,9 @@ Command-line options:
 - `-f, --file <path>` : Input path for policy files (must be under `data/`).
 - `-s, --sat` : Use SAT to encode bit-vectors (default is BDD).
 - `--round <number>` : Number of mining rounds (to reduce experimental bias).
-- **`[Journal Extension]`** `-i, --increment` : Enable *Incremental MCP*.
 - **`[Journal Extension]`** `-p, --pruning` : Enable *Intent Pruning*.
+- **`[Journal Extension]`** `-o, --mining-optimized` : Enable the intent-mining optimization alone.
+- **`[Journal Extension]`** `-i, --increment` : Enable *Incremental MCP*.
 
 **Example:**
 
@@ -237,17 +237,17 @@ In addition, one file is generated in the current path:
 
 ## Running Experiments
 
-This section describes (1) how to reproduce the results in `results/`, and (2) how to reproduce to the corresponding figures, tables, and conclusions in the paper from `results/`.
+This section describes (1) how to reproduce the results in `results/`, and (2) how to reproduce the corresponding figures, tables, and conclusions in the paper from `results/`.
 
 *We omit the results for the real-world datasets because of commercial restrictions.*
 
-**`[Journal Extension]`** *Here, we present only the experiments about the journal version. 
-For the experiments about the conference version, see [Github]().*
+**`[Journal Extension]`** Here, we present only the experiments about the journal version: the redraws of the scalability figures (RQ3 and RQ4, Figures 14-16) together with the three-stage optimization pipeline **Original → Pruning Reducer → Incremental MCP** (RQ7 and RQ8, Figures 18-20). For the experiments about the conference version, see [README-FSE26.md](README-FSE26.md).
 
-### Peproducing Results
+`archive_results_journal/` holds the immutable results shipped with this artifact, and `results/` is the working directory that the experiment scripts write to and that the extraction scripts read from. Every experiment below can therefore either be run or skipped by copying the corresponding archive folder into `results/`.
 
-First, we need to copy the archived results of *Access Analyzer* and *AccessRefinery* without optimizations. 
-For instructions on how to obtain these results, see [README-FSE26](README-FSE26.md/#reproducing--results).
+### Reproducing Results
+
+First, we need to copy the archived results of Access Analyzer and AccessRefinery without optimizations. For instructions on how to obtain these results, see README-FSE26.
 
 ```shell
 mkdir -p results/ 
@@ -259,111 +259,120 @@ cp -r archive_results/accessrefinery_sat_*rs results/
 cp -r archive_results/accessrefinery_bdd_*rs results/
 ```
 
-You can skip running *AccessRefinery* with *Incremental MCP* and *Intent Pruning* by running the following commands to directly reuse the data in the `archive_results_journal/` directory.
-
-```
-```shell
-cp -r archive_results_journal/accessanalyzer_*rs results/
-```
-
-Or, you can obtain the results of *AccessRefinery* with optimizations using the following commands.
-The following scripts invoke `target/accessanalyzer-1.0.jar`.
+You can skip running AccessRefinery with Incremental MCP and Intent Pruning by running the following commands to directly reuse the data in the archive_results_journal/ directory.
 
 ```shell
-# The execution takes about 80 minutes.
-sh tools/accessrefinery/running_bdd_reducer_20rs.sh
+cp -r archive_results_journal/accessrefinery_bdd_reducer_*rs results/
 ```
-*Note: `Ctrl + C` or `Ctrl + Z` end the scripts*
+
+The optimization pipeline is run by one script, which invokes `target/accessrefinery-1.0.jar` once per stage, with the stage selected on the command line — no stage flag is *Original*, `-p` is *Pruning Reducer*, `-o` is *MiningOptimized* and `-p -i` is *Incremental MCP* (see [Using AccessRefinery](#using-accessrefinery)). It takes the two 20-round runs that Figure 18 reads and the four 10-round runs that Figures 19 and 20 read:
+
+```shell
+# The execution takes about 110 minutes.
+bash tools/accessrefinery/running_optimization_pipeline.sh
+```
+
+*Note: `Ctrl + C` or `Ctrl + Z` end the scripts.*
 
 Expected Output:
 
-- `results/`: All experiments are run for 20 rounds, and average time is reported.
-  - `accessrefinery_bdd_reducer_IncrementalMCP_20rs/`: applying *Incremental MCP* for intent mining.
-  - `accessrefinery_bdd_reducer_IntentPruningt_20rs/`: applying *Intent Pruning* for intent reduction.
-  - `accessrefinery_bdd_reducer_Both_20rs/`: applying *Incremental MCP* and *Intent Pruning* at the same time.
+- `results/`: one folder per stage and per round count, each holding the same two datasets, `Scalability_05Keys` and `Scalability_06Keys`, with one `summary.txt` per dataset, reporting the average over the run's rounds. The real-world `RW` folder the script also reads is not shipped, for the reason above.
+  - `accessrefinery_bdd_reducer_Original_{10,20}rs/`: the pipeline with no optimization.
+  - `accessrefinery_bdd_reducer_PruningReducer_{10,20}rs/`: *Original* + *Intent Pruning*, the essential-finding pre-filter in the intent reducer.
+  - `accessrefinery_bdd_reducer_IncrementalMCP_10rs/`: *Pruning Reducer* + *Incremental MCP*, the miner's refinement-DAG node construction and the incremental EC engine below it.
+  - `accessrefinery_bdd_reducer_MiningOptimized_10rs/`: the mining-phase search optimization alone, without the essential-finding pre-filter and without the incremental EC engine. It is not one of the three stages — on the command line it is `-o` on its own — and it is the configuration Figure 20 reads.
 
 ### Reproducing Claims in the Paper
 
-After generating `results/`, we show how to reproduce the claims in the paper with scripts. 
+After generating `results/`, we show how to reproduce the claims in the paper with scripts. The claims covered here are the scalability of intent mining and reduction (RQ3, RQ4) and the three-stage optimization pipeline (RQ7, RQ8), i.e. Figures 14, 15, 16, 18, 19 and 20. [REPRODUCTION.md](REPRODUCTION.md) documents, claim by claim, the exact data each figure reads and the script that extracts it.
 
-Before plotting, we recommend clearing previously used plotting data with:
+The real-world `RW` corpus is not public, for commercial reasons, so the pipeline cannot be re-run over it. Its plotting data ships with the artifact, and the extraction script below skips it, leaving the archived files in place.
+
+The plotting data of these figures is extracted from `results/` by one script. It **overwrites** the files it writes into `paper_figures_journal/data/`: the six figure files of Figures 18, 19 and 20 whole, and Figures 14 and 15 in place. Running it therefore replaces the shipped copies with numbers from your own run.
+
+Before plotting, we recommend clearing previously rendered PDFs so that every figure below is regenerated rather than reused:
 
 ```shell
 sh tools/clean_plotting.sh
 ```
 
+Then extract the plotting data:
+
+```shell
+bash tools/figures/extract_optimization_pipeline.sh
+```
+
+The parts of `data/` it leaves alone are the ones that cannot be regenerated: the real-world panels `rw_p1.dat` and `rw_p2.dat` and the `Experiment-*-RealWorld.dat` files, whose corpus is withheld, and the `Experiment-Effectiveness-*` files, which belong to the conference-version archive.
+
+To draw the whole set in one go, from the repository root:
+
+```shell
+bash paper_figures_journal/draw.sh
+```
+
+The six figures are drawn one at a time below.
+
 #### Plotting Figure 14 (Section 7.3)
 
 ```shell
-# ... /to yijia
+(cd paper_figures_journal && gnuplot gnuplot/RQ3-Experiment-Scalability-Mining.plt)
 ```
 
 Expected Output:
 
-- 
-
+- `paper_figures_journal/results/RQ3-Experiment-Scalability-Mining.pdf`
 
 #### Plotting Figure 15 (Section 7.3)
 
 ```shell
-#... /to yijia
+(cd paper_figures_journal && gnuplot gnuplot/RQ3-Experiment-Scalability-Reducing.plt)
 ```
 
 Expected Output:
 
-- 
+- `paper_figures_journal/results/RQ3-Experiment-Scalability-Reducing.pdf`
 
 #### Plotting Figure 16 (Section 7.4)
 
 ```shell
-#... /to yijia
+(cd paper_figures_journal && gnuplot gnuplot/RQ4-Experiment-Scalabiliy-RealWorld.plt)
 ```
 
 Expected Output:
 
-- 
+- `paper_figures_journal/results/RQ4-Experiment-Scalabiliy-RealWorld.pdf`
 
 #### Plotting Figure 18 (Section 7.7)
 
 ```shell
-#... /to yijia
+(cd paper_figures_journal && gnuplot gnuplot/RQ7-ReducingPruning-Original-PruningReducer.plt)
 ```
 
 Expected Output:
 
-- 
+- `paper_figures_journal/results/RQ7-ReducingPruning-Original-PruningReducer.pdf`
 
 #### Plotting Figure 19 (Section 7.7)
 
 ```shell
-#... /to yijia
+(cd paper_figures_journal && gnuplot gnuplot/RQ7-MiningPruning-PruningReducer-IncrementalMCP.plt)
 ```
 
 Expected Output:
 
-- 
-
-#### Plotting Figure 19 (Section 7.7)
-
-```shell
-#... /to yijia
-```
-
-Expected Output:
-
-- 
-
+- `paper_figures_journal/results/RQ7-MiningPruning-PruningReducer-IncrementalMCP.pdf`
 
 #### Plotting Figure 20 (Section 7.8)
 
 ```shell
-#... /to yijia
+(cd paper_figures_journal && gnuplot gnuplot/RQ8-Optimization-Overview-Bars-Percentage.plt)
 ```
 
 Expected Output:
 
-- 
+- `paper_figures_journal/results/RQ8-Optimization-Overview-Bars-Percentage.pdf`
 
+Figures 18 and 19 each carry a real-world `RW` panel besides their two synthetic ones; as the note above says, the archived plotting data of those panels cannot be regenerated.
 
 ## For Developers
 

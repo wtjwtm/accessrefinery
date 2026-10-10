@@ -6,7 +6,9 @@ import org.iam.variables.dynamics.OperableLabel;
 import org.iam.variables.statics.Label;
 import org.iam.variables.statics.LabelFactory;
 import org.iam.variables.statics.LabelType;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -25,11 +27,25 @@ import java.util.Set;
  * dept2/user-star); the engine consumes regular expressions, so the wildcards are
  * spelled out here as regexes holding the same sets. See the constants below.
  * <p>
- * The tests here drive the partition directly, so they assume the default (incremental)
- * engine: {@code -Dmcp.incremental} and {@code -Dopt.incremental} are unset, as they are under
- * surefire.
+ * Most of the tests here drive {@link IncrementalECPartition} directly, which is the
+ * engine itself and ignores the stage switches. The one that goes through
+ * {@link MCPLabels#computeLabels()} does not: the incremental EC engine is the
+ * Incremental MCP stage's optimization and nothing is on by default, so the stage is
+ * selected for the duration of each test rather than assumed.
  */
 public class IncrementalECPartitionTest {
+
+    /** {@code -p -i}: MCPLabels takes the incremental EC path only when the stage is on. */
+    @Before
+    public void selectTheIncrementalMCPStage() {
+        PipelineStages.setStages(true, false, true);
+    }
+
+    /** Puts the stages back, since nothing is on by default. */
+    @After
+    public void restoreDefaultStages() {
+        PipelineStages.setStages(false, false, false);
+    }
 
     /** Resource labels of Fig. 9. */
 

@@ -26,11 +26,14 @@ import java.util.logging.Level;
  *
  * <ul>
  *   <li>-h, --help: Show help information</li>
- *   <li>-m, --mining: Enable mining mode (findings extraction)</li>
- *   <li>-r, --reducing: Enable reduction of findings</li>
- *   <li>-f, --file: Specify the input path for constraint files</li>
- *   <li>-s, --sat: Use SAT as the solving core (default is BDD)</li>
+ *   <li>-m, --mine: Enable intent mining</li>
+ *   <li>-r, --reduce: Enable intent reduction</li>
+ *   <li>-f, --file: Specify the input path for policy files</li>
+ *   <li>-s, --sat: Use SAT to encode bit-vectors (default is BDD)</li>
  *   <li>--round: Set the number of mining rounds</li>
+ *   <li>-p, --pruning: Enable Intent Pruning (journal extension)</li>
+ *   <li>-o, --mining-optimized: Enable the intent-mining optimization alone (journal extension)</li>
+ *   <li>-i, --increment: Enable Incremental MCP (journal extension)</li>
  *   <li>--zelkova: Run Zelkova mode</li>
  *   <li>--rest: Enable REST mode</li>
  *   <li>--merge: Merge intents in output</li>
@@ -47,11 +50,14 @@ public class CmdRun {
 
         Options options = new Options();
         options.addOption("h", "help", false, "Show help information");
-        options.addOption("m", "mine", false, "Enable mining mode (extract findings)");
-        options.addOption("r", "reduce", false, "Enable reduction of findings");
-        options.addOption("f", "file", true, "Input path for constraint files");
-        options.addOption("s", "sat", false, "Use SAT as solving core (default is BDD)");
+        options.addOption("m", "mine", false, "Enable intent mining");
+        options.addOption("r", "reduce", false, "Enable intent reduction");
+        options.addOption("f", "file", true, "Input path for policy files (must be under data/)");
+        options.addOption("s", "sat", false, "Use SAT to encode bit-vectors (default is BDD)");
         options.addOption(null, "round", true, "Number of mining rounds");
+        options.addOption("p", "pruning", false, "Enable Intent Pruning");
+        options.addOption("o", "mining-optimized", false, "Enable the intent-mining optimization alone");
+        options.addOption("i", "increment", false, "Enable Incremental MCP");
         options.addOption(null, "zelkova", false, "Run Zelkova mode");
         options.addOption(null, "rest", false, "Enable REST mode");
         options.addOption(null, "merge", false, "Merge intents in output");
@@ -64,7 +70,19 @@ public class CmdRun {
                 HelpFormatter formatter = new HelpFormatter();
                 formatter.printHelp("the help of accessrefinery", options);
                 return;
-            } 
+            }
+
+            // The journal extension's optimization stages. None is on by default, so
+            // the pipeline a run uses is exactly what its flags ask for: no flag is the
+            // Original stage, -p is the Pruning Reducer stage (the essential-finding
+            // pre-filter in the reducer), -p -i is the fully optimized Incremental MCP
+            // stage (the refinement DAG in the miner and the incremental EC engine
+            // below it), and -o picks out the miner's half of that last one alone — the
+            // MiningOptimized configuration, which is not a stage of the pipeline. See
+            // org.iam.core.PipelineStages.
+            // ADD_BEGIN_JOURNAL
+            PipelineStages.setStages(cmd.hasOption("p"), cmd.hasOption("o"), cmd.hasOption("i"));
+            // END_BEGIN_JOURNAL
 
             if (cmd.hasOption("s")) {
                 Parameter.isBDD = false;
@@ -75,7 +93,7 @@ public class CmdRun {
             if (cmd.hasOption("round")) {
                 Parameter.round = Integer.parseInt(cmd.getOptionValue("round"));
             }
-            
+
             if (cmd.hasOption("r")) {
                 Parameter.isReduced = true;
             }
@@ -133,9 +151,10 @@ public class CmdRun {
         // depend on which policies preceded it, which is not what the per-policy summary
         // columns are meant to report. Pass -Dinc.independent=false to opt back into the
         // cross-policy shared-factory behaviour.
-        // -Dopt.incremental=false also disables the cross-policy shared factory: the incremental
-        // EC state that a shared factory carries from one policy to the next *is* the AI
-        // stage's optimization, so without it every policy needs a fresh factory.
+        // Without -i the cross-policy shared factory is off as well: the incremental EC
+        // state that a shared factory carries from one policy to the next *is* the
+        // Incremental MCP stage's optimization, so outside that stage every policy needs
+        // a fresh factory.
         boolean independent = Boolean.parseBoolean(System.getProperty("inc.independent", "true"))
                 || !Parameter.isOptIncremental();
         // END_BEGIN_JOURNAL

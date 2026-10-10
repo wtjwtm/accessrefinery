@@ -18,7 +18,7 @@ We believe this artifact satisfies the Functional criteria based on the followin
 
 - **Exercisable:** The system can be built and executed from source using standard Maven workflows with JDK 17.
 
-- **Complete:** The artifact includes all necessary components to reproduce the extension experiment reported in the paper (RQ7-RQ9, the three-stage optimization pipeline):
+- **Complete:** The artifact includes all necessary components to reproduce the extension experiment reported in the paper (RQ7-RQ8, the three-stage optimization pipeline):
   - Source code of *AccessRefinery*, including the three-stage optimization pipeline
   - Three synthetic scalability datasets — `Scalability_05Keys/`, `Scalability_06Keys/` and `Scalability_05Keys∗/`, the paper's `5-Key`, `6-Key` and `5-Key*` — plus the `Correctness/` set used to check that the mined intents cover the policies
   - The real-world corpus (`RW/`, 506 policies) is **not public**, for commercial reasons: the raw real-world policies are not publicly available due to commercial restrictions
@@ -26,7 +26,7 @@ We believe this artifact satisfies the Functional criteria based on the followin
 
   The experiments of the original submission (RQ1-RQ6 and the two claims of the paper's setup section) are not part of this repository: the reimplemented *Access Analyzer* baseline, the scripts for invoking *AWS Access Analyzer* via CLI, and the archived results and plotting material of those experiments are not shipped.
 
-- **Consistent with the paper:** The artifact includes archived experimental results and provides instructions to reproduce the claims of the extension experiment (RQ7-RQ9) reported in the paper. The real-world `RW` corpus is not public, for commercial reasons, so the claims whose evidence rests on it — among them RQ9's add-label claim — are not reproduced here.
+- **Consistent with the paper:** The artifact includes archived experimental results and provides instructions to reproduce the claims of the extension experiment (RQ7-RQ8) reported in the paper. The real-world `RW` corpus is not public, for commercial reasons, so the claims whose evidence rests on it — among them RQ8's add-label claim — are not reproduced here.
 
 ## Evaluated - Reusable
 

@@ -182,4 +182,22 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- The Access Analyzer baseline links against pre-compiled SMT solvers
+             (lib/*/bin/*.so), so it only builds on Linux. Keeping it in an
+             OS-activated profile lets `mvn clean package` succeed everywhere
+             while still producing accessanalyzer-1.0.jar where it is runnable. -->
+        <profile>
+            <id>accessanalyzer-baseline</id>
+            <activation>
+                <os>
+                    <family>linux</family>
+                </os>
+            </activation>
+            <modules>
+                <module>baselines/accessanalyzer-reimpl</module>
+            </modules>
+        </profile>
+    </profiles>
 </project>

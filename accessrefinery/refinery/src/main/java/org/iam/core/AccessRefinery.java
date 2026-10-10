@@ -172,7 +172,8 @@ public class AccessRefinery {
             // END_BEGIN_JOURNAL
             analyzer.addRRIOperationsTime();
         } else {
-            // -Dopt.pruner=false: pre-optimization path. Every finding is a candidate and
+            // Without -p (the Original stage): pre-optimization path. Every finding is a
+            // candidate and
             // the EC/ILP set cover runs against the whole policy space, so the reducer
             // pays for solving candidates the pre-filter would have ruled out.
             candidates = new ArrayList<>(findings);
@@ -315,7 +316,7 @@ public class AccessRefinery {
             }
 
             if (Parameter.isOptRefinement()) {
-                // -Dopt.refinement=false: pre-optimization path. A finding disjoint from the
+                // Without -i (the Original stage): pre-optimization path. A finding disjoint from the
                 // remaining policy space is enqueued and explored like any other, so
                 // its whole subtree is traversed before being ruled out.
                 MCPBitVector findingNode = finding.getMCPNode();

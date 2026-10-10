@@ -324,20 +324,21 @@ public class MCPLabels {
     }
 
     /**
-     * Reads whether incremental EC is enabled from {@code -Dmcp.incremental}, and
-     * whether the Incremental MCP stage is enabled at all from {@code -Dopt.incremental}. Defaults to
-     * {@code true} for both; setting either to {@code false} forces the batch
-     * (full-rebuild on every updates() call) EC engine.
+     * Whether incremental EC is enabled: the MCP module's own {@code -Dmcp.incremental}
+     * switch (default on) and the Incremental MCP stage selected on the command line
+     * ({@code -i, --increment}, see {@link PipelineStages}). Setting either off forces
+     * the batch (full-rebuild on every updates() call) EC engine.
      * <p>
-     * {@code opt.incremental} is read here rather than through {@code org.iam.utils.Parameter}
-     * because this module sits below the refinery and cannot see that class.
+     * The stage flag is read from {@link PipelineStages} rather than through
+     * {@code org.iam.utils.Parameter} because this module sits below the refinery and
+     * cannot see that class.
      */
     private static boolean getIncrementalMode() {
         return isEnabled(System.getProperty("mcp.incremental"))
-                && isEnabled(System.getProperty("opt.incremental"));
+                && PipelineStages.incremental();
     }
 
-    /** A property that is absent, {@code "false"} or {@code "0"} means disabled. */
+    /** A property that is absent is enabled; {@code "false"} or {@code "0"} disables it. */
     private static boolean isEnabled(String v) {
         return v == null || !(v.equalsIgnoreCase("false") || v.equals("0"));
     }

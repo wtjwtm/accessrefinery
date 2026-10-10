@@ -1,100 +1,240 @@
 #!/bin/bash
-# Regenerate the plotting data of the optimization-pipeline figures that read the
-# 20-round stage archives, from their per-policy summary.txt.
+# Regenerate the plotting data of every figure that reads the pipeline stage
+# folders under results/ - the two RQ3 scalability figures included, whose
+# AccessRefinery series come from those same folders.
 #
-# Stage folders under results/, one per stage of the pipeline:
+# Input layout: results/accessrefinery_bdd_reducer_<STAGE>_<N>rs/<dataset>/summary.txt,
+# i.e. the same result/<dataset>/summary.txt shape the tool writes, with <STAGE> one
+# of Original / PruningReducer / IncrementalMCP / MiningOptimized and <N> the round
+# count. Only the summary.txt is read; the archive of the same directories under
+# archive_results_journal/, named identically, also carries the per-policy outputs of
+# the same runs (01..15_allow_result.json and 01..15_allow_time.csv).
 #
-#   accessrefinery_bdd_reducer_Original_20rs/        Original         (-Dopt.pruner=false -Dopt.refinement=false -Dopt.incremental=false)
-#   accessrefinery_bdd_reducer_PruningReducer_20rs/  Pruning Reducer  (-Dopt.refinement=false -Dopt.incremental=false)
-#   accessrefinery_bdd_reducer_IncrementalMCP_20rs/  Incremental MCP  (defaults)
+# What this script writes, and what reads it:
 #
-# The shipped copies of these three folders are in archive_results_journal/.
+#   p1_05.dat, p1_06.dat        RQ7-ReducingPruning-Original-PruningReducer (18)
+#   p2_05.dat, p2_06.dat        RQ7-MiningPruning-PruningReducer-IncrementalMCP (19)
+#   enc_05.dat, enc_06.dat      RQ8-Optimization-Overview-Bars-Percentage (20)
+#   rw_p1.dat, rw_p2.dat        the RW panel of the two RQ7 figures, written only
+#                               when the withheld real-world summaries are present
+#   Experiment-Scalability-MCI-K{2,3}[-WAll].dat    RQ3-Experiment-Scalability-Mining (14)
+#   Experiment-Scalability-RRI-K{2,3}[-WAll].dat    RQ3-Experiment-Scalability-Reducing (15)
 #
-# The Pruning Reducer folder was re-taken on 2026-09-26 - same four datasets, same flags,
-# the jar built from the tree that times the reducer's single-finding shortcut - so its four
-# datasets are from a later session than the other two, which are still the 2026-09-01 run.
-#
-# The real-world dataset of that same folder was re-taken once more, on 2026-09-28,
-# again at 20 rounds but with the jar built from the tree that removes the reducer's
-# single-finding shortcut instead of timing it, so that a policy of at most one finding
-# is charged the reduction it actually costs rather than the ~0 ms the shortcut took.
-# The RW pair of RQ8-ReducingPruning-Original-PruningReducer is therefore one session
-# later than the three Scalability datasets of the folder; no other output of this script
-# is affected by that re-take.
+# The first eight are written whole. The four RQ3 `.dat` files are edited column by
+# column, and only in the columns their two figures draw: the two AccessRefinery series
+# of each come from the pipeline stages under results/, and the Access Analyzer Z3 series
+# from the conference-version measurement archive that README's
+# `cp -r archive_results/... results/` step puts there. A column whose source is missing
+# keeps the value it already has, so the shipped files survive a run of this script
+# without that archive (see the RQ3 note before that block).
 #
 # summary.txt columns (1-based):
 #   1 NumberStatement          2 NumberMCI                   3 NumberRRI
 #   4 MCISolvingRoundAverage   5 TotalTimeAverage            6 MCILabelsTimeAverage
 #   7 MCIOperationsTimeAverage 8 RRIOperationsTimeAverage    9 RRIILPSolvingTimeAverage
 #
-# Each stage isolates one optimization, so each figure compares the one column
+# ------------------------------------------------------------------------------
+# The 20-round stages (Figures 18)
+# ------------------------------------------------------------------------------
+#
+#   accessrefinery_bdd_reducer_Original_20rs/        Original         (no stage flag)
+#   accessrefinery_bdd_reducer_PruningReducer_20rs/  Pruning Reducer  (-p)
+#
+# The Pruning Reducer folder was re-taken on 2026-09-26 - same four datasets, same flags,
+# the jar built from the tree that times the reducer's single-finding shortcut - so its four
+# datasets are from a later session than the Original folder, which is still the 2026-09-01 run.
+#
+# The real-world dataset of that same folder was re-taken once more, on 2026-09-28,
+# again at 20 rounds but with the jar built from the tree that removes the reducer's
+# single-finding shortcut instead of timing it, so that a policy of at most one finding
+# is charged the reduction it actually costs rather than the ~0 ms the shortcut took.
+# The RW pair of RQ7-ReducingPruning-Original-PruningReducer is therefore one session
+# later than the three Scalability datasets of the folder; no other output of this script
+# is affected by that re-take.
+#
+# Each stage isolates one optimization, so the figure compares the one column
 # that stage changes:
 #
-#   (no figure)                 p_bar_ix_05/06/07.dat
-#                                     TotalTimeAverage (c5) of the three stages, for
-#                                     the policies of 3/6/9/12/15 statements
-#                               rw_bar_ix.dat
-#                                     TotalTimeAverage (c5, Original) vs
-#                                     MCILabelsTimeAverage (c6, Incremental MCP)
-#
-#                               These five files fed the 20-round four-bar
-#                               "Optimization-Overview-Bars" rendering, which is no
-#                               longer shipped: the paper prints that figure from the
-#                               10-round data instead, as
-#                               "RQ7-Optimization-Overview-Bars-3Stage" (see
-#                               extract_optimization_pipeline_10rs.sh). The block below
-#                               still writes them, and they stay checked in, because
-#                               rw_bar_ix.dat needs the withheld real-world corpus and
-#                               can never be regenerated here.
-#   RQ8-ReducingPruning-Original-PruningReducer
-#                               p1_05/p1_06/p1_07.dat, rw_p1.dat
+#   RQ7-ReducingPruning-Original-PruningReducer
+#                               p1_05/p1_06.dat, rw_p1.dat
 #                                     RRIOperationsTimeAverage + RRIILPSolvingTimeAverage
 #                                     (c8+c9), Original vs Pruning Reducer - the
 #                                     reducer's set-cover cost
 #
 # The Scalability_* files keep summary.txt row order and number the policies 1..15.
-# The RW files number the rows 0..505 and sort every column on its own value, ascending,
-# so that each curve is monotone and the two curves of a panel are read as two sorted
-# distributions rather than as one policy-per-row pairing. The sort uses the computed
-# value, not its two-decimal rendering in summary.txt: policies that both print as 1.32
-# are still ordered by their exact sums.
+# The RW files keep that same order: they are the corpus' own, one row per policy,
+# numbered 0..505, so row 0 is rw_001.json and row 505 is rw_506.json. Nothing is
+# reordered - the figures draw these files with `smooth cumulative`, whose x axis is
+# the corpus position, so the column keeps the pairing the summaries have.
 #
 # All outputs are CRLF, no BOM, one header line, matching the checked-in files.
 #
-# Floor on the pair files. The figures draw these files on a log y-axis whose lower
-# bound is 1e-2 ms, so a cell that the summaries print as 0.00 has no place on the
-# curve: gnuplot drops it and the line simply starts one point later. The pair files
-# below therefore render such a cell at the axis floor, 0.01, which is the smallest
-# value the axis can show. Only RQ8-ReducingPruning-Original-PruningReducer has cells of
-# this kind, and today only on the RW corpus: the policies that yield no finding at all, so
-# the reducer is never entered and neither side is timed, which leaves both sides at 0.00.
-# The Pruning Reducer side of a synthetic policy with a single finding used to print 0.00
-# the same way, the reducer's shortcut having consumed no recordable time; since that folder
-# was re-taken on 2026-09-26 that shortcut is timed, so those cells are measurements now
-# (0.02 for policy 1 of Scalability_05Keys) and no longer need the floor.
+# Floor on the pair files. The synthetic pair files are drawn on a log y-axis whose
+# lower bound is 1e-2 ms, so a cell that the summaries print as 0.00 has no place on
+# the curve: gnuplot drops it and the line simply starts one point later. Those files
+# therefore render such a cell at the axis floor, 0.01, which is the smallest value
+# the axis can show. Only RQ7-ReducingPruning-Original-PruningReducer has cells of
+# this kind: the policies that yield no finding at all, so the reducer is never entered
+# and neither side is timed, which leaves both sides at 0.00. The Pruning Reducer side
+# of a synthetic policy with a single finding used to print 0.00 the same way, the
+# reducer's shortcut having consumed no recordable time; since that folder was re-taken
+# on 2026-09-26 that shortcut is timed, so those cells are measurements now (0.02 for
+# policy 1 of Scalability_05Keys) and no longer need the floor.
+#
+# The RW pair needs no floor. Its figure draws the two columns cumulatively, so a cell
+# the summaries print as 0.00 adds nothing and leaves the curve where it was instead of
+# punching a hole in it; the 506 rows keep their measured zeros.
+#
+# ------------------------------------------------------------------------------
+# The 10-round stages (Figures 19 and 20)
+# ------------------------------------------------------------------------------
+#
+# One campaign, four directories. The four stages of the archive do not all come
+# from the same server directory, though they are all --round 10 runs of the same
+# jar with the same command line, and each stage's per-policy files are the ones
+# the summary next to them was rolled up from. These are the sources:
+#
+#   Original         ~/exp/rerun10b_fix/BR/result/<dataset>/    2026-10-09
+#   PruningReducer   ~/exp/noshortcut/ar10/<dataset>/result/<dataset>/  2026-09-26
+#   IncrementalMCP   ~/exp/noshortcut/ai10/<dataset>/result/<dataset>/  2026-09-26
+#   MiningOptimized  ~/exp/rerun10b_fix/AM/result/Scalability_06Keys/  2026-10-09 (06Keys only)
+#                    ~/exp/amonly/result/<dataset>/              2026-09-26 (05Keys)
+#
+# Original was re-taken on 2026-10-09 with the jar built after the reducingIntents
+# set-cover fix (docs/NumberRRI-ILP-bug.md): the 09-23 run wrote NumberRRI = 0 for
+# 06Keys policies 1 and 3, and the 10-09 tree, before the fix, also zeroed 05Keys∗
+# policy 6. Same command line as the 09-23 run (-m -r --round 10, the three BR
+# switches), so only the jar differs. MiningOptimized was re-taken for 06Keys, the
+# one dataset whose archived copy carried a zero (policy 1); its other dataset is
+# still the 09-26 run.
+#
+# PruningReducer and IncrementalMCP are the `noshortcut` re-takes rather than
+# ~/exp/rerun10b/AR and ~/exp/rerun10b/AI: in the 09-23 run the reducer's
+# single-finding shortcut was charged no time at all, and these 09-26 re-takes
+# charge it the reduction it actually costs. MiningOptimized is ~/exp/amonly, not
+# ~/exp/rerun10b/AM, for the same reason. The pairing is checkable: the md5 of each
+# archived summary.txt is the md5 of the summary.txt in the directory the
+# per-policy files came from, and each 01_allow_result.json's GeneratedTime is
+# that directory's summary.txt mtime to the second (e.g. Original/Scalability_05Keys
+# 2026-09-23 23:18:28, PruningReducer 2026-09-26 01:08:55, IncrementalMCP
+# 2026-09-26 01:16:04, MiningOptimized 2026-09-26 00:33:12).
+#
+# Outputs, one set per key count k = 05 / 06:
+#
+#   p2_$k.dat   Figure "RQ7-MiningPruning-PruningReducer-IncrementalMCP"
+#                 Policy A B - the intent-mining cost with the two reduce/solve
+#                 columns (c8 RRIOperationsTimeAverage, c9 RRIILPSolvingTimeAverage)
+#                 taken out, i.e. c6+c7, of Pruning Reducer vs Incremental MCP,
+#                 one row per policy 1..15.
+#
+#   enc_$k.dat    Figure "RQ8-Optimization-Overview-Bars-Percentage"
+#                 idx Miner Reducer - the MiningOptimized configuration alone, and
+#                 how much of each of its two stages goes to the encoding step that
+#                 stage starts with, as a percentage of that stage's own pair:
+#                 Miner = 100*c6/(c6+c7), the intent miner's window up to the end
+#                 of the label tree (parse + ECs + label tree), i.e. everything
+#                 before the mining BFS itself; Reducer = 100*c8/(c8+c9), the
+#                 intent reducer's window up to the end of the EC encoding of the
+#                 findings, i.e. everything before the ILP solve.  One row per
+#                 policy, numbered 0..14.
+#
+# MiningOptimized, the extra configuration this script reads: the mining-phase search
+# optimization alone, without the essential-finding pre-filter and without the
+# incremental EC engine. It is not one of the three pipeline stages; it is selected
+# by -o/--mining-optimized on the command line, and this folder is a run of it.
+# results/accessrefinery_bdd_reducer_MiningOptimized_10rs/ was taken 2026-09-26 on the
+# same server as the three stages, with the same jar (exp/rerun10/refinery_sw.jar) and
+# the same command line, so it differs from them in the switches alone. Only the
+# Percentage figure reads it.
+#
+# Real-world output. The RW panel of "RQ7-MiningPruning-PruningReducer-IncrementalMCP"
+# needs the two real-world summaries of the same round,
+# results/accessrefinery_bdd_reducer_<STAGE>_10rs/RW/summary.txt, which this script then
+# turns into
+#
+#   rw_p2.dat   the RW panel of Figure "RQ7-MiningPruning-PruningReducer-IncrementalMCP"
+#                 Policy A B - c6+c7 of Pruning Reducer vs Incremental MCP, i.e.
+#                 the same quantity as the figure's synthetic panels, one row per RW
+#                 policy, in the corpus' own order and numbered 0..505, like rw_p1.dat
+#                 of Figure "RQ7-ReducingPruning-Original-PruningReducer". The two
+#                 columns stay paired policy by policy: the panels draw them with
+#                 `smooth cumulative`, whose x axis is the corpus position.
+#
+# Both RW summaries are 10-round runs of the same round as the synthetic data
+# (2026-09-25 for the RW pair). The Pruning Reducer columns of every summary this
+# script reads - the two Scalability sets and RW - were re-taken on 2026-09-26, same
+# flags and same corpus, with the jar built from the tree that times the reducer's
+# single-finding shortcut; the Incremental MCP column is still that run. The incremental
+# one was taken with -Dmcp.labelinc=true, so its c6 column times the single
+# computeLabels() call that absorbs the synthesized label instead of the whole
+# parse+preprocessing window the archives time. Measured against the Incremental
+# MCP 20-round archive (wide window), the two differ by 5-7% at the median — below
+# this figure's resolution on a log axis, but the difference is real and is why c6 is
+# the only column of the pair that this script's provenance differs on.
+#
+# ------------------------------------------------------------------------------
+# RQ3 (Figures 14 and 15)
+# ------------------------------------------------------------------------------
+#
+# Figures 14 and 15 compare the same two stages of the 10-round run, BR (the Original
+# stage, results/accessrefinery_bdd_reducer_Original_10rs) and AI (the Incremental MCP
+# stage, results/accessrefinery_bdd_reducer_IncrementalMCP_10rs), and differ only in the
+# quantity they plot:
+#
+#   RQ3-Experiment-Scalability-Mining (14)    c6+c7, the intent miner's own two columns
+#   RQ3-Experiment-Scalability-Reducing (15)  c5, TotalTimeAverage
+#
+# Of the columns of those two files, this script writes the ones Figures 14 and 15 draw,
+# and leaves the others as they are. Those written are the Access Analyzer Z3 series,
+# which comes from the conference-version measurement archive that README's
+# `cp -r archive_results/... results/` step restores under results/, and the two
+# AccessRefinery series, which come from the pipeline stages above:
+#
+#   Experiment-Scalability-MCI-K{2,3}.dat, tab separated
+#     1  policy index             the file's own
+#     2  Access Analyzer, Z3      results/accessanalyzer_z3_miner_1rs/<dataset>/summary.csv
+#     5  AccessRefinery(Original) the BR stage, c6+c7
+#
+#   Experiment-Scalability-RRI-K{2,3}.dat, space separated
+#     1  Access Analyzer, Z3      results/accessanalyzer_z3_reducer_1rs/<dataset>/summary.csv
+#     4  AccessRefinery(Original) the BR stage, c5
+#
+# The CVC5 series of the same files and the MiniSAT one are drawn by no figure of this
+# set - they belong to the conference version, where RQ5's micro-benchmark plots the
+# MiniSAT column - so they are left alone.
+#
+# The Access Analyzer summary.csv of those folders carries the total time of the run in
+# seconds; the column here is in milliseconds, so it is scaled by 1000, held at the
+# 3600000 ms timeout sentinel and printed with one decimal, the shape the archived file
+# has - a policy the baseline did not finish has no row and takes the sentinel. The MCI
+# file trims the trailing zeros of the columns it writes (466.8, not 466.80); the RRI
+# file, being space separated, keeps the two decimals.
+#
+# The series each figure calls AccessRefinery(Optimized) is the file's own one-column
+# W/All companion, taken from the Incremental MCP stage of the same 10 rounds.
+#
+# Every column above is replaced only when its source is there. A source that is missing
+# is reported and that column keeps the value the shipped file already has, so a run
+# without the conference-version folders still refreshes the two AccessRefinery series
+# instead of inventing numbers for the archived ones.
 
 set -e
 
-ORIGINAL=results/accessrefinery_bdd_reducer_Original_20rs
-PRUNING_REDUCER=results/accessrefinery_bdd_reducer_PruningReducer_20rs
-INCREMENTAL_MCP=results/accessrefinery_bdd_reducer_IncrementalMCP_20rs
-
-OUT=paper_figures/archive_data_journal
+ROOT=results
+OUT=paper_figures_journal/data
 mkdir -p "$OUT"
 TMP=$(mktemp -d)
 trap 'rm -rf "$TMP"' EXIT
 
-# The real-world corpus is withheld for commercial reasons, so the `rw_*` outputs
-# are produced only when the archives are present. Every other output on this
-# script's list is synthetic and regenerates unconditionally.
-HAVE_RW=1
-for s in "$ORIGINAL" "$PRUNING_REDUCER" "$INCREMENTAL_MCP"; do
-    [ -f "$s/RW/summary.txt" ] || HAVE_RW=0
-done
-if [ "$HAVE_RW" = 0 ]; then
-    echo "Note: the real-world corpus is not shipped (commercial reasons)."
-    echo "      Skipping rw_p1.dat, rw_bar_ix.dat."
-fi
+# The dataset directory of a key count. The files and the k suffix keep their
+# historical 05/06 numbering; only the directory names follow the paper's, and the
+# panel-reduced set here draws 05 and 06.
+ds_of() {
+    case "$1" in
+        05) echo Scalability_05Keys ;;
+        06) echo Scalability_06Keys ;;
+    esac
+}
 
 # readcol <summary.txt> <spec> : one value per policy, in file order.
 # <spec> is a 1-based column number, or a "+" sum such as 8+9.
@@ -122,67 +262,223 @@ pair_by_row() {
     } > "$5"
 }
 
-# rawcol <summary.txt> <spec> : the same values as readcol, but at full double
-# precision. This is the sort key: the figures sort on the computed value, and two
-# policies whose values round to the same two decimals are still ordered by their
-# exact sums, so sorting on the printed values would scramble the ties.
-rawcol() {
-    awk -v spec="$2" 'NR>1 {
-        n = split(spec, p, "+"); s = 0
-        for (i = 1; i <= n; i++) s += $p[i]
-        printf "%.17g\n", s
-    }' "$1"
-}
-
-# pair_sorted_each <summaryA> <specA> <summaryB> <specB> <out> : the two columns are
-# sorted on their own values, independently of each other.
-pair_sorted_each() {
-    readcol "$1" "$2" | LC_ALL=C sort -s -g > "$TMP/a"
-    readcol "$3" "$4" | LC_ALL=C sort -s -g > "$TMP/b"
+# pair_by_row_ix <summaryA> <specA> <summaryB> <specB> <out> : the two columns are
+# taken from the same summary row, in the corpus' own order, and column 1 numbers the
+# rows 0..505. No floor is applied - see the note at the top.
+pair_by_row_ix() {
+    readcol "$1" "$2" > "$TMP/a"
+    readcol "$3" "$4" > "$TMP/b"
     { printf 'Policy\tA\tB\r\n'
       paste -d'\t' "$TMP/a" "$TMP/b" \
-        | awk "$FLOOR"' { printf "%d\t%s\t%s\r\n", NR-1, fl($1), fl($2) }'
+        | awk '{ printf "%d\t%s\t%s\r\n", NR-1, $1, $2 }'
     } > "$5"
 }
 
-# --- RQ8-ReducingPruning-Original-PruningReducer: reducer (c8+c9) --------------
-pair_by_row "$ORIGINAL/Scalability_05Keys/summary.txt" 8+9 "$PRUNING_REDUCER/Scalability_05Keys/summary.txt" 8+9 "$OUT/p1_05.dat"
-pair_by_row "$ORIGINAL/Scalability_06Keys/summary.txt" 8+9 "$PRUNING_REDUCER/Scalability_06Keys/summary.txt" 8+9 "$OUT/p1_06.dat"
-pair_by_row "$ORIGINAL/Scalability_05Keys∗/summary.txt" 8+9 "$PRUNING_REDUCER/Scalability_05Keys∗/summary.txt" 8+9 "$OUT/p1_07.dat"
-if [ "$HAVE_RW" = 1 ]; then
-    pair_sorted_each "$ORIGINAL/RW/summary.txt" 8+9 "$PRUNING_REDUCER/RW/summary.txt" 8+9 "$OUT/rw_p1.dat"
+# ---------------------------------------------------------------- 20 rounds ----
+ORIG_20="$ROOT/accessrefinery_bdd_reducer_Original_20rs"
+PRUN_20="$ROOT/accessrefinery_bdd_reducer_PruningReducer_20rs"
+
+# The real-world corpus is withheld for commercial reasons, so the `rw_*` outputs
+# are produced only when the archives are present. Every other output on this
+# script's list is synthetic and regenerates unconditionally.
+HAVE_RW=1
+for s in "$ORIG_20" "$PRUN_20"; do
+    [ -f "$s/RW/summary.txt" ] || HAVE_RW=0
+done
+if [ "$HAVE_RW" = 0 ]; then
+    echo "Note: the real-world corpus is not shipped (commercial reasons)."
+    echo "      Skipping rw_p1.dat."
 fi
 
-# --- Total time of the three stages, c5 ----------------------------------------
-# Kept for the archive only: the figure these files fed, the 20-round
-# Optimization-Overview-Bars, is no longer shipped (see the header).
-# The 07 case holds the 5-Key* dataset, whose directory keeps that name.
-for k in 05 06 07; do
-    case $k in
-        05) ds=Scalability_05Keys ;;
-        06) ds=Scalability_06Keys ;;
-        07) ds=Scalability_05Keys∗ ;;
-    esac
-    { printf 'idx\tOriginal\tPruningReducer\tIncrementalMCP\r\n'
-      paste -d'\t' <(readcol "$ORIGINAL/$ds/summary.txt" 5) \
-                   <(readcol "$PRUNING_REDUCER/$ds/summary.txt" 5) \
-                   <(readcol "$INCREMENTAL_MCP/$ds/summary.txt" 5) \
-        | awk 'NR==3||NR==6||NR==9||NR==12||NR==15 { printf "%d\t%s\t%s\t%s\r\n", n++, $1, $2, $3 }'
-    } > "$OUT/p_bar_ix_$k.dat"
-done
+# --- Figure 18: RQ7-ReducingPruning-Original-PruningReducer, reducer (c8+c9) ----
+pair_by_row "$ORIG_20/Scalability_05Keys/summary.txt" 8+9 "$PRUN_20/Scalability_05Keys/summary.txt" 8+9 "$OUT/p1_05.dat"
+pair_by_row "$ORIG_20/Scalability_06Keys/summary.txt" 8+9 "$PRUN_20/Scalability_06Keys/summary.txt" 8+9 "$OUT/p1_06.dat"
 if [ "$HAVE_RW" = 1 ]; then
-    {
-        printf 'Policy\tOriginal\tIncrementalMCP\r\n'
-        paste -d'\t' <(rawcol "$ORIGINAL/RW/summary.txt" 5) <(readcol "$ORIGINAL/RW/summary.txt" 5) \
-                     <(readcol "$INCREMENTAL_MCP/RW/summary.txt" 6) \
-          | LC_ALL=C sort -s -g -k1,1 \
-          | awk -F'\t' '{ printf "%d\t%s\t%s\r\n", NR-1, $2, $3 }'
-    } > "$OUT/rw_bar_ix.dat"
+    pair_by_row_ix "$ORIG_20/RW/summary.txt" 8+9 "$PRUN_20/RW/summary.txt" 8+9 "$OUT/rw_p1.dat"
 fi
+
+# ---------------------------------------------------------------- 10 rounds ----
+# The stage folders the two figure blocks below read: PruningReducer and
+# IncrementalMCP for p2_*.dat, MiningOptimized for enc_*.dat. A missing summary.txt
+# is reported here; the output that reads it then comes out empty.
+for s in PruningReducer IncrementalMCP MiningOptimized; do
+    for k in 05 06; do
+        f="$ROOT/accessrefinery_bdd_reducer_${s}_10rs/$(ds_of "$k")/summary.txt"
+        [ -f "$f" ] || echo "Warning: $f not found" >&2
+    done
+done
+
+# --- Figure 19: RQ7-MiningPruning-PruningReducer-IncrementalMCP, mining c6+c7 ---
+for k in 05 06; do
+    ds=$(ds_of "$k")
+    { printf 'Policy\tA\tB\r\n'
+      paste -d'\t' <(readcol "$ROOT/accessrefinery_bdd_reducer_PruningReducer_10rs/$ds/summary.txt" 6+7) \
+                   <(readcol "$ROOT/accessrefinery_bdd_reducer_IncrementalMCP_10rs/$ds/summary.txt" 6+7) \
+        | awk '{ printf "%d\t%s\t%s\r\n", NR, $1, $2 }'
+    } > "$OUT/p2_$k.dat"
+done
+
+# --- Figure 20: encoder share within each pair, MiningOptimized configuration ---
+# The two shares are of different denominators on purpose: the left bar of a pair
+# says how much of the miner's window the label side takes, the right bar how much
+# of the reducer's window the EC encoding takes.  A policy whose pair is entirely
+# zero prints 0 rather than dividing by it.
+for k in 05 06; do
+    ds=$(ds_of "$k")
+    { printf 'idx\tMiner\tReducer\r\n'
+      awk 'NR>1 {
+              m = $6 + $7; r = $8 + $9
+              printf "%.2f\t%.2f\n", (m > 0 ? 100*$6/m : 0), (r > 0 ? 100*$8/r : 0)
+           }' "$ROOT/accessrefinery_bdd_reducer_MiningOptimized_10rs/$ds/summary.txt" \
+        | awk '{ printf "%d\t%s\t%s\r\n", NR-1, $1, $2 }'
+    } > "$OUT/enc_$k.dat"
+done
+
+# --- RW panel of Figure 19 -----------------------------------------------------
+# Only when both real-world summaries of this round are in place; the synthetic
+# outputs above regenerate unconditionally.
+HAVE_RW=1
+for s in PruningReducer IncrementalMCP; do
+    [ -f "$ROOT/accessrefinery_bdd_reducer_${s}_10rs/RW/summary.txt" ] || HAVE_RW=0
+done
+
+if [ "$HAVE_RW" = 1 ]; then
+    { printf 'Policy\tA\tB\r\n'
+      paste -d'\t' <(readcol "$ROOT/accessrefinery_bdd_reducer_PruningReducer_10rs/RW/summary.txt" 6+7) \
+                   <(readcol "$ROOT/accessrefinery_bdd_reducer_IncrementalMCP_10rs/RW/summary.txt" 6+7) \
+        | awk '{ printf "%d\t%s\t%s\r\n", NR-1, $1, $2 }'
+    } > "$OUT/rw_p2.dat"
+else
+    echo "Note: $ROOT/accessrefinery_bdd_reducer_{PruningReducer,IncrementalMCP}_10rs/RW/summary.txt not found." >&2
+    echo "      Skipping rw_p2.dat (RW panel of RQ7-MiningPruning-PruningReducer-IncrementalMCP)" >&2
+fi
+
+# ------------------------------------------------------------------- RQ3 -------
+# rq3_col_in <file> <sep> <col> <values> : replace column <col> of <file> with the
+# lines of <values>, keeping that file's separator, line ending and every other
+# column byte for byte.
+rq3_col_in() {
+    local file=$1 sep=$2 col=$3 vals=$4
+    # The record's own trailing CR is stripped before the split (this awk may have
+    # done it already) and re-added on output, since these files are CRLF.
+    awk -v sep="$sep" -v col="$col" -v vf="$vals" '
+        NR == FNR { v[FNR] = $0; next }
+        {
+            line = $0
+            sub(/\r$/, "", line)
+            n = split(line, f, sep)
+            f[col] = v[FNR]
+            out = f[1]
+            for (i = 2; i <= n; i++) out = out sep f[i]
+            printf "%s\r\n", out
+        }
+    ' "$vals" "$file" > "$file.tmp"
+    mv "$file.tmp" "$file"
+}
+
+# rq3_wall <values> <file> : write the one-column W/All companion, CRLF, as it is.
+rq3_wall() {
+    awk '{ printf "%s\r\n", $0 }' "$1" > "$2"
+}
+
+# rq3_src_col <src> <mode> <spec> : the values of one source column, one per row of
+# that source, in file order. Mode `aa` is an Access Analyzer summary.csv, whose fifth
+# column is the total time of the run in seconds: it is printed in milliseconds, the
+# unit of the `.dat` files, and held at the 3600000 ms timeout sentinel. Mode `txt` is
+# a tool summary.txt, <spec> being a column number or a "+" sum such as 6+7.
+rq3_src_col() {
+    case "$2" in
+        aa)  awk -F',' 'NR>1 { t = $5 * 1000; printf "%.1f\n", (t > 3600000 ? 3600000 : t) }' "$1" ;;
+        txt) awk -v spec="$3" 'NR>1 {
+                 n = split(spec, p, "+"); s = 0
+                 for (i = 1; i <= n; i++) s += $p[i]
+                 printf "%.2f\n", s
+             }' "$1" ;;
+    esac
+}
+
+# rq3_pad <sentinel> : read one value per row and write the 15 policies of a `.dat`
+# file, a policy the source has no row for taking <sentinel>.
+rq3_pad() {
+    awk -v sent="$1" '{ v[NR] = $0 }
+        END { for (i = 1; i <= 15; i++) printf "%s\n", (i in v ? v[i] : sent) }'
+}
+
+# rq3_fill_col <file> <sep> <col> <src> <mode> <spec> <sentinel> [trim]
+# Put the values of <src> into column <col> of <file>. `trim` cuts the trailing zeros
+# of the column, which is how the MCI file carries every one of its own; the RRI file
+# keeps the two decimals. A source that is not there is reported and the column keeps
+# the value it already has - see the note above.
+rq3_fill_col() {
+    local file=$1 sep=$2 col=$3 src=$4 mode=$5 spec=$6 sent=$7 trim=$8
+    if [ ! -f "$file" ]; then
+        echo "Warning: $file not found; nothing written" >&2
+        return 0
+    fi
+    if [ ! -f "$src" ]; then
+        echo "Warning: $src not found; column $col of $(basename "$file") keeps the value it has" >&2
+        return 0
+    fi
+    rq3_src_col "$src" "$mode" "$spec" > "$TMP/src"
+    rq3_pad "$sent" < "$TMP/src" > "$TMP/col"
+    if [ "$trim" = trim ]; then
+        sed -e '/\./!b' -e 's/0*$//' -e 's/\.$//' "$TMP/col" > "$TMP/col.t"; mv "$TMP/col.t" "$TMP/col"
+    fi
+    rq3_col_in "$file" "$sep" "$col" "$TMP/col"
+}
+
+# rq3_fill_wall <src> <spec> <file> : the one-column W/All companion of an RQ3 file,
+# the series the figure calls AccessRefinery(Optimized). It keeps the two decimals.
+rq3_fill_wall() {
+    local src=$1 spec=$2 file=$3
+    if [ ! -f "$src" ]; then
+        echo "Warning: $src not found; $(basename "$file") keeps the column it has" >&2
+        return 0
+    fi
+    rq3_src_col "$src" txt "$spec" > "$TMP/src"
+    rq3_pad 3600000.00 < "$TMP/src" > "$TMP/col"
+    rq3_wall "$TMP/col" "$file"
+}
+
+# The index the file name of a key count carries; the two RQ3 figures number their
+# datasets 2 and 3, after the paper's K2 and K3.
+k_index() {
+    case "$1" in
+        05) echo 2 ;;
+        06) echo 3 ;;
+    esac
+}
+
+# Figure 14: mining, c6+c7 of the BR stage in the file's column 5 (tab separated), and
+# of the AI stage in its W/All companion.
+rq3_mci() {
+    local k=$1 ds n dat wall
+    ds=$(ds_of "$k"); n=$(k_index "$k")
+    dat="$OUT/Experiment-Scalability-MCI-K$n.dat"
+    wall="$OUT/Experiment-Scalability-MCI-K$n-WAll.dat"
+    rq3_fill_col "$dat" "$(printf '\t')" 2 "$ROOT/accessanalyzer_z3_miner_1rs/$ds/summary.csv" aa "" 3600000 trim
+    rq3_fill_col "$dat" "$(printf '\t')" 5 "$ROOT/accessrefinery_bdd_reducer_Original_10rs/$ds/summary.txt" txt 6+7 3600000 trim
+    rq3_fill_wall "$ROOT/accessrefinery_bdd_reducer_IncrementalMCP_10rs/$ds/summary.txt" 6+7 "$wall"
+}
+
+# Figure 15: reduction, c5 (TotalTimeAverage) of the BR stage in the file's column 4
+# (space separated), and of the AI stage in its W/All companion.
+rq3_rri() {
+    local k=$1 ds n dat wall
+    ds=$(ds_of "$k"); n=$(k_index "$k")
+    dat="$OUT/Experiment-Scalability-RRI-K$n.dat"
+    wall="$OUT/Experiment-Scalability-RRI-K$n-WAll.dat"
+    rq3_fill_col "$dat" " " 1 "$ROOT/accessanalyzer_z3_reducer_1rs/$ds/summary.csv" aa "" 3600000.0
+    rq3_fill_col "$dat" " " 4 "$ROOT/accessrefinery_bdd_reducer_Original_10rs/$ds/summary.txt" txt 5 3600000.00
+    rq3_fill_wall "$ROOT/accessrefinery_bdd_reducer_IncrementalMCP_10rs/$ds/summary.txt" 5 "$wall"
+}
+
+rq3_mci 05
+rq3_mci 06
+rq3_rri 05
+rq3_rri 06
 
 echo "Done extracting optimization-pipeline data into $OUT/"
-if [ "$HAVE_RW" = 1 ]; then
-    ls -1 "$OUT"/p*.dat "$OUT"/rw_*.dat
-else
-    ls -1 "$OUT"/p*.dat
-fi
+ls -1 "$OUT"/p1_*.dat "$OUT"/p2_*.dat "$OUT"/enc_*.dat \
+      "$OUT"/Experiment-Scalability-MCI-K{2,3}*.dat \
+      "$OUT"/Experiment-Scalability-RRI-K{2,3}*.dat

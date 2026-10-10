@@ -1,5 +1,7 @@
 package org.iam.utils;
 
+import org.iam.core.PipelineStages;
+
 import java.util.logging.Logger;
 
 /**
@@ -29,23 +31,24 @@ public class Parameter {
     /** Enable or disable BDD (Binary Decision Diagram) mode. */
     public static boolean   isBDD          =   true;
 
-    // ── Optimization switches for the pipeline stages ──────────────────────
-    // Each optimization can be turned off with -Dopt.<name>=false, so that every
-    // stage of the pipeline can be exercised from a single build:
-    //   Original        = all three off
-    //   Pruning Reducer = -Dopt.refinement=false -Dopt.incremental=false
-    //   Incremental MCP = the default, no switch at all
-    // All default to true, i.e. leaving them unset gives the fully optimized
-    // (Incremental MCP) pipeline.
+    // ── Optimization stages, as selected on the command line ───────────────
+    // The three stages of the pipeline can be exercised from a single build:
+    //   Original        = java -jar target/accessrefinery-1.0.jar -m -r ...
+    //   Pruning Reducer = ... -p
+    //   Incremental MCP = ... -p -i
+    // The MiningOptimized configuration the archive also carries is the mining half
+    // of that last one, and is selected by -o on its own.
+    // Nothing is on by default; CmdRun sets the switches in
+    // org.iam.core.PipelineStages, which is where the three flags below read them.
 
-    /** -Dopt.pruner: essential-finding pre-filter in the intent reducer. */
-    public static boolean isOptPruner() { return boolProp("opt.pruner"); }
+    /** The essential-finding pre-filter in the intent reducer ({@code -p, --pruning}). */
+    public static boolean isOptPruner() { return PipelineStages.pruner(); }
 
-    /** -Dopt.refinement: the miner's refinement-DAG node construction and BFS early-exit. */
-    public static boolean isOptRefinement() { return boolProp("opt.refinement"); }
+    /** The miner's refinement-DAG node construction and BFS early-exit ({@code -o} or {@code -i}). */
+    public static boolean isOptRefinement() { return PipelineStages.refinement(); }
 
-    /** -Dopt.incremental: incremental EC engine and cross-policy shared MCPFactory. */
-    public static boolean isOptIncremental() { return boolProp("opt.incremental"); }
+    /** The incremental EC engine and cross-policy shared MCPFactory ({@code -i, --increment}). */
+    public static boolean isOptIncremental() { return PipelineStages.incremental(); }
 
     // ── Incremental add-label measurement ──────────────────────────────────
     // -Dmcp.labelinc=true replaces the MCILabelsTimeAverage window with the cost
@@ -58,11 +61,5 @@ public class Parameter {
     public static boolean isLabelInc() {
         String v = System.getProperty("mcp.labelinc");
         return v != null && (v.equalsIgnoreCase("true") || v.equals("1"));
-    }
-
-    /** Reads a boolean system property; absent, "false" or "0" means disabled. */
-    private static boolean boolProp(String key) {
-        String v = System.getProperty(key);
-        return v == null || !(v.equalsIgnoreCase("false") || v.equals("0"));
     }
 }

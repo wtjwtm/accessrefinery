@@ -100,12 +100,12 @@ public class MCPPolicy extends Policy implements MCPVar {
      */
     @Override
     public void initialMCPFactory() {
-        // -Dmcp.incremental=false selects the original batch EC engine: add all
-        // statements' labels first, then run a single full EC computation (mirrors
-        // the pre-optimization pipeline). Default (true) updates after each
-        // statement to exercise the incremental EC engine.
-        // -Dopt.incremental=false forces the batch engine regardless, since the incremental
-        // engine is the Incremental MCP stage's optimization.
+        // The incremental EC engine updates after each statement; the batch engine adds
+        // all statements' labels first and then runs a single full EC computation
+        // (mirrors the pre-optimization pipeline). Either of two switches selects the
+        // batch engine: the MCP module's own -Dmcp.incremental=false, or leaving the
+        // Incremental MCP stage off on the command line (no -i), since the incremental
+        // engine is that stage's optimization.
         String v = System.getProperty("mcp.incremental");
         boolean incremental = Parameter.isOptIncremental()
                 && ((v == null) || !(v.equalsIgnoreCase("false") || v.equals("0")));
