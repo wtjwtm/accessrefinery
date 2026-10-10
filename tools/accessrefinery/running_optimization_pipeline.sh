@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # The optimization-pipeline runs behind the journal-extension figures: the two
-# 20-round stages that Figure 18 reads, and the four 10-round folders that
-# Figures 19 and 20 read.
+# 20-round stages that Figure 19 reads, and the four 10-round folders that
+# Figures 18 and 20 read.
 #
 # The stage is selected on the command line (see README, "Using AccessRefinery");
 # nothing is on by default, so a run's flags are exactly the stages it adds:
@@ -24,15 +24,15 @@
 #   results/accessrefinery_bdd_reducer_IncrementalMCP_10rs/  (-p -i)    10 rounds
 #   results/accessrefinery_bdd_reducer_MiningOptimized_10rs/ (-o)       10 rounds
 #                                       -> tools/figures/extract_optimization_pipeline.sh
-#                                          (Figure 18: p1_05.dat, p1_06.dat, rw_p1.dat;
-#                                           Figure 19: p2_05.dat, p2_06.dat, rw_p2.dat;
+#                                          (Figure 19: p1_05.dat, p1_06.dat, rw_p1.dat;
+#                                           Figure 18: p2_05.dat, p2_06.dat, rw_p2.dat;
 #                                           Figure 20: enc_05.dat, enc_06.dat;
 #                                           Figures 14 and 15 read the 10-round
 #                                           Original and Incremental MCP folders)
 #
 # Only the folder sizes differ between the two round counts: a 10-round run is
 # about half the wall clock of a 20-round one, which is why the 20-round pair is
-# kept to the two stages Figure 18 needs.
+# kept to the two stages Figure 19 needs.
 #
 # Every run covers the same datasets and writes its `result/` tree to
 # results/<folder>/, the working directory the extraction script above reads.

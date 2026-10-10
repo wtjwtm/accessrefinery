@@ -77,8 +77,8 @@ set xrange[0: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-plot 'data/p1_05.dat' using ($0+1):2 w lp ls 2 t'Intent Reducer (Original)', \
-	'' using ($0+1):3 w lp ls 3 t'Intent Reducer (Pruning Reducer)'
+plot 'data/p1_05.dat' using 1:2 w lp ls 2 t'Intent Reducer (Original)', \
+	'' using 1:3 w lp ls 3 t'Intent Reducer (Pruning Reducer)'
 
 unset label
 
@@ -89,7 +89,7 @@ set xrange[0: 16]
 set xtics 3
 set size 1, 0.9
 set offsets 0.5,0.5,0,0
-plot 'data/p1_06.dat' using ($0+1):2 w lp ls 2 t'Intent Reducer (Original)', \
-	'' using ($0+1):3 w lp ls 3 t'Intent Reducer (Pruning Reducer)'
+plot 'data/p1_06.dat' using 1:2 w lp ls 2 t'Intent Reducer (Original)', \
+	'' using 1:3 w lp ls 3 t'Intent Reducer (Pruning Reducer)'
 
 # End of output

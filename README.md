@@ -265,7 +265,7 @@ You can skip running AccessRefinery with Incremental MCP and Intent Pruning by r
 cp -r archive_results_journal/accessrefinery_bdd_reducer_*rs results/
 ```
 
-The optimization pipeline is run by one script, which invokes `target/accessrefinery-1.0.jar` once per stage, with the stage selected on the command line — no stage flag is *Original*, `-p` is *Pruning Reducer*, `-o` is *MiningOptimized* and `-p -i` is *Incremental MCP* (see [Using AccessRefinery](#using-accessrefinery)). It takes the two 20-round runs that Figure 18 reads and the four 10-round runs that Figures 19 and 20 read:
+The optimization pipeline is run by one script, which invokes `target/accessrefinery-1.0.jar` once per stage, with the stage selected on the command line — no stage flag is *Original*, `-p` is *Pruning Reducer*, `-o` is *MiningOptimized* and `-p -i` is *Incremental MCP* (see [Using AccessRefinery](#using-accessrefinery)). It takes the two 20-round runs that Figure 19 reads and the four 10-round runs that Figures 18 and 20 read:
 
 ```shell
 # The execution takes about 110 minutes.
@@ -345,22 +345,22 @@ Expected Output:
 #### Plotting Figure 18 (Section 7.7)
 
 ```shell
-(cd paper_figures_journal && gnuplot gnuplot/RQ7-ReducingPruning-Original-PruningReducer.plt)
-```
-
-Expected Output:
-
-- `paper_figures_journal/results/RQ7-ReducingPruning-Original-PruningReducer.pdf`
-
-#### Plotting Figure 19 (Section 7.7)
-
-```shell
 (cd paper_figures_journal && gnuplot gnuplot/RQ7-MiningPruning-PruningReducer-IncrementalMCP.plt)
 ```
 
 Expected Output:
 
 - `paper_figures_journal/results/RQ7-MiningPruning-PruningReducer-IncrementalMCP.pdf`
+
+#### Plotting Figure 19 (Section 7.7)
+
+```shell
+(cd paper_figures_journal && gnuplot gnuplot/RQ7-ReducingPruning-Original-PruningReducer.plt)
+```
+
+Expected Output:
+
+- `paper_figures_journal/results/RQ7-ReducingPruning-Original-PruningReducer.pdf`
 
 #### Plotting Figure 20 (Section 7.8)
 

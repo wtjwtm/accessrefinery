@@ -15,8 +15,8 @@ Six PDFs are produced, from six gnuplot scripts:
 | `RQ3-Experiment-Scalability-Mining.plt` | 14 | 5-Key, 6-Key | Z3, CVC5, AccessRefinery (Original), AccessRefinery (Optimized) |
 | `RQ3-Experiment-Scalability-Reducing.plt` | 15 | 5-Key, 6-Key | Z3, CVC5, AccessRefinery (Original), AccessRefinery (Optimized) |
 | `RQ4-Experiment-Scalabiliy-RealWorld.plt` | 16 | Real-world mining, real-world reducing | Z3, CVC5, AccessRefinery (Original), AccessRefinery (Optimized) |
-| `RQ7-ReducingPruning-Original-PruningReducer.plt` | 18 | Real-world, 5-Key, 6-Key | Intent reducer, Original / Pruning Reducer |
-| `RQ7-MiningPruning-PruningReducer-IncrementalMCP.plt` | 19 | Real-world, 5-Key, 6-Key | Intent miner, Original / Incremental MCP |
+| `RQ7-ReducingPruning-Original-PruningReducer.plt` | 19 | Real-world, 5-Key, 6-Key | Intent reducer, Original / Pruning Reducer |
+| `RQ7-MiningPruning-PruningReducer-IncrementalMCP.plt` | 18 | Real-world, 5-Key, 6-Key | Intent miner, Original / Incremental MCP |
 | `RQ8-Optimization-Overview-Bars-Percentage.plt` | 20 | 5-Key, 6-Key | Per-stage encoding share, all fifteen policies |
 
 ## Running
@@ -39,7 +39,7 @@ was reduced from, so a panel lands where it lands in the paper:
 | `RQ3-*` (14, 15) | 31 cm x 11 cm | `layout 1,2 margins 0.13, 0.96, 0.31, 0.711 spacing 0.20` |
 | `RQ4-*` (16) | 26 cm x 11 cm | `layout 1,2 margins 0.13, 0.96, 0.31, 0.711 spacing 0.20` |
 | `RQ7-*` (18, 19) | 35 cm x 9 cm | `layout 1,3 margins 0.10, 0.96, 0.31, 0.80 spacing 0.13` |
-| `RQ8-*` (20) | 26 cm x 9 cm | `layout 1,2 margins 0.13, 0.96, 0.31, 0.7544 spacing 0.09` |
+| `RQ8-*` (20) | 26 cm x 9 cm | `layout 1,2 margins 0.13, 0.96, 0.31, 0.7088 spacing 0.09` |
 
 The curves, axis ranges, line styles and legend entries are the ones the full
 versions of these figures draw.

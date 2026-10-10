@@ -6,24 +6,29 @@
 #
 # Each panel draws all fifteen policies of its dataset, against the five
 # (3/6/9/12/15) the three-panel version drew, and takes the two-panel RQ3 band:
-# margins 0.13, 0.96, 0.31, 0.7544 and spacing 0.09 of the 26 by 9 cm canvas, so a
-# panel is 9.62 cm by 4.00 cm. The band is 0.41 cm shorter than RQ3's: the panels
-# were asked for shorter, and the canvas, the legend and the x label are where
-# they were, so the whole 0.41 cm comes off the top of the panels and shows up as
-# a wider gap between them and the legend. The two labels that sit on the band
-# itself - the rotated y title at its vertical centre, the two panel labels just
-# inside its top edge - moved down with it.
+# margins 0.13, 0.96, 0.31, 0.7088 and spacing 0.09 of the 26 by 9 cm canvas, so a
+# panel is 9.62 cm by 3.59 cm. The band is 0.82 cm shorter than RQ3's: the panels
+# were asked for shorter, and the canvas, the legend and the x label are where they
+# were, so the whole of it comes off the top of the panels and shows up as a wider
+# gap between them and the legend. The two labels that sit on the band itself - the
+# rotated y title at its vertical centre, the two panel labels just inside its top
+# edge - moved down with it.
 #
-# A policy's slot on that band is 1.00 unit - the axis runs -0.5 to 14.5 for the
-# fifteen of them. The two bars of its pair are centred a quarter of a bar's width
-# either side of its tick, so at 0.175 unit each and each 0.35 unit wide, 0.224 cm:
-# the pair spans 0.70 unit, its two bars touch at the tick, and 0.30 unit - 0.192
-# cm - of blank is left between one policy's pair and the next's.
+# A policy's slot on that band is 1.00 unit - the axis runs -1.5 to 15.5, seventeen
+# slots for the fifteen policies: the two outermost, the ones a policy 0 and a policy
+# 16 would take, are drawn but carry no bar and no number, so the row of bars stops a
+# slot and a half short of either edge instead of touching it. The two bars of a pair
+# are centred a quarter of a bar's width either side of its tick, so at 0.175 unit each
+# and each 0.35 unit wide, 0.198 cm: the pair spans 0.70 unit, its two bars touch at
+# the tick, and 0.30 unit - 0.170 cm - of blank is left between one policy's pair and
+# the next's.
 #
-# The range is -0.5 to 14.5 rather than the -0.30 to 14.30 it was, because a bar
-# reaches half its own width past its tick: 14.30 cut the first policy's miner bar
-# off at the panel's left edge, narrowing it by a quarter, while the rest of the
-# bars fell inside the range and kept their width.
+# The range leaves a gap of a slot and a half at each end - a blank slot, over and
+# above the half slot a bar needs to reach half its own width past its tick - rather
+# than the -0.30 to 14.30 it first was, which cut the first policy's miner bar off at
+# the panel's left edge and narrowed it by a quarter while the rest of the bars fell
+# inside the range and kept their width. Both ends carry the same blank slot now, one
+# past the first policy and one past the last, and neither is numbered.
 #
 # The two panel labels keep their place within their panel - 0.08 of the canvas in
 # from its left edge - which on this band is 0.21 and 0.67.
@@ -44,18 +49,20 @@ set border 3 back linestyle 80
 set xtics nomirror
 set ytics nomirror
 
-# The two bar styles of the outermost bars of the 3-Stage overview, taken over as
-# they are there: the miner's bar and the reducer's bar are the two shares of
-# their own window, which the labels name, so the colour carries no stage. Both
-# bars carry a border, each in its own colour: the miner's hatch in the dark blue
-# of its pattern, the reducer's solid fill in the green of the fill itself.
+# The two bar styles are the two shares: the miner's bar and the reducer's bar are
+# the two shares of their own window, which the labels name, so the colour carries
+# no stage. Both bars carry a border, each in its own colour, and both are hatched:
+# the miner's in the dark blue of its own colour, a single-direction diagonal drawn
+# on a 4 pt cell - the denser of the two diagonal patterns the terminal offers - and
+# the reducer's in the green of its own colour, on the cross-hatch the miner's used
+# to carry (an 8 pt cell, both diagonals).
 set style line 2 lt rgb "#00A000" lw 2
 set style line 3 lt rgb "#253494" lw 2
 
-# Fifteen policies on a 9.62 cm panel give a tick every 0.64 cm. The two-digit
-# labels 10..15 are about 0.55 cm wide at the 11 pt the rest of the figure uses,
-# which leaves them touching, so the axis numbers are set one step smaller - both
-# axes, so that the y numbers are the same size as the x numbers.
+# Seventeen slots on a 9.62 cm panel give a tick every 0.57 cm. The two-digit labels
+# 10..15 are about 0.55 cm wide at the 11 pt the rest of the figure uses, which
+# leaves them touching, so the axis numbers are set one step smaller - both axes, so
+# that the y numbers are the same size as the x numbers.
 set xtics font ", 9"
 set ytics font ", 9"
 # The axis stops at 120 so the tallest bars - the miner shares sit at 95-100 for
@@ -71,17 +78,17 @@ set rmargin screen 0.87
 # Output settings
 set output 'results/RQ8-Optimization-Overview-Bars-Percentage.pdf'
 
-set label "Percentage (%)" rotate by 90 at screen 0.0586, 0.5322 center font ", 9.06"
+set label "Percentage (%)" rotate by 90 at screen 0.0586, 0.5094 center font ", 9.06"
 set label "# of allow statements" at screen 0.54, 0.16 center font ", 9.06"
 
 # Manual legend for the two shares, one row above the panels, each block a
 # rectangle of its bar's style followed by the bar's name.
-set object 1 rect from screen 0.297, 0.830 to screen 0.321, 0.855 fc rgb "#253494" fillstyle pattern 1 border lc rgb "#253494" lw 1
-set object 2 rect from screen 0.550, 0.830 to screen 0.574, 0.855 fc rgb "#00A000" fs solid noborder
+set object 1 rect from screen 0.297, 0.830 to screen 0.321, 0.855 fc rgb "#253494" fillstyle pattern 7 border lc rgb "#253494" lw 1
+set object 2 rect from screen 0.550, 0.830 to screen 0.574, 0.855 fc rgb "#00A000" fillstyle pattern 1 border lc rgb "#00A000" lw 1
 set label 20 "Intent Miner"   at screen 0.327, 0.8425 left font ", 9.06"
 set label 21 "Intent Reducer" at screen 0.580, 0.8425 left font ", 9.06"
 
-set multiplot layout 1,2 margins 0.13, 0.96, 0.31, 0.7544 spacing 0.09
+set multiplot layout 1,2 margins 0.13, 0.96, 0.31, 0.7088 spacing 0.09
 
 # ------------------------------------------------------------------
 # Panels: two adjacent bars per policy, the left one the share of the intent
@@ -89,22 +96,24 @@ set multiplot layout 1,2 margins 0.13, 0.96, 0.31, 0.7544 spacing 0.09
 # the mining BFS runs on but does not itself do - and the right one the share of
 # the intent reducer's window that goes to the encoding of the findings into EC
 # indices, everything the ILP solve is handed rather than does. The bar indices
-# 0..14 are policies 1..15. Every bar is a share of its own pair, so 100% is the
-# ceiling of what a bar can mean; the axis is drawn 20% past it for headroom.
+# 0..14 are policies 1..15, and the axis runs a slot and a half past each end, so the
+# outermost slots - policy 16 and policy 0 - are floor without a bar or a number.
+# Every bar is a share of its own pair, so 100% is the ceiling of what a bar can mean;
+# the axis is drawn 20% past it for headroom.
 # ------------------------------------------------------------------
 set style data boxes
 set style fill solid 1.0 noborder
 
 # --- Panel 1 (5-Key) ---
 set xtics ( "1" 0, "2" 1, "3" 2, "4" 3, "5" 4, "6" 5, "7" 6, "8" 7, "9" 8, "10" 9, "11" 10, "12" 11, "13" 12, "14" 13, "15" 14 ) scale 0 offset screen 0, 0
-set xrange[-0.5: 14.5]
+set xrange[-1.5: 15.5]
 set yrange[0: 120]
 set size 1, 0.9
 set offsets 0,0,0,0
 set key off
-set label "5-Key" at screen 0.21, 0.7144 center font ", 9.06"
-plot 'data/enc_05.dat' using ($1-0.175):2 w boxes ls 3 fs pattern 1 border title 'Intent Miner', \
-     '' using ($1+0.175):3                   w boxes ls 2 fs solid 1.0 border title 'Intent Reducer'
+set label "5-Key" at screen 0.21, 0.6688 center font ", 9.06"
+plot 'data/enc_05.dat' using ($1-0.175):2 w boxes ls 3 fs pattern 7 border title 'Intent Miner', \
+     '' using ($1+0.175):3                   w boxes ls 2 fs pattern 1 border title 'Intent Reducer'
 
 # Figure-level text is written once, not once per panel: gnuplot redraws every
 # label, every object and every key on each panel's plot, and each of them here
@@ -118,13 +127,13 @@ unset key
 
 # --- Panel 2 (6-Key) ---
 set xtics ( "1" 0, "2" 1, "3" 2, "4" 3, "5" 4, "6" 5, "7" 6, "8" 7, "9" 8, "10" 9, "11" 10, "12" 11, "13" 12, "14" 13, "15" 14 ) scale 0 offset screen 0, 0
-set xrange[-0.5: 14.5]
+set xrange[-1.5: 15.5]
 set yrange[0: 120]
 set size 1, 0.9
 set offsets 0,0,0,0
 set key off
-set label "6-Key" at screen 0.67, 0.7144 center font ", 9.06"
-plot 'data/enc_06.dat' using ($1-0.175):2 w boxes ls 3 fs pattern 1 border notitle, \
-     '' using ($1+0.175):3                   w boxes ls 2 fs solid 1.0 border notitle
+set label "6-Key" at screen 0.67, 0.6688 center font ", 9.06"
+plot 'data/enc_06.dat' using ($1-0.175):2 w boxes ls 3 fs pattern 7 border notitle, \
+     '' using ($1+0.175):3                   w boxes ls 2 fs pattern 1 border notitle
 
 unset multiplot

@@ -94,33 +94,9 @@ bash paper_figures_journal/draw.sh
 
 - `paper_figures_journal/results/RQ4-Experiment-Scalabiliy-RealWorld.pdf`
 
-#### 16. Intent Reduction with Pruning (RQ7): Figure 18
+#### 16. Intent Mining with Pruning and Incremental MCP (RQ7): Figure 18
 
 <img src="docs/figures/figure18.png" width="450"/>
-
-**Required logs**: `results/accessrefinery_bdd_reducer_Original_20rs/` and `results/accessrefinery_bdd_reducer_PruningReducer_20rs/`, each with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys`.
-
-This figure isolates the intent reducer: columns 8 and 9 (`RRIOperationsTimeAverage + RRIILPSolvingTimeAverage`, the set-cover cost over the candidates) of the *Original* stage against the same two columns of *Pruning Reducer*.
-
-**Expected Output:**
-
-- `paper_figures_journal/data/p1_05.dat`, `p1_06.dat`
-  Header `Policy A B`: the *Original* and *Pruning Reducer* stages for `Scalability_05Keys` and `Scalability_06Keys` respectively, in `summary.txt` row order, the 15 policies numbered 1 to 15.
-- `paper_figures_journal/data/rw_p1.dat` — the real-world panel. It is **not** rewritten: its two summaries are withheld like the corpus itself, so the archived file is left in place and the figure keeps reading it. The script reports the skip.
-
-**Running:**
-
-```shell
-(cd paper_figures_journal && gnuplot gnuplot/RQ7-ReducingPruning-Original-PruningReducer.plt)
-```
-
-**Expected Output:**
-
-- `paper_figures_journal/results/RQ7-ReducingPruning-Original-PruningReducer.pdf`
-
-#### 17. Intent Mining with Pruning and Incremental MCP (RQ7): Figure 19
-
-<img src="docs/figures/figure19.png" width="450"/>
 
 **Required logs**: `results/accessrefinery_bdd_reducer_PruningReducer_10rs/` and `results/accessrefinery_bdd_reducer_IncrementalMCP_10rs/`, each with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys`.
 
@@ -130,7 +106,7 @@ This figure isolates the intent miner: columns 6 and 7 (`MCILabelsTimeAverage + 
 
 - `paper_figures_journal/data/p2_05.dat`, `p2_06.dat`
   Header `Policy A B`: the *Pruning Reducer* and *Incremental MCP* stages for `Scalability_05Keys` and `Scalability_06Keys`, in `summary.txt` row order, the 15 policies numbered 1 to 15.
-- `paper_figures_journal/data/rw_p2.dat` — the real-world panel, not rewritten, as in §16.
+- `paper_figures_journal/data/rw_p2.dat` — the real-world panel. It is **not** rewritten: its two summaries are withheld like the corpus itself, so the archived file is left in place and the figure keeps reading it. The script reports the skip.
 
 **Running:**
 
@@ -141,6 +117,30 @@ This figure isolates the intent miner: columns 6 and 7 (`MCILabelsTimeAverage + 
 **Expected Output:**
 
 - `paper_figures_journal/results/RQ7-MiningPruning-PruningReducer-IncrementalMCP.pdf`
+
+#### 17. Intent Reduction with Pruning (RQ7): Figure 19
+
+<img src="docs/figures/figure19.png" width="450"/>
+
+**Required logs**: `results/accessrefinery_bdd_reducer_Original_20rs/` and `results/accessrefinery_bdd_reducer_PruningReducer_20rs/`, each with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys`.
+
+This figure isolates the intent reducer: columns 8 and 9 (`RRIOperationsTimeAverage + RRIILPSolvingTimeAverage`, the set-cover cost over the candidates) of the *Original* stage against the same two columns of *Pruning Reducer*.
+
+**Expected Output:**
+
+- `paper_figures_journal/data/p1_05.dat`, `p1_06.dat`
+  Header `Policy A B`: the *Original* and *Pruning Reducer* stages for `Scalability_05Keys` and `Scalability_06Keys` respectively, in `summary.txt` row order, the 15 policies numbered 1 to 15.
+- `paper_figures_journal/data/rw_p1.dat` — the real-world panel, not rewritten, as in §16.
+
+**Running:**
+
+```shell
+(cd paper_figures_journal && gnuplot gnuplot/RQ7-ReducingPruning-Original-PruningReducer.plt)
+```
+
+**Expected Output:**
+
+- `paper_figures_journal/results/RQ7-ReducingPruning-Original-PruningReducer.pdf`
 
 #### 18. Optimization Overview (RQ8): Figure 20
 

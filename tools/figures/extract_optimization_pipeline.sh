@@ -15,12 +15,13 @@
 #   p1_05.dat, p1_06.dat        RQ7-ReducingPruning-Original-PruningReducer (18)
 #   p2_05.dat, p2_06.dat        RQ7-MiningPruning-PruningReducer-IncrementalMCP (19)
 #   enc_05.dat, enc_06.dat      RQ8-Optimization-Overview-Bars-Percentage (20)
-#   rw_p1.dat, rw_p2.dat        the RW panel of the two RQ7 figures, written only
-#                               when the withheld real-world summaries are present
+#   rw_p1.dat, rw_p2.dat        the RW panels of the two RQ7 figures - shipped as
+#                               they are; this script writes neither of them, so no
+#                               run of it can replace them
 #   Experiment-Scalability-MCI-K{2,3}[-WAll].dat    RQ3-Experiment-Scalability-Mining (14)
 #   Experiment-Scalability-RRI-K{2,3}[-WAll].dat    RQ3-Experiment-Scalability-Reducing (15)
 #
-# The first eight are written whole. The four RQ3 `.dat` files are edited column by
+# The six pair/share files are written whole. The four RQ3 `.dat` files are edited column by
 # column, and only in the columns their two figures draw: the two AccessRefinery series
 # of each come from the pipeline stages under results/, and the Access Analyzer Z3 series
 # from the conference-version measurement archive that README's
@@ -49,23 +50,20 @@
 # single-finding shortcut instead of timing it, so that a policy of at most one finding
 # is charged the reduction it actually costs rather than the ~0 ms the shortcut took.
 # The RW pair of RQ7-ReducingPruning-Original-PruningReducer is therefore one session
-# later than the three Scalability datasets of the folder; no other output of this script
-# is affected by that re-take.
+# later than the three Scalability datasets of the folder. That RW re-take is not read
+# here: this script takes only the two Scalability datasets of the folder.
 #
 # Each stage isolates one optimization, so the figure compares the one column
 # that stage changes:
 #
 #   RQ7-ReducingPruning-Original-PruningReducer
-#                               p1_05/p1_06.dat, rw_p1.dat
+#                               p1_05/p1_06.dat
 #                                     RRIOperationsTimeAverage + RRIILPSolvingTimeAverage
 #                                     (c8+c9), Original vs Pruning Reducer - the
 #                                     reducer's set-cover cost
+#                               (its rw_p1.dat panel is shipped, not written here)
 #
 # The Scalability_* files keep summary.txt row order and number the policies 1..15.
-# The RW files keep that same order: they are the corpus' own, one row per policy,
-# numbered 0..505, so row 0 is rw_001.json and row 505 is rw_506.json. Nothing is
-# reordered - the figures draw these files with `smooth cumulative`, whose x axis is
-# the corpus position, so the column keeps the pairing the summaries have.
 #
 # All outputs are CRLF, no BOM, one header line, matching the checked-in files.
 #
@@ -147,22 +145,24 @@
 # the same command line, so it differs from them in the switches alone. Only the
 # Percentage figure reads it.
 #
-# Real-world output. The RW panel of "RQ7-MiningPruning-PruningReducer-IncrementalMCP"
-# needs the two real-world summaries of the same round,
-# results/accessrefinery_bdd_reducer_<STAGE>_10rs/RW/summary.txt, which this script then
-# turns into
+# Real-world files. Neither `rw_*.dat` panel is produced here: both ship with the
+# artifact and this script never writes either of them, so no run of it can replace
+# the RW panels of the two RQ7 figures. The corpus they summarise is withheld, so they
+# are not reproducible from this repository in the first place. For the record, the
+# shipped files hold
 #
+#   rw_p1.dat   the RW panel of Figure "RQ7-ReducingPruning-Original-PruningReducer"
+#                 Policy A B - c8+c9 of Original vs Pruning Reducer
 #   rw_p2.dat   the RW panel of Figure "RQ7-MiningPruning-PruningReducer-IncrementalMCP"
-#                 Policy A B - c6+c7 of Pruning Reducer vs Incremental MCP, i.e.
-#                 the same quantity as the figure's synthetic panels, one row per RW
-#                 policy, in the corpus' own order and numbered 0..505, like rw_p1.dat
-#                 of Figure "RQ7-ReducingPruning-Original-PruningReducer". The two
-#                 columns stay paired policy by policy: the panels draw them with
-#                 `smooth cumulative`, whose x axis is the corpus position.
+#                 Policy A B - c6+c7 of Pruning Reducer vs Incremental MCP, i.e. the
+#                 same quantity as that figure's synthetic panels
 #
-# Both RW summaries are 10-round runs of the same round as the synthetic data
-# (2026-09-25 for the RW pair). The Pruning Reducer columns of every summary this
-# script reads - the two Scalability sets and RW - were re-taken on 2026-09-26, same
+# one row per RW policy, in the corpus' own order and numbered 0..505, both columns
+# paired policy by policy: the panels draw them with `smooth cumulative`, whose x axis
+# is the corpus position.
+#
+# The Pruning Reducer columns of every summary this script reads - the two Scalability
+# sets - were re-taken on 2026-09-26, same
 # flags and same corpus, with the jar built from the tree that times the reducer's
 # single-finding shortcut; the Incremental MCP column is still that run. The incremental
 # one was taken with -Dmcp.labelinc=true, so its c6 column times the single
@@ -262,40 +262,20 @@ pair_by_row() {
     } > "$5"
 }
 
-# pair_by_row_ix <summaryA> <specA> <summaryB> <specB> <out> : the two columns are
-# taken from the same summary row, in the corpus' own order, and column 1 numbers the
-# rows 0..505. No floor is applied - see the note at the top.
-pair_by_row_ix() {
-    readcol "$1" "$2" > "$TMP/a"
-    readcol "$3" "$4" > "$TMP/b"
-    { printf 'Policy\tA\tB\r\n'
-      paste -d'\t' "$TMP/a" "$TMP/b" \
-        | awk '{ printf "%d\t%s\t%s\r\n", NR-1, $1, $2 }'
-    } > "$5"
-}
-
 # ---------------------------------------------------------------- 20 rounds ----
 ORIG_20="$ROOT/accessrefinery_bdd_reducer_Original_20rs"
 PRUN_20="$ROOT/accessrefinery_bdd_reducer_PruningReducer_20rs"
 
-# The real-world corpus is withheld for commercial reasons, so the `rw_*` outputs
-# are produced only when the archives are present. Every other output on this
-# script's list is synthetic and regenerates unconditionally.
-HAVE_RW=1
-for s in "$ORIG_20" "$PRUN_20"; do
-    [ -f "$s/RW/summary.txt" ] || HAVE_RW=0
-done
-if [ "$HAVE_RW" = 0 ]; then
-    echo "Note: the real-world corpus is not shipped (commercial reasons)."
-    echo "      Skipping rw_p1.dat."
-fi
+# The real-world corpus is withheld for commercial reasons, and the two `rw_*.dat`
+# panels ship as they are: this script writes neither of them, so no run of it can
+# replace the RW panels of the two RQ7 figures. Every output on its list is synthetic
+# and regenerates unconditionally.
+echo "Note: the real-world corpus is not shipped (commercial reasons)."
+echo "      rw_p1.dat and rw_p2.dat ship as they are and are never written by this script."
 
-# --- Figure 18: RQ7-ReducingPruning-Original-PruningReducer, reducer (c8+c9) ----
+# --- Figure 19: RQ7-ReducingPruning-Original-PruningReducer, reducer (c8+c9) ----
 pair_by_row "$ORIG_20/Scalability_05Keys/summary.txt" 8+9 "$PRUN_20/Scalability_05Keys/summary.txt" 8+9 "$OUT/p1_05.dat"
 pair_by_row "$ORIG_20/Scalability_06Keys/summary.txt" 8+9 "$PRUN_20/Scalability_06Keys/summary.txt" 8+9 "$OUT/p1_06.dat"
-if [ "$HAVE_RW" = 1 ]; then
-    pair_by_row_ix "$ORIG_20/RW/summary.txt" 8+9 "$PRUN_20/RW/summary.txt" 8+9 "$OUT/rw_p1.dat"
-fi
 
 # ---------------------------------------------------------------- 10 rounds ----
 # The stage folders the two figure blocks below read: PruningReducer and
@@ -308,7 +288,7 @@ for s in PruningReducer IncrementalMCP MiningOptimized; do
     done
 done
 
-# --- Figure 19: RQ7-MiningPruning-PruningReducer-IncrementalMCP, mining c6+c7 ---
+# --- Figure 18: RQ7-MiningPruning-PruningReducer-IncrementalMCP, mining c6+c7 ---
 for k in 05 06; do
     ds=$(ds_of "$k")
     { printf 'Policy\tA\tB\r\n'
@@ -334,24 +314,10 @@ for k in 05 06; do
     } > "$OUT/enc_$k.dat"
 done
 
-# --- RW panel of Figure 19 -----------------------------------------------------
-# Only when both real-world summaries of this round are in place; the synthetic
-# outputs above regenerate unconditionally.
-HAVE_RW=1
-for s in PruningReducer IncrementalMCP; do
-    [ -f "$ROOT/accessrefinery_bdd_reducer_${s}_10rs/RW/summary.txt" ] || HAVE_RW=0
-done
-
-if [ "$HAVE_RW" = 1 ]; then
-    { printf 'Policy\tA\tB\r\n'
-      paste -d'\t' <(readcol "$ROOT/accessrefinery_bdd_reducer_PruningReducer_10rs/RW/summary.txt" 6+7) \
-                   <(readcol "$ROOT/accessrefinery_bdd_reducer_IncrementalMCP_10rs/RW/summary.txt" 6+7) \
-        | awk '{ printf "%d\t%s\t%s\r\n", NR-1, $1, $2 }'
-    } > "$OUT/rw_p2.dat"
-else
-    echo "Note: $ROOT/accessrefinery_bdd_reducer_{PruningReducer,IncrementalMCP}_10rs/RW/summary.txt not found." >&2
-    echo "      Skipping rw_p2.dat (RW panel of RQ7-MiningPruning-PruningReducer-IncrementalMCP)" >&2
-fi
+# --- RW panel of Figure 18 -----------------------------------------------------
+# Not produced here: rw_p2.dat ships as it is and the corpus it summarises is
+# withheld, so no run of this script may write it. See the note above the Figure 19
+# block.
 
 # ------------------------------------------------------------------- RQ3 -------
 # rq3_col_in <file> <sep> <col> <values> : replace column <col> of <file> with the
