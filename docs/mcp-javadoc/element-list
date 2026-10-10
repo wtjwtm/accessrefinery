@@ -1,0 +1,7 @@
+org.batfish
+org.batfish.datamodel
+org.iam.core
+org.iam.sat
+org.iam.utils
+org.iam.variables.dynamics
+org.iam.variables.statics

@@ -1,0 +1,1 @@
+packageSearchIndex = [{"l":"All Packages","u":"allpackages-index.html"},{"l":"org.batfish"},{"l":"org.batfish.datamodel"},{"l":"org.iam.core"},{"l":"org.iam.sat"},{"l":"org.iam.utils"},{"l":"org.iam.variables.dynamics"},{"l":"org.iam.variables.statics"}];updateSearchResults();

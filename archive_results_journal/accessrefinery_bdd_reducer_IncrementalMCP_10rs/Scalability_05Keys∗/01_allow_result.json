@@ -1,0 +1,27 @@
+{
+	"InputFilePath" : "data/Scalability_05Keys∗/01_allow.json",
+	"GeneratedTime" : "2026-09-26 01:17:19",
+	"Finding" : [
+		{
+			"Principal" : {
+				"AWS" : [
+					"*"
+				]
+			},
+			"Action" : [
+				"s3:ListBucket"
+			],
+			"Resource" : [
+				"arn:aws:s3:::antsknmath"
+			],
+			"Condition" : {
+				"aws:PrincipalOrgId" : [
+					"arn:aws:iam::123456789012:user/*bcdefghijklmno"
+				],
+				"aws:PrincipalArn" : [
+					"arn:aws:iam::123456789012:user/*bcdefghijklmno"
+				]
+			}
+		}
+	]
+}
