@@ -6,16 +6,59 @@ by [Ning Kang](https://xjtu-netverify.github.io/people/nkang/), [Peng Zhang](htt
 
 ## About AccessRefinery
 
+### Conference Version
+
 *AccessRefinery* automatically mines access control intents from IAM (Identity and Access Management) policies. Compared with [AWS Access Analyzer](https://link.springer.com/content/pdf/10.1007/978-3-030-53288-8_9.pdf), *AccessRefinery* accelerates mining by about 10-100x and reduces the number of intents by up to 10x.
 
 - To accelerate intent mining, *AccessRefinery* uses our Multi-Theory Constraint Preprocessor (*MCP*) to speed up multi-round SMT solving by preprocessing constraints into bit-vector form. We also designed *MCP* as a reusable data structure that may benefit other studies.
 - For intent reduction, *AccessRefinery* computes a compact set that covers all mined intents by solving a minimum set-cover problem.
 
-Moreover, the artifact ships the full implementation of *AccessRefinery* together with the datasets, archived results and plotting scripts of the extension experiment reported in the paper: the three-stage optimization pipeline behind RQ7-RQ9. The experiments of the original submission — RQ1-RQ6 and the *Access Analyzer* baseline — are not part of this repository.
+Moreover, the artifact includes the full implementations of *AccessRefinery* and the baseline reimplementation of *Access Analyzer*, along with datasets, archived results, experiment scripts, and plotting scripts to reproduce the results reported in the paper. For technical details, see our [FSE 2026 paper](https://xjtu-netverify.github.io/papers/AccessRefinery/accessrefinery_final_version.pdf).
+
+### Journal Version
+
+We observe that EC paritioning dominates the overall time for both intent mining and intent reduction. 
+We further extends our previous work in FSE 2026 by accelerating EC partitioning for intent mining and intent reduction. 
+
+- For intent mining, we extend MCP to support incremental preprocessing, enabling the results of EC partitioning to be efficiently updated as new variables or values are added, denoted as *Incremetanl MCP*. 
+
+- For intent reduction, we propose a pruning method to identify necessary intents and reduce the number of intents participating in EC partitioning, denoted as *Intent Pruning*.
+
+The code for the conference version has received the **Available** and **Reusable** badges. 
+In this README, we use the `[Journal Extension]` tag to distinguish content added in the journal version from that in the conference version. 
+In the source code, all code additions in the journal version are marked with `//ADD_BEGIN_JOURNAL` and `//ADD_END_JOURNAL`.
+
+
+## Installing AccessRefinery
+
+see [REQUIREMENTS.md](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/REQUIREMENTS.md)  and [INSTALL.md](https://github.com/XJTU-NetVerify/accessrefinery/blob/main/INSTALL.md) for details.
+
+## Project Structure
+
+Since *AWS Access Analyzer* is not open source and provides only a Command-Line Interface (CLI), we also reimplement *Access Analyzer* for evaluation.
+
+- `data/`: Dataset for experiments.
+- `accessrefinery/`: Implementation of *AccessRefinery*.
+  - `bdd/`: Implementation of the binary decision diagram backend used by *MCP*.
+  - `mcp/`: Implementation of the *Multi-Theory Constraint Preprocessor* (*MCP*).
+  - `refinery/`: Implementation of intent mining and reduction.
+- `baselines/`:
+  - `accessanalyzer-reimpl`: Reimplementation of *Access Analyzer*.
+  - `accessanalyzer-cli`: Scripts for invoking *AWS Access Analyzer* via CLI.
+- `pom.xml`: Maven root configuration.
+- `tools/`: Scripts for running the experiments.
+- `docs/`:
+  - `mcp-javadoc`: Javadoc for *MCP*.
+  - `accessrefinery-javadoc`: Javadoc for *AccessRefinery*.
+- `paper_figures/`: Scripts for plotting the figures in the paper.
+- `archive_results/`: Archived experimental results.
+- `[Journal Extension]` `archive_results_journal/`:  Archived experimental result of journal version.
+
 
 ## Optimization Pipeline
 
 Beyond the original batch engine, this artifact implements a three-stage optimization pipeline, in which each stage removes the cost left by the previous one. The three stages are the paper's **Original**, **Pruning Reducer** and **Incremental MCP**.
+
 
 | Stage | Optimization added |
 |---|---|
