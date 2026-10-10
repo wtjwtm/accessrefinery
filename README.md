@@ -15,19 +15,18 @@ by [Ning Kang](https://xjtu-netverify.github.io/people/nkang/), [Peng Zhang](htt
 
 Moreover, the artifact includes the full implementations of *AccessRefinery* and the baseline reimplementation of *Access Analyzer*, along with datasets, archived results, experiment scripts, and plotting scripts to reproduce the results reported in the paper. For technical details, see our [FSE 2026 paper](https://xjtu-netverify.github.io/papers/AccessRefinery/accessrefinery_final_version.pdf).
 
-> The [code](XXX) for the conference version has received the **Available** and **Reusable** badges.
+> The [source code](https://github.com/XJTU-NetVerify/accessrefinery) for the conference version has received the **Available** and **Reusable** badges.
 
 ### Journal Version
 
-We observe that EC partitioning dominates the overall time for both intent mining and intent reduction, accounting for 71--98% and 16--93% of the total time, respectively.
-We further extend our previous work published at FSE 2026 by accelerating EC partitioning for both intent mining and intent reduction. The proposed optimizations provide an additional approximately 10× speedup for **AccessRefinery**.
+We observe that EC partitioning dominates the overall time for both intent mining and intent reduction, accounting for 71-98% and 16-93% of the total time, respectively.
+We further extend our previous work published at FSE 2026 by accelerating EC partitioning for both intent mining and intent reduction. The proposed optimizations provide an additional about 10× speedup for *AccessRefinery*.
 
-- For intent mining, we extend MCP to support incremental preprocessing, enabling the results of EC partitioning to be efficiently updated as new variables or values are added. This technique is denoted as **Incremental MCP**.
+- For intent mining, we propose *Incremental MCP*, which extends MCP to support incremental preprocessing, enabling EC partitions to be efficiently updated as new variables or values are added.
 
-- For intent reduction, we propose a pruning method to identify necessary intents and reduce the number of intents participating in EC partitioning. This technique is denoted as **Intent Pruning**.
+- For intent reduction, we propose *Intent Pruning* to identify necessary intents and reduce the number of intents participating in EC partitioning.
 
-In this README, we use the **`[Journal Extension]`** tag to distinguish content added in the journal version from that in the conference version.
-In the source code, all code additions in the journal version are marked with `//ADD_BEGIN_JOURNAL` and `//ADD_END_JOURNAL`.
+> In this README and the source code, journal extensions are marked with **`[Journal Extension]`** and `//ADD_BEGIN_JOURNAL` / `//ADD_END_JOURNAL`, respectively.
 
 ## Installing AccessRefinery
 
@@ -247,7 +246,8 @@ For the experiments about the conference version, see [Github]().*
 
 ### Peproducing Results
 
-First, we need to collect the results from Access Analyzer and AccessRefinery. For instructions on how to obtain these results, see [README-FSE26](README-FSE26.md/#reproducing--results).
+First, we need to copy the archived results of *Access Analyzer* and *AccessRefinery* without optimizations. 
+For instructions on how to obtain these results, see [README-FSE26](README-FSE26.md/#reproducing--results).
 
 ```shell
 mkdir -p results/ 
