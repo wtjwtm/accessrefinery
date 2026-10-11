@@ -242,7 +242,9 @@ This section describes (1) how to reproduce the results in `results/`, and (2) h
 
 *We omit the results for the real-world datasets because of commercial restrictions.*
 
-**`[Journal Extension]`** Here, we present only the experiments for the journal version: the redrawn scalability figures (RQ3 and RQ4, Figures 14–16) and the evaluations of **Intent Pruning** and **Incremental MCP** (RQ7 and RQ8, Figures 18–20). For the experiments for the conference version, see [README-FSE26.md](README-FSE26.md#running-experiments).
+**`[Journal Extension]`** Here, we present only the experiments about the journal version. For the experiments about the conference version, see [Github](https://github.com/XJTU-NetVerify/accessrefinery).
+
+<!-- **`[Journal Extension]`** Here, we present only the experiments for the journal version: the redrawn scalability figures (RQ3 and RQ4, Figures 14–16) and the evaluations of **Intent Pruning** and **Incremental MCP** (RQ7 and RQ8, Figures 18–20). For the experiments for the conference version, see [README-FSE26.md](README-FSE26.md#running-experiments). -->
 
 <!-- `archive_results_journal/` holds the immutable results shipped with this artifact, and `results/` is the working directory that the experiment scripts write to and that the extraction scripts read from. Every experiment below can therefore either be run or skipped by copying the corresponding archive folder into `results/`. -->
 
