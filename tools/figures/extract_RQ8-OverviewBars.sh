@@ -8,7 +8,7 @@
 # intent reducer's is 100*c8/(c8+c9), its window up to the end of the EC encoding
 # of the findings, i.e. everything before the ILP solve.
 #
-# Input: results/accessrefinery_bdd_reducer_ECPercentage_10rs/, with a summary.txt
+# Input: results/accessrefinery_bdd_reducer_ECpercentage_10rs/, with a summary.txt
 # for Scalability_05Keys and Scalability_06Keys, copied in from
 # archive_results_journal/ by README's second `cp -r` step.
 #
@@ -56,7 +56,7 @@ ds_of() {
 # zero prints 0 rather than dividing by it.
 for k in 05 06; do
     ds=$(ds_of "$k")
-    src="$ROOT/accessrefinery_bdd_reducer_ECPercentage_10rs/$ds/summary.txt"
+    src="$ROOT/accessrefinery_bdd_reducer_ECpercentage_10rs/$ds/summary.txt"
     [ -f "$src" ] || echo "Warning: $src not found; enc_$k.dat comes out empty" >&2
     { printf 'idx\tMiner\tReducer\r\n'
       awk 'NR>1 {

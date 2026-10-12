@@ -122,7 +122,7 @@ This figure isolates the intent miner: columns 6 and 7 (`MCILabelsTimeAverage + 
 
 <img src="docs/figures/figure19.png" width="450"/>
 
-**Required logs**: `results/accessrefinery_bdd_reducer_Original_20rs/` and `results/accessrefinery_bdd_reducer_PruningReducer_20rs/`, each with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys`.
+**Required logs**: `results/accessrefinery_bdd_reducer_Original_20rs/` and `results/accessrefinery_bdd_reducer_IntentPruning_20rs/`, each with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys`.
 
 This figure isolates the intent reducer: columns 8 and 9 (`RRIOperationsTimeAverage + RRIILPSolvingTimeAverage`, the set-cover cost over the candidates) of the *Original* stage against the same two columns of *Pruning Reducer*.
 

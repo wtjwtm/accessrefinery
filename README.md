@@ -271,12 +271,12 @@ You can skip running *AccessRefinery* with *Incremental MCP* and *Intent Pruning
 cp -r archive_results_journal/accessrefinery_bdd_reducer_*rs results/
 ```
 
-Or, you can obtain the results of *AccessRefinery* with optimizations using the following commands. The following scripts invoke target/accessanalyzer-1.0.jar.
+Or, you can obtain the results of *AccessRefinery* with optimizations using the following commands. The following scripts invoke target/accessrefinery-1.0.jar.
 
 <!-- The optimization pipeline is run by one script, which invokes `target/accessrefinery-1.0.jar` once per stage, with the stage selected on the command line — no stage flag is *Original*, `-p` is *Pruning Reducer*, `-o` is *MiningOptimized* and `-p -i -c` is *Incremental MCP* (see [Using AccessRefinery](#using-accessrefinery)). It takes the two 20-round runs that Figure 19 reads and the four 10-round runs that Figures 18 and 20 read: -->
 
 ```shell
-# The execution takes about 110 minutes.
+# The execution takes about 20 minutes.
 bash tools/accessrefinery/running_optimization_pipeline.sh
 ```
 
@@ -285,7 +285,7 @@ bash tools/accessrefinery/running_optimization_pipeline.sh
 Expected Output:
 
 - `results/`: `_` denotes the number of runs, and the average time is reported.
-  - `accessrefinery_bdd_reducer_IncrementalMCP_10rs/`: the results of enable *Incremental MCP*.
+  <!-- - `accessrefinery_bdd_reducer_IncrementalMCP_10rs/`: the results of enable *Incremental MCP*. -->
   - `accessrefinery_bdd_reducer_IntentPruning_20rs/`: the results of enable *Intent Pruning*.
   - `accessrefinery_bdd_reducer_Optimized_10rs/`: the results of enable *Incremental MCP* and *Intent Pruning*.
   <!-- - `accessrefinery_bdd_reducer_Original_{10,20}rs/`: the pipeline with no optimization. -->

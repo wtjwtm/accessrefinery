@@ -4,7 +4,7 @@
 # Figure 14 compares the same two stages of the 10-round set, BR (the
 # conference-version run with no optimization,
 # results/accessrefinery_bdd_reducer_10rs) and the optimized stage (Pruning
-# Reducer + Incremental MCP, results/accessrefinery_bdd_reducer_optimized_10rs),
+# Reducer + Incremental MCP, results/accessrefinery_bdd_reducer_Optimized_10rs),
 # on the intent miner's own two columns, c6+c7.
 #
 # Input: results/<stage folder>/<dataset>/summary.txt, the same
@@ -170,7 +170,7 @@ rq3_mci() {
     wall="$OUT/Experiment-Scalability-MCI-K$n-WAll.dat"
     rq3_fill_col "$dat" "$(printf '\t')" 2 "$ROOT/accessanalyzer_z3_miner_1rs/$ds/summary.csv" aa "" 3600000 trim
     rq3_fill_col "$dat" "$(printf '\t')" 5 "$ROOT/accessrefinery_bdd_reducer_10rs/$ds/summary.txt" txt 6+7 3600000 trim
-    rq3_fill_wall "$ROOT/accessrefinery_bdd_reducer_optimized_10rs/$ds/summary.txt" 6+7 "$wall"
+    rq3_fill_wall "$ROOT/accessrefinery_bdd_reducer_Optimized_10rs/$ds/summary.txt" 6+7 "$wall"
 }
 
 rq3_mci 05

@@ -9,7 +9,7 @@
 # README's `cp -r` steps put under results/:
 #
 #   results/accessrefinery_bdd_reducer_10rs/                 BR  (no stage flag)
-#   results/accessrefinery_bdd_reducer_PruningReducer_20rs/  AR  (-p)
+#   results/accessrefinery_bdd_reducer_IntentPruning_20rs/  AR  (-p)
 #
 # BR is the conference-version run of the tool with no optimization, copied in
 # from archive_results/accessrefinery_bdd_reducer_10rs/ by README's first
@@ -84,7 +84,7 @@ pair_by_row() {
 }
 
 BR="$ROOT/accessrefinery_bdd_reducer_10rs"
-PRUN_20="$ROOT/accessrefinery_bdd_reducer_PruningReducer_20rs"
+PRUN_20="$ROOT/accessrefinery_bdd_reducer_IntentPruning_20rs"
 
 echo "Note: the real-world corpus is not shipped (commercial reasons)."
 echo "      rw_p1.dat ships as it is and is never written by this script."

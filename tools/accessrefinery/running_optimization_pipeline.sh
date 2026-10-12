@@ -26,9 +26,9 @@
 #
 # What is run, and what reads each folder:
 #
-#   results/accessrefinery_bdd_reducer_PruningReducer_20rs/  (-p)       20 rounds
-#   results/accessrefinery_bdd_reducer_optimized_10rs/       (-p -i -c) 10 rounds
-#   results/accessrefinery_bdd_reducer_ECPercentage_10rs/    (-o)       10 rounds
+#   results/accessrefinery_bdd_reducer_IntentPruning_20rs/  (-p)       20 rounds
+#   results/accessrefinery_bdd_reducer_Optimized_10rs/       (-p -i -c) 10 rounds
+#   results/accessrefinery_bdd_reducer_ECpercentage_10rs/    (-o)       10 rounds
 #                                       -> tools/figures/extract_RQ7-ReducingPruning.sh
 #                                          (Figure 19: p1_05.dat, p1_06.dat, rw_p1.dat)
 #                                       -> tools/figures/extract_RQ7-MiningPruning.sh
@@ -72,9 +72,15 @@ run_stage() {
   mv result "results/$name"
 }
 
+# The runs above write into results/, which a fresh checkout already carries (it
+# holds the folders the shipped figures were drawn from) but which need not exist
+# at all. Create it so a run in a bare tree lands its folders rather than failing
+# to move them.
+mkdir -p results
+
 # --- 20 rounds -----------------------------------------------------------------
 # Pruning Reducer - Original + essential-finding pre-filter
-run_stage accessrefinery_bdd_reducer_PruningReducer_20rs 20 -p
+run_stage accessrefinery_bdd_reducer_IntentPruning_20rs 20 -p
 
 # --- 10 rounds -----------------------------------------------------------------
 # ADD_BEGIN_JOURNAL
@@ -83,13 +89,13 @@ run_stage accessrefinery_bdd_reducer_PruningReducer_20rs 20 -p
 # -c is pinned because this stage's archive was measured with the cross-policy
 # shared factory: without it every policy gets its own fresh factory, which would
 # make the regenerated stage disagree with
-# archive_results_journal/accessrefinery_bdd_reducer_optimized_10rs/ on every
+# archive_results_journal/accessrefinery_bdd_reducer_Optimized_10rs/ on every
 # timing column (on 05Keys the labels column alone is 2-8x).
-run_stage accessrefinery_bdd_reducer_optimized_10rs 10 -p -i -c
+run_stage accessrefinery_bdd_reducer_Optimized_10rs 10 -p -i -c
 # END_BEGIN_JOURNAL
 
 # ECPercentage - the intent-mining optimization alone, the configuration Figure
 # 20 reads. -o turns on the miner's refinement-DAG node construction and BFS
 # early-exit without the incremental EC engine below it, so the cross-policy
 # shared factory of the stage above does not apply and no -c is passed.
-run_stage accessrefinery_bdd_reducer_ECPercentage_10rs 10 -o
+run_stage accessrefinery_bdd_reducer_ECpercentage_10rs 10 -o

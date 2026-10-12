@@ -9,8 +9,8 @@
 # README's second `cp -r` step copies in from archive_results_journal/. Where each
 # was taken:
 #
-#   results/accessrefinery_bdd_reducer_PruningReducer_20rs/  AR, Pruning Reducer
-#   results/accessrefinery_bdd_reducer_optimized_10rs/       Pruning Reducer +
+#   results/accessrefinery_bdd_reducer_IntentPruning_20rs/  AR, Pruning Reducer
+#   results/accessrefinery_bdd_reducer_Optimized_10rs/       Pruning Reducer +
 #                                                            Incremental MCP
 #
 # Both are journal runs of the 10- and 20-round sets described in
@@ -74,13 +74,13 @@ echo "      rw_p2.dat ships as it is and is never written by this script."
 # --- Figure 18: RQ7-MiningPruning-PruningReducer-IncrementalMCP, mining c6+c7 ---
 for k in 05 06; do
     ds=$(ds_of "$k")
-    for f in "$ROOT/accessrefinery_bdd_reducer_PruningReducer_20rs/$ds/summary.txt" \
-             "$ROOT/accessrefinery_bdd_reducer_optimized_10rs/$ds/summary.txt"; do
+    for f in "$ROOT/accessrefinery_bdd_reducer_IntentPruning_20rs/$ds/summary.txt" \
+             "$ROOT/accessrefinery_bdd_reducer_Optimized_10rs/$ds/summary.txt"; do
         [ -f "$f" ] || echo "Warning: $f not found; the column that reads it comes out empty" >&2
     done
     { printf 'Policy\tA\tB\r\n'
-      paste -d'\t' <(readcol "$ROOT/accessrefinery_bdd_reducer_PruningReducer_20rs/$ds/summary.txt" 6+7) \
-                   <(readcol "$ROOT/accessrefinery_bdd_reducer_optimized_10rs/$ds/summary.txt" 6+7) \
+      paste -d'\t' <(readcol "$ROOT/accessrefinery_bdd_reducer_IntentPruning_20rs/$ds/summary.txt" 6+7) \
+                   <(readcol "$ROOT/accessrefinery_bdd_reducer_Optimized_10rs/$ds/summary.txt" 6+7) \
         | awk '{ printf "%d\t%s\t%s\r\n", NR, $1, $2 }'
     } > "$OUT/p2_$k.dat"
 done

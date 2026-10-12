@@ -4,7 +4,7 @@
 # Figure 15 compares the same two stages of the 10-round set as Figure 14 does -
 # BR (the conference-version run with no optimization,
 # results/accessrefinery_bdd_reducer_10rs) and the optimized stage (Pruning
-# Reducer + Incremental MCP, results/accessrefinery_bdd_reducer_optimized_10rs) -
+# Reducer + Incremental MCP, results/accessrefinery_bdd_reducer_Optimized_10rs) -
 # but plots the per-policy total execution time instead: c5, TotalTimeAverage.
 #
 # Input: results/<stage folder>/<dataset>/summary.txt. The two folders it reads
@@ -165,7 +165,7 @@ rq3_rri() {
     wall="$OUT/Experiment-Scalability-RRI-K$n-WAll.dat"
     rq3_fill_col "$dat" " " 1 "$ROOT/accessanalyzer_z3_reducer_1rs/$ds/summary.csv" aa "" 3600000.0
     rq3_fill_col "$dat" " " 4 "$ROOT/accessrefinery_bdd_reducer_10rs/$ds/summary.txt" txt 5 3600000.00
-    rq3_fill_wall "$ROOT/accessrefinery_bdd_reducer_optimized_10rs/$ds/summary.txt" 5 "$wall"
+    rq3_fill_wall "$ROOT/accessrefinery_bdd_reducer_Optimized_10rs/$ds/summary.txt" 5 "$wall"
 }
 
 rq3_rri 05
