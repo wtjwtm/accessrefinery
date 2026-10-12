@@ -302,36 +302,25 @@ After generating `results/`, we show how to reproduce the claims in the paper wi
 
 > We rerun the experiments on real-world datasets to reduce measurement noise. The results of these experiments are not publicly available for commercial reasons, but the data are retained for plotting.
 
-<!-- The claims covered here are the scalability of intent mining and reduction (RQ3, RQ4) and the three-stage optimization pipeline (RQ7, RQ8), i.e. Figures 14, 15, 16, 18, 19 and 20. [REPRODUCTION.md](REPRODUCTION.md) documents, claim by claim, the exact data each figure reads and the script that extracts it. -->
-
-<!-- The real-world `RW` corpus is not public, for commercial reasons, so the pipeline cannot be re-run over it. Its plotting data ships with the artifact, and the extraction script below skips it, leaving the archived files in place. -->
-
-Before plotting, we recommend clearing previously used plotting data with:
+Before plotting, we clear the plotting data of a previous run:
 
 ```shell
 sh tools/clean_plotting.sh
 ```
 
-Then extract the plotting data using the following command, which runs a script that extracts the data from `results/`.
-<!-- It **overwrites** the files it generates in `paper_figures_journal/data/`: all six data files for Figures 18–20 and the existing data files for Figures 14 and 15.  -->
+To generate all figures at once, run the following command:
 
 ```shell
 bash tools/figures/extract_optimization_pipeline.sh
+bash paper_figures_journal/draw.sh
 ```
 
-<!-- The parts of `data/` it leaves alone are the ones that cannot be regenerated: the real-world panels `rw_p1.dat` and `rw_p2.dat` and the `Experiment-*-RealWorld.dat` files, whose corpus is withheld, and the `Experiment-Effectiveness-*` files, which belong to the conference-version archive. -->
-
-<!-- To generate all figures at once, run the following command: -->
-
-<!-- ```shell
-bash paper_figures_journal/draw.sh
-``` -->
-
-To generate each figure individually, run the following command:
+Or, to generate each figure individually, run the following command:
 
 #### Plotting Figure 14 (Section 7.3)
 
 ```shell
+bash tools/figures/extract_RQ3-Mining.sh
 (cd paper_figures_journal && gnuplot gnuplot/RQ3-Experiment-Scalability-Mining.plt)
 ```
 
@@ -342,6 +331,7 @@ Expected Output:
 #### Plotting Figure 15 (Section 7.3)
 
 ```shell
+bash tools/figures/extract_RQ3-Reducing.sh
 (cd paper_figures_journal && gnuplot gnuplot/RQ3-Experiment-Scalability-Reducing.plt)
 ```
 
@@ -362,6 +352,7 @@ Expected Output:
 #### Plotting Figure 18 (Section 7.7)
 
 ```shell
+bash tools/figures/extract_RQ7-MiningPruning.sh
 (cd paper_figures_journal && gnuplot gnuplot/RQ7-MiningPruning-PruningReducer-IncrementalMCP.plt)
 ```
 
@@ -372,6 +363,7 @@ Expected Output:
 #### Plotting Figure 19 (Section 7.7)
 
 ```shell
+bash tools/figures/extract_RQ7-ReducingPruning.sh
 (cd paper_figures_journal && gnuplot gnuplot/RQ7-ReducingPruning-Original-PruningReducer.plt)
 ```
 
@@ -382,12 +374,14 @@ Expected Output:
 #### Plotting Figure 20 (Section 7.8)
 
 ```shell
+bash tools/figures/extract_RQ8-OverviewBars.sh
 (cd paper_figures_journal && gnuplot gnuplot/RQ8-Optimization-Overview-Bars-Percentage.plt)
 ```
 
 Expected Output:
 
 - `paper_figures_journal/results/RQ8-Optimization-Overview-Bars-Percentage.pdf`
+
 
 <!-- Figures 18 and 19 each carry a real-world `RW` panel besides their two synthetic ones; as the note above says, the archived plotting data of those panels cannot be regenerated. -->
 
