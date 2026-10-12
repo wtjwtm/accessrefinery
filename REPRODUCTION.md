@@ -4,8 +4,6 @@ After generating `results/`, we explain how to reproduce the figures and conclus
 
 This document covers the extension experiment of this revision: the redraws of the scalability figures (RQ3 and RQ4, Figures 14-16) and the three-stage optimization pipeline **Original → Pruning Reducer → Incremental MCP** (RQ7 and RQ8, Figures 18-20). Its material is kept in its own directories: archived outputs in `archive_results_journal/`, plotting inputs in `paper_figures_journal/data/`, `.plt` files in `paper_figures_journal/gnuplot/`, rendered PDFs in `paper_figures_journal/results/`.
 
-> **Note on numbering.** §1-§13 of the original document reproduce the experiments reported in the original submission — RQ1-RQ6, plus the two claims the paper makes in its setup section (§6), the AWS CLI time-out and the identical intents of the two *Access Analyzer* versions. Those experiments are not part of this repository: the conference-version `archive_results/`, `paper_figures/` and the real-world `data/RW/` are not shipped, so those sections are not included here. The section numbers below are kept continuous with the original document, so the extension experiment keeps its §14-§18 numbering.
-
 `results/` is the working directory that the experiment scripts write to and that the extraction scripts read from. `archive_results_journal/` holds the immutable results shipped with this artifact, so every dataset below can either be run or skipped by copying the corresponding archive folder into `results/`.
 
 Each section from §14 on is labelled with the research question it answers: RQ3, RQ4, RQ7 and RQ8.
@@ -14,7 +12,7 @@ Each section from §14 on is labelled with the research question it answers: RQ3
 
 #### Setup Common to §§14-18
 
-The *Access Analyzer* baselines Figures 14-16 compare against come from the conference-version archive, which is not part of this repository (see [README-FSE26.md](README-FSE26.md)); the optimization pipeline itself is run by one script, whose stages are selected on the command line — no stage flag is *Original*, `-p` is *Pruning Reducer*, `-o` is *MiningOptimized* and `-p -i` is *Incremental MCP*. Copying the shipped archive is the alternative to running it, which takes about 110 minutes:
+The *Access Analyzer* baselines Figures 14-16 compare against come from the conference-version archive, which is not part of this repository (see [README-FSE26.md](README-FSE26.md)); the optimization pipeline itself is run by one script, whose stages are selected on the command line — no stage flag is *Original*, `-p` is *Pruning Reducer*, `-o` is *MiningOptimized* and `-p -i -c` is *Incremental MCP*. Copying the shipped archive is the alternative to running it, which takes about 20 minutes:
 
 ```shell
 mkdir -p results/
@@ -30,9 +28,9 @@ cp -r archive_results_journal/accessrefinery_bdd_reducer_*rs results/
 bash tools/accessrefinery/running_optimization_pipeline.sh
 ```
 
-Every run writes `results/accessrefinery_bdd_reducer_{Original,PruningReducer,IncrementalMCP,MiningOptimized}_{10,20}rs/`, each holding one `summary.txt` per dataset, `Scalability_05Keys` and `Scalability_06Keys`, reporting the average over the run's rounds. The columns a figure reads are named by its section below.
+Every run writes one folder per stage — `results/accessrefinery_bdd_reducer_IntentPruning_20rs/` at 20 rounds, and `results/accessrefinery_bdd_reducer_Optimized_10rs/` and `results/accessrefinery_bdd_reducer_ECpercentage_10rs/` at 10 — and the copy steps above add the conference-version folders, `results/accessrefinery_bdd_reducer_10rs/` among them. Each folder holds one `summary.txt` per dataset, `Scalability_05Keys` and `Scalability_06Keys`, reporting the average over the run's rounds. The columns a figure reads are named by its section below.
 
-Before plotting, clear previously rendered PDFs so that every figure is regenerated rather than reused:
+Before plotting, reset both plotting directories — the rendered PDFs and the plotting data — to the state shipped with the artifact, so that every figure and every data file is regenerated rather than reused:
 
 ```shell
 sh tools/clean_plotting.sh
@@ -55,7 +53,7 @@ bash paper_figures_journal/draw.sh
 <img src="docs/figures/figure14.png" width="450"/>
 <img src="docs/figures/figure15.png" width="450"/>
 
-**Required logs**: `results/accessrefinery_bdd_reducer_Original_10rs/` and `results/accessrefinery_bdd_reducer_IncrementalMCP_10rs/`, each with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys` — the two stages these figures compare; the archive-copy step above populates both. The *Access Analyzer* curves are read from `results/accessanalyzer_z3_miner_1rs/` and `results/accessanalyzer_z3_reducer_1rs/`, from the conference-version archive.
+**Required logs**: `results/accessrefinery_bdd_reducer_10rs/` and `results/accessrefinery_bdd_reducer_Optimized_10rs/`, each with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys` — the two stages these figures compare; the archive-copy step above populates both. The *Access Analyzer* curves are read from `results/accessanalyzer_z3_miner_1rs/` and `results/accessanalyzer_z3_reducer_1rs/`, from the conference-version archive.
 
 **Expected Output:** two data files per figure, one per dataset size, K2 being `Scalability_05Keys` and K3 `Scalability_06Keys`. The script rewrites the *Access Analyzer* (Z3) and *AccessRefinery* (Original) columns of each; the CVC5 and MiniSAT columns belong to the conference-version figures and are kept as shipped.
 
@@ -67,7 +65,9 @@ bash paper_figures_journal/draw.sh
 **Running:**
 
 ```shell
+bash tools/figures/extract_RQ3-Mining.sh
 (cd paper_figures_journal && gnuplot gnuplot/RQ3-Experiment-Scalability-Mining.plt)
+bash tools/figures/extract_RQ3-Reducing.sh
 (cd paper_figures_journal && gnuplot gnuplot/RQ3-Experiment-Scalability-Reducing.plt)
 ```
 
@@ -98,7 +98,7 @@ bash paper_figures_journal/draw.sh
 
 <img src="docs/figures/figure18.png" width="450"/>
 
-**Required logs**: `results/accessrefinery_bdd_reducer_PruningReducer_10rs/` and `results/accessrefinery_bdd_reducer_IncrementalMCP_10rs/`, each with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys`.
+**Required logs**: `results/accessrefinery_bdd_reducer_IntentPruning_20rs/` and `results/accessrefinery_bdd_reducer_Optimized_10rs/`, each with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys`.
 
 This figure isolates the intent miner: columns 6 and 7 (`MCILabelsTimeAverage + MCIOperationsTimeAverage`, the label update and the refinement-DAG node construction) of *Pruning Reducer* against the same two columns of *Incremental MCP*. The panel titles the first curve *Intent Miner (Original)*; its values are the *Pruning Reducer* stage's.
 
@@ -111,6 +111,7 @@ This figure isolates the intent miner: columns 6 and 7 (`MCILabelsTimeAverage + 
 **Running:**
 
 ```shell
+bash tools/figures/extract_RQ7-MiningPruning.sh
 (cd paper_figures_journal && gnuplot gnuplot/RQ7-MiningPruning-PruningReducer-IncrementalMCP.plt)
 ```
 
@@ -122,7 +123,7 @@ This figure isolates the intent miner: columns 6 and 7 (`MCILabelsTimeAverage + 
 
 <img src="docs/figures/figure19.png" width="450"/>
 
-**Required logs**: `results/accessrefinery_bdd_reducer_Original_20rs/` and `results/accessrefinery_bdd_reducer_IntentPruning_20rs/`, each with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys`.
+**Required logs**: `results/accessrefinery_bdd_reducer_10rs/` and `results/accessrefinery_bdd_reducer_IntentPruning_20rs/`, each with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys`.
 
 This figure isolates the intent reducer: columns 8 and 9 (`RRIOperationsTimeAverage + RRIILPSolvingTimeAverage`, the set-cover cost over the candidates) of the *Original* stage against the same two columns of *Pruning Reducer*.
 
@@ -135,6 +136,7 @@ This figure isolates the intent reducer: columns 8 and 9 (`RRIOperationsTimeAver
 **Running:**
 
 ```shell
+bash tools/figures/extract_RQ7-ReducingPruning.sh
 (cd paper_figures_journal && gnuplot gnuplot/RQ7-ReducingPruning-Original-PruningReducer.plt)
 ```
 
@@ -146,7 +148,7 @@ This figure isolates the intent reducer: columns 8 and 9 (`RRIOperationsTimeAver
 
 <img src="docs/figures/figure20.png" width="450"/>
 
-**Required logs**: `results/accessrefinery_bdd_reducer_MiningOptimized_10rs/`, with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys`. This is the mining-phase search optimization alone, `-o` on the command line, which is not one of the three pipeline stages. It is optional: without that folder the script reports it and the two files below come out empty, while everything else in §§14-17 still reproduces.
+**Required logs**: `results/accessrefinery_bdd_reducer_ECpercentage_10rs/`, with a `summary.txt` for `Scalability_05Keys` and `Scalability_06Keys`. This is the mining-phase search optimization alone, `-o` on the command line, which is not one of the three pipeline stages. It is optional: without that folder the script reports it and the two files below come out empty, while everything else in §§14-17 still reproduces.
 
 This figure reports how much of each phase's window goes to the encoding side. Its two shares are read from that configuration's own `summary.txt`: the intent miner's share is `100*c6/(c6+c7)`, its window up to the end of the label tree, and the intent reducer's is `100*c8/(c8+c9)`, its window up to the end of the EC encoding of the findings.
 
@@ -158,6 +160,7 @@ This figure reports how much of each phase's window goes to the encoding side. I
 **Running:**
 
 ```shell
+bash tools/figures/extract_RQ8-OverviewBars.sh
 (cd paper_figures_journal && gnuplot gnuplot/RQ8-Optimization-Overview-Bars-Percentage.plt)
 ```
 
