@@ -1,8 +1,7 @@
 # RQ8 - Share of each stage's window that goes to its encoding step, as a
 # percentage of that stage's own pair.
 #
-# Two panels: 5-Key, 6-Key. The 5-Key* panel of the three-panel version of this
-# figure is not drawn in this set.
+# Two panels: 5-Key, 6-Key.
 #
 # Each panel draws all fifteen policies of its dataset, against the five
 # (3/6/9/12/15) the three-panel version drew, and takes the two-panel RQ3 band:

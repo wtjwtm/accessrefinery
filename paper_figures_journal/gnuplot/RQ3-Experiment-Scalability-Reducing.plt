@@ -1,10 +1,9 @@
 # RQ3 - Scalability of the intent reducing phase.
 #
-# Two panels: 5-Key, 6-Key. The 5-Key* panel of the three-panel version of this
-# figure is not drawn in this set.
+# Two panels: 5-Key, 6-Key.
 #
 # Layout: the canvas, the two-panel multiplot band, the two panel labels and the
-# key are the ones this figure used before the 5-Key* panel was added. The four
+# key are this figure's own two-panel layout. The four
 # curves, their axes and their colours are the ones the three-panel version draws.
 
 set terminal pdfcairo font "Times New Roman, 13" linewidth 1 rounded fontscale 1.35 size 31cm, 11cm

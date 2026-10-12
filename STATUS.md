@@ -20,7 +20,7 @@ We believe this artifact satisfies the Functional criteria based on the followin
 
 - **Complete:** The artifact includes all necessary components to reproduce the extension experiment reported in the paper (RQ7-RQ8, the three-stage optimization pipeline):
   - Source code of *AccessRefinery*, including the three-stage optimization pipeline
-  - Three synthetic scalability datasets — `Scalability_05Keys/`, `Scalability_06Keys/` and `Scalability_05Keys∗/`, the paper's `5-Key`, `6-Key` and `5-Key*` — plus the `Correctness/` set used to check that the mined intents cover the policies
+  - Two synthetic scalability datasets — `Scalability_05Keys/` and `Scalability_06Keys/`, the paper's `5-Key` and `6-Key` — plus the `Correctness/` set used to check that the mined intents cover the policies
   - The real-world corpus (`RW/`, 506 policies) is **not public**, for commercial reasons: the raw real-world policies are not publicly available due to commercial restrictions
   - Archived results, extraction scripts, plotting scripts and rendered figures for the pipeline (Figures 18-21)
 
