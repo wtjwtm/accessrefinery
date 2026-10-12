@@ -62,8 +62,8 @@ Two notes on the scripts:
 | `Experiment-Scalability-MCI-K{2,3}[-WAll].dat` | RQ3-Mining (14) | `tools/figures/extract_optimization_pipeline.sh`, the AccessRefinery series only |
 | `Experiment-Scalability-RRI-K{2,3}[-WAll].dat` | RQ3-Reducing (15) | the same script, the AccessRefinery series only |
 | `Experiment-Scalability-{MCI,RRI}-RealWorld[-WAll].dat` | RQ4 (16) | nothing in this tree — see below |
-| `p1_05.dat`, `p1_06.dat`, `rw_p1.dat` | RQ7-ReducingPruning (18) | `tools/figures/extract_optimization_pipeline.sh` |
-| `p2_05.dat`, `p2_06.dat`, `rw_p2.dat` | RQ7-MiningPruning (19) | `tools/figures/extract_optimization_pipeline.sh` |
+| `p1_05.dat`, `p1_06.dat`, `rw_p1.dat` | RQ7-ReducingPruning (19) | `tools/figures/extract_optimization_pipeline.sh` |
+| `p2_05.dat`, `p2_06.dat`, `rw_p2.dat` | RQ7-MiningPruning (18) | `tools/figures/extract_optimization_pipeline.sh` |
 | `enc_05.dat`, `enc_06.dat` | RQ8 (20) | `tools/figures/extract_optimization_pipeline.sh` |
 
 That one script reads the stage folders under `results/` and writes into this
