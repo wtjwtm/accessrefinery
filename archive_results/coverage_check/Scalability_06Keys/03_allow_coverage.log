@@ -1,0 +1,10 @@
+[INFO] 2026-04-10 22:30:43 : ----------[ Shaky Jenga Tower Code ]-------------
+[INFO] 2026-04-10 22:30:43 : logger path: /home/testmachine/accessrefinery/miner.log
+[INFO] 2026-04-10 22:30:43 : policy path: ./data/Scalability_06Keys/03_allow.json
+[INFO] 2026-04-10 22:30:43 : findings path: /tmp/tmp.czWYmDsvwR
+[INFO] 2026-04-10 22:30:43 : ----------< Processing policy - 03_allow.json >-----------
+[INFO] 2026-04-10 22:30:43 : ----------< Processing findings - tmp.czWYmDsvwR >-----------
+[INFO] 2026-04-10 22:30:43 : [1/2]  finish parser policy and findings
+[INFO] 2026-04-10 22:30:44 : The findings cover the policy.
+[INFO] 2026-04-10 22:30:46 : The findings are minimal (removing any finding breaks coverage).
+[INFO] 2026-04-10 22:30:46 : [2/2]  finish covering checking.
