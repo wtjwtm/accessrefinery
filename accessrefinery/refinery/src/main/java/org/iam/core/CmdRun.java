@@ -34,6 +34,7 @@ import java.util.logging.Level;
  *   <li>-p, --pruning: Enable Intent Pruning (journal extension)</li>
  *   <li>-o, --mining-optimized: Enable the intent-mining optimization alone (journal extension)</li>
  *   <li>-i, --increment: Enable Incremental MCP (journal extension)</li>
+ *   <li>-c, --cross-policy: Share the MCPFactory across policies within a round (default is one per policy)</li>
  *   <li>--zelkova: Run Zelkova mode</li>
  *   <li>--rest: Enable REST mode</li>
  *   <li>--merge: Merge intents in output</li>
@@ -58,6 +59,7 @@ public class CmdRun {
         options.addOption("p", "pruning", false, "Enable Intent Pruning");
         options.addOption("o", "mining-optimized", false, "Enable the intent-mining optimization alone");
         options.addOption("i", "increment", false, "Enable Incremental MCP");
+        options.addOption("c", "cross-policy", false, "Share the MCPFactory across policies within a round (default is one per policy)");
         options.addOption(null, "zelkova", false, "Run Zelkova mode");
         options.addOption(null, "rest", false, "Enable REST mode");
         options.addOption(null, "merge", false, "Merge intents in output");
@@ -89,6 +91,8 @@ public class CmdRun {
             } else {
                 Parameter.isBDD = true;
             }
+
+            Parameter.isCrossPolicy = cmd.hasOption("c");
 
             if (cmd.hasOption("round")) {
                 Parameter.round = Integer.parseInt(cmd.getOptionValue("round"));
@@ -145,18 +149,18 @@ public class CmdRun {
         // END_BEGIN_JOURNAL
         int round = Parameter.round;
         // ADD_BEGIN_JOURNAL
-        // -Dinc.independent (default true): each policy gets its own fresh MCPFactory, so
-        // no EC/BDD state accumulates across policies ("各数据无关联"). This is the
-        // default because the cross-policy shared factory made a policy's measured cost
-        // depend on which policies preceded it, which is not what the per-policy summary
-        // columns are meant to report. Pass -Dinc.independent=false to opt back into the
-        // cross-policy shared-factory behaviour.
+        // Whether the sweep shares EC/BDD state across policies is selected by
+        // -c/--cross-policy. By default each policy gets its own fresh MCPFactory, so no
+        // EC/BDD state accumulates across policies ("各数据无关联"). That is the default
+        // because the cross-policy shared factory makes a policy's measured cost depend
+        // on which policies preceded it, which is not what the per-policy summary columns
+        // are meant to report. -c opts into the shared factory, the mode the archived
+        // Incremental MCP measurements were taken in.
         // Without -i the cross-policy shared factory is off as well: the incremental EC
         // state that a shared factory carries from one policy to the next *is* the
         // Incremental MCP stage's optimization, so outside that stage every policy needs
-        // a fresh factory.
-        boolean independent = Boolean.parseBoolean(System.getProperty("inc.independent", "true"))
-                || !Parameter.isOptIncremental();
+        // a fresh factory and -c has no effect.
+        boolean independent = !Parameter.isOptIncremental() || !Parameter.isCrossPolicy;
         // END_BEGIN_JOURNAL
         Map<String, double[][]> acc = new LinkedHashMap<>();   // [round][labels,ops,rriOps,rriIlp]
         Map<String, int[]> meta = new LinkedHashMap<>();     // [stmt,mci,rri,mciRound]

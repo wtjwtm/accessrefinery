@@ -207,6 +207,7 @@ Command-line options:
 - `--round <number>` : Number of mining rounds (to reduce experimental bias).
 - **`[Journal Extension]`** `-p, --pruning` : Enable *Intent Pruning*.
 - **`[Journal Extension]`** `-i, --increment` : Enable *Incremental MCP*.
+- **`[Journal Extension]`** `-c, --cross-policy` : Share one MCP factory across the policies of a round, carrying the incremental EC state over (only with `-i`; default is one factory per policy).
 - **`[Journal Extension]`** `-o, --mining-optimized` : Enable the intent mining optimization for calculating the percentage of EC partitioning.
 
 **Example:**
@@ -272,7 +273,7 @@ cp -r archive_results_journal/accessrefinery_bdd_reducer_*rs results/
 
 Or, you can obtain the results of *AccessRefinery* with optimizations using the following commands. The following scripts invoke target/accessanalyzer-1.0.jar.
 
-<!-- The optimization pipeline is run by one script, which invokes `target/accessrefinery-1.0.jar` once per stage, with the stage selected on the command line — no stage flag is *Original*, `-p` is *Pruning Reducer*, `-o` is *MiningOptimized* and `-p -i` is *Incremental MCP* (see [Using AccessRefinery](#using-accessrefinery)). It takes the two 20-round runs that Figure 19 reads and the four 10-round runs that Figures 18 and 20 read: -->
+<!-- The optimization pipeline is run by one script, which invokes `target/accessrefinery-1.0.jar` once per stage, with the stage selected on the command line — no stage flag is *Original*, `-p` is *Pruning Reducer*, `-o` is *MiningOptimized* and `-p -i -c` is *Incremental MCP* (see [Using AccessRefinery](#using-accessrefinery)). It takes the two 20-round runs that Figure 19 reads and the four 10-round runs that Figures 18 and 20 read: -->
 
 ```shell
 # The execution takes about 110 minutes.

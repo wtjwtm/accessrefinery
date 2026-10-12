@@ -13,6 +13,11 @@
 #   -p -i             Incremental MCP - Pruning Reducer + the miner's refinement-DAG
 #                                       node construction and BFS early-exit, and
 #                                       the incremental EC engine below it
+#   -c                Cross-policy shared MCPFactory - with -i on, one factory
+#                                       drives every policy of a round instead of
+#                                       one per policy. Run here because the
+#                                       archived Incremental MCP folder was measured
+#                                       that way; it selects no stage of its own.
 #
 # The Baseline these stages are compared against is not run here: it is the
 # conference-version BR run, which ships as
@@ -22,7 +27,7 @@
 # What is run, and what reads each folder:
 #
 #   results/accessrefinery_bdd_reducer_PruningReducer_20rs/  (-p)       20 rounds
-#   results/accessrefinery_bdd_reducer_optimized_10rs/       (-p -i)    10 rounds
+#   results/accessrefinery_bdd_reducer_optimized_10rs/       (-p -i -c) 10 rounds
 #   results/accessrefinery_bdd_reducer_ECPercentage_10rs/    (-o)       10 rounds
 #                                       -> tools/figures/extract_RQ7-ReducingPruning.sh
 #                                          (Figure 19: p1_05.dat, p1_06.dat, rw_p1.dat)
@@ -50,8 +55,8 @@
 # data/RW/ ships empty and the RW run below is skipped unless the folder has been
 # restored locally.
 
-# JVM options, which must precede -jar. Only the Incremental MCP stage below sets
-# any; the stage flags, by contrast, are passed to run_stage and land after -jar.
+# JVM options, which must precede -jar. None is needed by the stages below; the stage
+# flags, by contrast, are passed to run_stage and land after -jar.
 JAVA_OPTS=""
 
 run_stage() {
@@ -75,18 +80,16 @@ run_stage accessrefinery_bdd_reducer_PruningReducer_20rs 20 -p
 # ADD_BEGIN_JOURNAL
 # Incremental MCP - Pruning Reducer + the refinement-DAG miner and the incremental
 # EC engine with the cross-policy shared factory.
-# -Dinc.independent=false is pinned because this stage's archive was measured with
-# the cross-policy shared factory: as of 2026-10-09 a plain run gives every policy
-# its own fresh factory, which would make the regenerated stage disagree with
+# -c is pinned because this stage's archive was measured with the cross-policy
+# shared factory: without it every policy gets its own fresh factory, which would
+# make the regenerated stage disagree with
 # archive_results_journal/accessrefinery_bdd_reducer_optimized_10rs/ on every
 # timing column (on 05Keys the labels column alone is 2-8x).
-JAVA_OPTS="-Dinc.independent=false"
-run_stage accessrefinery_bdd_reducer_optimized_10rs 10 -p -i
+run_stage accessrefinery_bdd_reducer_optimized_10rs 10 -p -i -c
 # END_BEGIN_JOURNAL
 
 # ECPercentage - the intent-mining optimization alone, the configuration Figure
 # 20 reads. -o turns on the miner's refinement-DAG node construction and BFS
-# early-exit without the incremental EC engine below it, so the property pinned
-# above does not apply and is cleared here.
-JAVA_OPTS=""
+# early-exit without the incremental EC engine below it, so the cross-policy
+# shared factory of the stage above does not apply and no -c is passed.
 run_stage accessrefinery_bdd_reducer_ECPercentage_10rs 10 -o

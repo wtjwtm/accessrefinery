@@ -30,6 +30,8 @@ public class Parameter {
     public static int       round          =   1;
     /** Enable or disable BDD (Binary Decision Diagram) mode. */
     public static boolean   isBDD          =   true;
+    /** Share one MCPFactory across the policies of a round ({@code -c, --cross-policy}). */
+    public static boolean   isCrossPolicy  =   false;
 
     // ── Optimization stages, as selected on the command line ───────────────
     // The three stages of the pipeline can be exercised from a single build:
